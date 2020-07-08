@@ -15,6 +15,7 @@
     <name>antplatform-admin</name>
     <description>antplatform-admin</description>
 
+    <!-- 子模块-->
     <modules>
         <module>antplatform-admin-web</module>
         <module>antplatform-admin-api</module>
@@ -25,9 +26,9 @@
     <properties>
         <springboot.version>2.2.3.RELEASE</springboot.version>
         <java.version>1.8</java.version>
-        <shiro.version>1.5.3</shiro.version>
     </properties>
 
+    <!--统一管理依赖的版本号-->
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -161,11 +162,21 @@
 
 
             <!-- commons-lang -->
+            <!--<dependency>-->
+                <!--<groupId>commons-lang</groupId>-->
+                <!--<artifactId>commons-lang</artifactId>-->
+                <!--<version>2.6</version>-->
+            <!--</dependency>-->
+
             <dependency>
-                <groupId>commons-lang</groupId>
-                <artifactId>commons-lang</artifactId>
-                <version>2.6</version>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.10</version>
             </dependency>
+
+
+
+
             <!--&lt;!&ndash; shiro &ndash;&gt;-->
             <!--<dependency>-->
                 <!--<groupId>org.apache.shiro</groupId>-->
@@ -229,6 +240,46 @@
 
         </dependencies>
     </dependencyManagement>
+
+    <!-- 环境信息 -->
+    <profiles>
+        <!-- 标机开发环境 -->
+        <profile>
+            <id>dev</id>
+            <properties>
+                <activeProfile>dev</activeProfile>
+                <coreactive>coredev</coreactive>
+                <commonactive>commondev</commonactive>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <!-- 测试环境 -->
+        <profile>
+            <id>test</id>
+            <properties>
+                <activeProfile>test</activeProfile>
+                <coreactive>coretest</coreactive>
+                <commonactive>commontest</commonactive>
+            </properties>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+        </profile>
+        <!-- 生产环境 -->
+        <profile>
+            <id>pro</id>
+            <properties>
+                <activeProfile>pro</activeProfile>
+                <coreactive>corepro</coreactive>
+                <commonactive>commonpro</commonactive>
+            </properties>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+        </profile>
+    </profiles>
 
     <build>
         <plugins>

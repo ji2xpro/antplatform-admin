@@ -10,13 +10,13 @@
     <result column="type" jdbcType="VARCHAR" property="type" />
     <result column="introduction" jdbcType="VARCHAR" property="introduction" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
-    <result column="state" jdbcType="TINYINT" property="status" />
-    <result column="deleted" jdbcType="TINYINT" property="deleted" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
   </resultMap>
   <sql id="Base_Column_List">
     <!--
       WARNING - @mbg.generated
     -->
-    id, name, type, introduction, remark, state, deleted
+    id, name, type, introduction, remark, status, is_delete
   </sql>
 </mapper>

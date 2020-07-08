@@ -17,20 +17,20 @@ public class UserRole extends BaseModel implements Serializable {
     /**
      * 用户Id
      */
-    @Column(name = "userId")
+    @Column(name = "user_id")
     private Integer userId;
 
     /**
      * 角色Id
      */
-    @Column(name = "roleId")
+    @Column(name = "role_id")
     private Integer roleId;
 
     /**
      * 状态,0-未删除,1-删除
      */
-    @Column(name = "deleted")
-    private Integer deleted;
+    @Column(name = "is_delete")
+    private Integer isDelete;
 
     private static final long serialVersionUID = 1L;
 
@@ -43,7 +43,7 @@ public class UserRole extends BaseModel implements Serializable {
         sb.append(", id=").append(id);
         sb.append(", userId=").append(userId);
         sb.append(", roleId=").append(roleId);
-        sb.append(", deleted=").append(deleted);
+        sb.append(", isDelete=").append(isDelete);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

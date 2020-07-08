@@ -1,0 +1,17 @@
+#spring:
+#  datasource:
+#    type: com.alibaba.druid.pool.DruidDataSource
+#    url: jdbc:mysql://127.0.0.1:3306/AntPlatform?characterEncoding=UTF-8
+#    username: root
+#    password: root123456
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis:
+  config-location: classpath:mybatis-config.xml
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.antplatform.admin.core.model
+
+
+logging:
+  level:
+    com.antplatform.admin.core.mapper: debug

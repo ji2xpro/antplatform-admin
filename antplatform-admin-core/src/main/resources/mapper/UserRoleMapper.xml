@@ -6,14 +6,14 @@
       WARNING - @mbg.generated
     -->
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="userId" jdbcType="INTEGER" property="userId" />
-    <result column="roleId" jdbcType="INTEGER" property="roleId" />
-    <result column="deleted" jdbcType="TINYINT" property="deleted" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="role_id" jdbcType="INTEGER" property="roleId" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
   </resultMap>
   <sql id="Base_Column_List">
     <!--
       WARNING - @mbg.generated
     -->
-    id, userId, roleId, deleted
+    id, user_id, role_id, is_delete
   </sql>
 </mapper>

@@ -1,9 +1,11 @@
 package com.antplatform.admin.common.result;
 
 import lombok.Data;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -45,6 +47,7 @@ public class AjaxResult<T> implements Serializable {
         this.code = code;
         this.msg = msg;
         this.data = data;
+        this.attrMaps = getDefaultAttrMap();
     }
 
     public AjaxResult(int code, String msg, T data, Paging paging) {
@@ -52,13 +55,25 @@ public class AjaxResult<T> implements Serializable {
         this.msg = msg;
         this.data = data;
         this.paging = paging;
+        this.attrMaps = getDefaultAttrMap();
     }
 
     public AjaxResult(int code,String msg, T data,Map<Object,Object> attrMaps) {
         this.code = code;
         this.msg = msg;
         this.data = data;
+        if (MapUtils.isNotEmpty(attrMaps)) {
+            attrMaps.put("serverTime",System.currentTimeMillis());
+        } else {
+            attrMaps = getDefaultAttrMap();
+        }
         this.attrMaps = attrMaps;
+    }
+
+    private Map<Object, Object> getDefaultAttrMap() {
+        Map<Object, Object> map = new HashMap<>(1);
+        map.put("serverTime",System.currentTimeMillis());
+        return map;
     }
 
     public static <T> AjaxResult<T> createSuccessResult(T data) {
@@ -90,6 +105,10 @@ public class AjaxResult<T> implements Serializable {
     }
     public static<T> AjaxResult<T> createSuccessResult(T data,String msg){
         return new AjaxResult<T>(AjaxCode.SUCCESS_CODE,msg,data);
+    }
+
+    public boolean isSuccess(){
+        return this.code==AjaxCode.SUCCESS_CODE;
     }
 }
 

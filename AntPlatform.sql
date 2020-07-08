@@ -15,13 +15,13 @@
 
  Date      12/01/2020 15:14:18
 
- ************  WARNING  ************   
+ ************  WARNING  ************
  执行此脚本，会导致数据库所有数据初始化，初次执行，请慎重！！！！
 */
 
 -- DROP DATABASE IF EXISTS AntPlatform;
-CREATE DATABASE IF NOT EXISTS AntPlatform DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
--- CREATE DATABASE IF NOT EXISTS AntPlatform CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_unicode_ci';
+# CREATE DATABASE IF NOT EXISTS AntPlatform DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
+CREATE DATABASE IF NOT EXISTS AntPlatform CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 USE AntPlatform;
 
@@ -34,24 +34,26 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `sys_user`;
 CREATE TABLE `sys_user` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `userName` varchar(225) DEFAULT NULL COMMENT '用户名',
-  `password` varchar(255) DEFAULT NULL COMMENT '用户密码',
-  `nickName` varchar(255) DEFAULT NULL COMMENT '昵称',
-  `remark` varchar(255) DEFAULT NULL COMMENT '用户备注',
-  `state` tinyint(2) unsigned NOT NULL DEFAULT 0 COMMENT '状态,0-启用,1-禁用',
-  `deleted` tinyint(2) unsigned NOT NULL DEFAULT 0 COMMENT '状态,0-未删除,1-删除',
-  `avatar` varchar(255) DEFAULT 'http://news.mydrivers.com/Img/20110518/04481549.png' COMMENT '用户头像',
-  `createTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `updateTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `username` varchar(225) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '用户名',
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '用户密码',
+  `nickname` varchar(255) COLLATE utf8mb4_unicode_ci  DEFAULT NULL COMMENT '昵称',
+  `mobile` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '手机号',
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '邮箱',
+  `avatar` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT 'http://news.mydrivers.com/Img/20110518/04481549.png' COMMENT '用户头像',
+  `remark` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '用户备注',
+  `status` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '状态,0-启用,1-禁用',
+  `is_delete` tinyint(4) unsigned NOT NULL DEFAULT 0 COMMENT '状态,0-未删除,1-删除',
+  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='用户表';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='用户表';
 
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
 BEGIN;
-INSERT INTO `sys_user` VALUES (1, 'admin', '123456', '超级管理员', NULL, 0, 0, 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_user` VALUES (2, 'editor', '123456', '普通用户', NULL, 0, 0, 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_user` VALUES (1, 'admin', '123456', '超级管理员', NULL, NULL, 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif', NULL, 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_user` VALUES (2, 'editor', '123456', '普通用户', NULL, NULL, 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif', NULL, 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 COMMIT;
 
 -- ----------------------------
@@ -60,16 +62,16 @@ COMMIT;
 DROP TABLE IF EXISTS `sys_role`;
 CREATE TABLE `sys_role` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键 ',
-  `name` varchar(255) NOT NULL DEFAULT '' COMMENT '角色名称',
-  `type` varchar(255) DEFAULT NULL COMMENT '角色类型',
-  `introduction` varchar(255) DEFAULT NULL COMMENT '角色介绍',
-  `remark` varchar(255) NOT NULL DEFAULT '' COMMENT '角色备注',
-  `state` tinyint(2) unsigned NOT NULL DEFAULT 0 COMMENT '状态,0-启用,-1禁用',
-  `deleted` tinyint(2) unsigned NOT NULL DEFAULT 0 COMMENT '状态,0-未删除,1-删除',
-  `createTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `updateTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '角色名称',
+  `type` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '角色类型',
+  `introduction` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '角色介绍',
+  `remark` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '角色备注',
+  `status` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '状态,0-启用,-1禁用',
+  `is_delete` tinyint(4) unsigned NOT NULL DEFAULT 0 COMMENT '状态,0-未删除,1-删除',
+  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='角色表';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='角色表';
 
 -- ----------------------------
 -- Records of sys_role
@@ -86,13 +88,13 @@ COMMIT;
 DROP TABLE IF EXISTS `sys_user_role`;
 CREATE TABLE `sys_user_role` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `userId` int(11) unsigned DEFAULT NULL COMMENT '用户Id',
-  `roleId` int(11) unsigned DEFAULT NULL COMMENT '角色Id',
-  `deleted` tinyint(2) unsigned NOT NULL DEFAULT 0 COMMENT '状态,0-未删除,1-删除',
-  `createTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `updateTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `user_id` int(11) unsigned DEFAULT NULL COMMENT '用户Id',
+  `role_id` int(11) unsigned DEFAULT NULL COMMENT '角色Id',
+  `is_delete` tinyint(4) unsigned NOT NULL DEFAULT 0 COMMENT '状态,0-未删除,1-删除',
+  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='用户角色关联表';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='用户角色关联表';
 
 -- ----------------------------
 -- Records of sys_user_role

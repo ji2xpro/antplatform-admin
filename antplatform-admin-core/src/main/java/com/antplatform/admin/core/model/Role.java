@@ -41,14 +41,14 @@ public class Role extends BaseModel implements Serializable {
     /**
      * 状态,0-启用,-1禁用
      */
-    @Column(name = "state")
+    @Column(name = "status")
     private Integer status;
 
     /**
      * 状态,0-未删除,1-删除
      */
-    @Column(name = "deleted")
-    private Integer deleted;
+    @Column(name = "is_delete")
+    private Integer isDelete;
 
     private static final long serialVersionUID = 1L;
 
@@ -64,7 +64,7 @@ public class Role extends BaseModel implements Serializable {
         sb.append(", introduction=").append(introduction);
         sb.append(", remark=").append(remark);
         sb.append(", status=").append(status);
-        sb.append(", deleted=").append(deleted);
+        sb.append(", isDelete=").append(isDelete);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

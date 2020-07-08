@@ -35,7 +35,7 @@
             2、MyBatis3Simple：类似MyBatis3，只是不生成XXXBySample；
         introspectedColumnImpl：类全限定名，用于扩展MBG（非必须）
     -->
-    <context id="default" targetRuntime="MyBatis3">
+    <context id="default" targetRuntime="MyBatis3" defaultModelType="flat">
 
         <!-- 以下整段非必须 -->
         <!--
@@ -377,17 +377,10 @@
                selectByExampleQueryId="false">
             <property name="useActualColumnNames" value="true"/>
 
-            <columnOverride column="id" property="id" javaType="Integer" />
-            <columnOverride column="username" property="username" />
-            <columnOverride column="password" property="password" />
-            <columnOverride column="nickName" property="nickName" />
-            <columnOverride column="remark" property="remark" />
-            <columnOverride column="state" property="status" javaType="Integer"/>
-            <columnOverride column="deleted" property="deleted" javaType="Integer"/>
-            <columnOverride column="avatar" property="avatar" />
+            <columnOverride column="is_delete" property="isDelete" javaType="Integer"/>
 
-            <ignoreColumn column="createTime"/>
-            <ignoreColumn column="updateTime"/>
+            <ignoreColumn column="create_time"/>
+            <ignoreColumn column="update_time"/>
         </table>
 
         <table tableName="sys_role" domainObjectName="Role" enableCountByExample="false"
@@ -397,16 +390,10 @@
                selectByExampleQueryId="false">
             <property name="useActualColumnNames" value="true"/>
 
-            <columnOverride column="id" property="id" javaType="Integer" />
-            <columnOverride column="name" property="name" />
-            <columnOverride column="type" property="type" />
-            <columnOverride column="introduction" property="introduction" />
-            <columnOverride column="remark" property="remark" />
-            <columnOverride column="state" property="status" javaType="Integer"/>
-            <columnOverride column="deleted" property="deleted" javaType="Integer"/>
+            <columnOverride column="is_delete" property="isDelete" javaType="Integer"/>
 
-            <ignoreColumn column="createTime"/>
-            <ignoreColumn column="updateTime"/>
+            <ignoreColumn column="create_time"/>
+            <ignoreColumn column="update_time"/>
         </table>
 
         <table tableName="sys_user_role" domainObjectName="UserRole" enableCountByExample="false"
@@ -416,23 +403,26 @@
                selectByExampleQueryId="false">
             <property name="useActualColumnNames" value="true"/>
 
-            <columnOverride column="id" property="id" javaType="Integer" />
-            <columnOverride column="userId" property="userId" javaType="Integer" />
-            <columnOverride column="roleId" property="roleId" javaType="Integer" />
-            <columnOverride column="deleted" property="deleted" javaType="Integer"/>
+            <columnOverride column="user_id" property="userId"/>
+            <columnOverride column="role_id" property="roleId"/>
+            <columnOverride column="is_delete" property="isDelete" javaType="Integer"/>
 
-            <ignoreColumn column="createTime"/>
-            <ignoreColumn column="updateTime"/>
+            <ignoreColumn column="create_time"/>
+            <ignoreColumn column="update_time"/>
         </table>
 
-
-        <!--<table schema="test" tableName="user_t" domainObjectName="User"-->
-               <!--enableCountByExample="false"-->
+        <!--<table tableName="sys_user11" domainObjectName="User11" enableCountByExample="false"-->
                <!--enableUpdateByExample="false"-->
                <!--enableDeleteByExample="false"-->
                <!--enableSelectByExample="false"-->
                <!--selectByExampleQueryId="false">-->
-            <!--<generatedKey column="Id" sqlStatement="Mysql"/>-->
+            <!--<property name="useActualColumnNames" value="true"/>-->
+
+            <!--<columnOverride column="status" javaType="Integer"/>-->
+            <!--<columnOverride column="is_deleted" property="isDeleted" javaType="Integer"/>-->
+
+            <!--<ignoreColumn column="create_time"/>-->
+            <!--<ignoreColumn column="update_time"/>-->
         <!--</table>-->
     </context>
 </generatorConfiguration>

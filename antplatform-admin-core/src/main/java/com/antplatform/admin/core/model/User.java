@@ -17,7 +17,7 @@ public class User extends BaseModel implements Serializable {
     /**
      * 用户名
      */
-    @Column(name = "userName")
+    @Column(name = "username")
     private String username;
 
     /**
@@ -29,8 +29,26 @@ public class User extends BaseModel implements Serializable {
     /**
      * 昵称
      */
-    @Column(name = "nickName")
-    private String nickName;
+    @Column(name = "nickname")
+    private String nickname;
+
+    /**
+     * 手机号
+     */
+    @Column(name = "mobile")
+    private String mobile;
+
+    /**
+     * 邮箱
+     */
+    @Column(name = "email")
+    private String email;
+
+    /**
+     * 用户头像
+     */
+    @Column(name = "avatar")
+    private String avatar;
 
     /**
      * 用户备注
@@ -41,20 +59,14 @@ public class User extends BaseModel implements Serializable {
     /**
      * 状态,0-启用,1-禁用
      */
-    @Column(name = "state")
+    @Column(name = "status")
     private Integer status;
 
     /**
      * 状态,0-未删除,1-删除
      */
-    @Column(name = "deleted")
-    private Integer deleted;
-
-    /**
-     * 用户头像
-     */
-    @Column(name = "avatar")
-    private String avatar;
+    @Column(name = "is_delete")
+    private Integer isDelete;
 
     private static final long serialVersionUID = 1L;
 
@@ -67,11 +79,13 @@ public class User extends BaseModel implements Serializable {
         sb.append(", id=").append(id);
         sb.append(", username=").append(username);
         sb.append(", password=").append(password);
-        sb.append(", nickName=").append(nickName);
+        sb.append(", nickname=").append(nickname);
+        sb.append(", mobile=").append(mobile);
+        sb.append(", email=").append(email);
+        sb.append(", avatar=").append(avatar);
         sb.append(", remark=").append(remark);
         sb.append(", status=").append(status);
-        sb.append(", deleted=").append(deleted);
-        sb.append(", avatar=").append(avatar);
+        sb.append(", isDelete=").append(isDelete);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();
