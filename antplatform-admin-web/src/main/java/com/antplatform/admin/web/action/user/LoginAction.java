@@ -6,7 +6,6 @@ import com.antplatform.admin.common.dto.Response;
 import com.antplatform.admin.common.result.AjaxCode;
 import com.antplatform.admin.common.result.AjaxResult;
 import com.antplatform.admin.web.biz.user.UserBiz;
-import com.antplatform.admin.web.biz.user.UserBizImpl;
 import com.antplatform.admin.web.entity.user.UserRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -25,10 +24,6 @@ import org.springframework.web.util.HtmlUtils;
  */
 @RestController
 public class LoginAction {
-
-//    @Autowired
-//    UserService userService;
-
     @Autowired
     private UserBiz userBiz;
 
@@ -45,7 +40,7 @@ public class LoginAction {
         if (response.isSuccess()) {
             return AjaxResult.createSuccessResult(response.getData());
         }
-        return AjaxResult.createFailedResult(AjaxCode.ERROR_CODE,"请输入正确的用户名或密码");
+        return AjaxResult.createFailedResult(AjaxCode.ERROR_CODE,response.getMsg());
     }
 
     @GetMapping(value = "/user/info")

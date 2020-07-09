@@ -19,8 +19,9 @@
     <modules>
         <module>antplatform-admin-web</module>
         <module>antplatform-admin-api</module>
+        <module>antplatform-admin-service</module>
+        <module>antplatform-admin-biz</module>
         <module>antplatform-admin-common</module>
-        <module>antplatform-admin-core</module>
     </modules>
 
     <properties>
@@ -48,7 +49,12 @@
             </dependency>
             <dependency>
                 <groupId>com.antplatform</groupId>
-                <artifactId>antplatform-admin-core</artifactId>
+                <artifactId>antplatform-admin-biz</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.antplatform</groupId>
+                <artifactId>antplatform-admin-service</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
 
@@ -236,7 +242,17 @@
                 <version>3.2.3</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>23.0</version>
+            </dependency>
 
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct</artifactId>
+                <version>1.4.0.Beta2</version>
+            </dependency>
 
         </dependencies>
     </dependencyManagement>
@@ -248,7 +264,7 @@
             <id>dev</id>
             <properties>
                 <activeProfile>dev</activeProfile>
-                <coreactive>coredev</coreactive>
+                <bizactive>bizdev</bizactive>
                 <commonactive>commondev</commonactive>
             </properties>
             <activation>
@@ -260,7 +276,7 @@
             <id>test</id>
             <properties>
                 <activeProfile>test</activeProfile>
-                <coreactive>coretest</coreactive>
+                <bizactive>biztest</bizactive>
                 <commonactive>commontest</commonactive>
             </properties>
             <activation>
@@ -272,7 +288,7 @@
             <id>pro</id>
             <properties>
                 <activeProfile>pro</activeProfile>
-                <coreactive>corepro</coreactive>
+                <bizactive>bizpro</bizactive>
                 <commonactive>commonpro</commonactive>
             </properties>
             <activation>

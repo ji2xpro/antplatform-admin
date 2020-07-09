@@ -1,27 +1,28 @@
-package com.antplatform.admin.api;
+package com.antplatform.admin.biz.service;
+
 
 import com.antplatform.admin.api.dto.UserDTO;
 import com.antplatform.admin.api.request.UserMgtSpec;
-import com.antplatform.admin.common.dto.Response;
+import com.antplatform.admin.biz.model.User;
 
 /**
  * @author: maoyan
- * @date: 2020/1/22 14:28:38
+ * @date: 2020/1/19 16:37:52
  * @description:
  */
-public interface UserMgtApi {
-
+public interface UserService {
     /**
      * 查询指定用户
      * @param userMgtSpec
      * @return
      */
-    Response<UserDTO> queryUser(UserMgtSpec userMgtSpec);
+    User getUser(UserMgtSpec userMgtSpec);
 
     /**
      * 查询用户信息
      * @param userMgtSpec
      * @return
      */
-    Response<UserDTO> queryUserRole(UserMgtSpec userMgtSpec);
+    UserDTO getUserRole(UserMgtSpec userMgtSpec);
+
 }
