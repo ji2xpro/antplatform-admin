@@ -42,17 +42,18 @@ CREATE TABLE `sys_user` (
   `avatar` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT 'http://news.mydrivers.com/Img/20110518/04481549.png' COMMENT '用户头像',
   `remark` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '用户备注',
   `status` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '状态,0-启用,1-禁用',
-  `is_delete` tinyint(4) unsigned NOT NULL DEFAULT 0 COMMENT '状态,0-未删除,1-删除',
-  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `is_delete` tinyint(4) unsigned NOT NULL DEFAULT 0 COMMENT '是否删除,0-未删除,1-删除',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='用户表';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='用户表';
 
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
 BEGIN;
-INSERT INTO `sys_user` VALUES (1, 'admin', '123456', '超级管理员', NULL, NULL, 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif', NULL, 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO `sys_user` VALUES (1, 'admin', '43286a86708820e38c333cdd4c496355', '超级管理员', NULL, NULL, 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif', NULL, 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO `sys_user` VALUES (2, 'editor', '123456', '普通用户', NULL, NULL, 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif', NULL, 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 COMMIT;
 
@@ -63,23 +64,29 @@ DROP TABLE IF EXISTS `sys_role`;
 CREATE TABLE `sys_role` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键 ',
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '角色名称',
-  `type` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '角色类型',
-  `introduction` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '角色介绍',
-  `remark` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '角色备注',
+  `keypoint` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '角色标识',
+  `type` int(11) unsigned NOT NULL DEFAULT 2 COMMENT '类型,0-超级管理员,1-管理员,2-普通用户',
+  `introduction` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '介绍',
+  `remark` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '备注',
   `status` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '状态,0-启用,-1禁用',
-  `is_delete` tinyint(4) unsigned NOT NULL DEFAULT 0 COMMENT '状态,0-未删除,1-删除',
-  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `is_delete` tinyint(4) unsigned NOT NULL DEFAULT 0 COMMENT '是否删除,0-未删除,1-删除',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='角色表';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='角色表';
 
 -- ----------------------------
 -- Records of sys_role
 -- ----------------------------
 BEGIN;
-INSERT INTO `sys_role` VALUES (1, 'Super Admin', 'admin', 'I am a super administrator', '超级管理员', 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_role` VALUES (2, 'Admin', 'admin', 'I am an administrator', '管理员', 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_role` VALUES (3, 'Normal Editor', 'editor', 'I am an editor', '普通用户', 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+# INSERT INTO `sys_role` VALUES (1, 'Super Admin', 'admin', 'I am a super administrator', '超级管理员', 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+# INSERT INTO `sys_role` VALUES (2, 'Admin', 'admin', 'I am an administrator', '管理员', 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+# INSERT INTO `sys_role` VALUES (3, 'Normal Editor', 'editor', 'I am an editor', '普通用户', 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+
+INSERT INTO `sys_role` VALUES (1, 'Super Admin', 'super admin', 0, 'I am a super administrator', '超级管理员', 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role` VALUES (2, 'Admin', 'admin', 1, 'I am an administrator', '系统管理员', 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role` VALUES (3, 'Normal Editor', 'editor', 2, 'I am an editor', '普通用户', 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 COMMIT;
 
 -- ----------------------------
@@ -90,18 +97,98 @@ CREATE TABLE `sys_user_role` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
   `user_id` int(11) unsigned DEFAULT NULL COMMENT '用户Id',
   `role_id` int(11) unsigned DEFAULT NULL COMMENT '角色Id',
-  `is_delete` tinyint(4) unsigned NOT NULL DEFAULT 0 COMMENT '状态,0-未删除,1-删除',
-  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `is_delete` tinyint(4) unsigned NOT NULL DEFAULT 0 COMMENT '是否删除,0-未删除,1-删除',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='用户角色关联表';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='用户角色关联表';
 
 -- ----------------------------
 -- Records of sys_user_role
 -- ----------------------------
 BEGIN;
-INSERT INTO `sys_user_role` VALUES (1, 1, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_user_role` VALUES (1, 1, 2, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO `sys_user_role` VALUES (2, 2, 3, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+COMMIT;
+
+-- ----------------------------
+-- Table structure for sys_permission
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_permission`;
+CREATE TABLE `sys_permission` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `name` varchar(40) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '权限名称',
+  `parent_id` int(11) unsigned DEFAULT NULL COMMENT '权限父类ID',
+  `keypoint` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '权限点',
+  `type` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '类型,0-模块,1-菜单,2-按钮,3-链接',
+  `icon` varchar(255) COLLATE utf8mb4_unicode_ci  DEFAULT NULL comment '图标',
+  `path` varchar(255) COLLATE utf8mb4_unicode_ci  DEFAULT NULL comment '路径',
+  `url` varchar(255) COLLATE utf8mb4_unicode_ci  DEFAULT NULL comment '网址',
+  `level` int(11) unsigned DEFAULT NULL COMMENT '优先级',
+  `description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '介绍',
+  `status` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '状态,0-启用,-1禁用',
+  `is_cache` tinyint(1) unsigned DEFAULT 0 COMMENT '是否缓存,0-缓存,1-不缓存',
+  `is_delete` tinyint(4) unsigned NOT NULL DEFAULT 0 COMMENT '是否删除,0-未删除,1-删除',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  KEY `INDEX_PERM_NAME` (`name`) USING BTREE,
+  KEY `INDEX_PERM_PID` (`parent_id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='权限表';
+
+-- ----------------------------
+-- Records of sys_permission
+-- ----------------------------
+BEGIN;
+INSERT INTO `sys_permission` VALUES (1, '基础系统管理',  0, 'system:mgr', 0, 'xitongguanli', 'system', 'system', 1000,'基础系统管理', 0, 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_permission` VALUES (2, '系统管理',  1, 'system:cfg', 1, 'xitongguanli', 'system', 'Layout', 1000, '系统管理',  0, 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_permission` VALUES (3, '权限管理', 2, 'system:permission', 1, 'quanxianguanli', 'permission', 'nested', 1, '权限管理', 0, 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_permission` VALUES (4, '用户管理', 3, 'userTable', 1, 'yonghuguanli', 'userTable', 'system/user/userTable', 1, '用户管理菜单', 0, 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_permission` VALUES (5, '角色管理', 3, 'roleTable', 1, 'jiaoseguanli', 'roleTable', 'system/role/roleTable', 2, '角色管理', 0, 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_permission` VALUES (6, '资源管理', 3, 'resourceTable', 1, 'quanxianguanli', 'resourceTable', 'system/resource/resourceTable', 3, '资源管理', 0, 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_permission` VALUES (7, '组织管理', 3, 'organizationTable', 1, 'zuzhiguanli', 'organizationTable', 'system/organization/organizationTable', 4, '组织管理',0, 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_permission` VALUES (8, '基础配置', 2, 'system:base:cfg', 1, 'jichupeizhi', 'systemBase', 'nested', 2, '系统配置',0, 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_permission` VALUES (9, '数据字典', 8, 'system:config:dict', 1, 'shujuzidian', 'dictTable', 'system/common/dict/dictTable', 1, '数据字典',0, 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_permission` VALUES (10, '定时任务', 8, 'system:task', 1, 'timingtask', 'https://github.com/xuxueli/xxl-job', 'system/task', 2, '定时任务',0, 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_permission` VALUES (11, '日志管理', 2, 'system:log:mgr', 1, 'rizhiguanli', 'system/log', 'nested', 3, '日志管理', 0, 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_permission` VALUES (12, '操作日志', 11, 'system:log:operation', 1, 'caozuorizhi', 'logTable', 'system/common/log/logTable', 1, '管理员操作日志，只记录重要关键日志，请勿频繁记录，系统运行日志记录到log文件。',0, 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_permission` VALUES (13, '系统日志', 11, 'system:log:run', 1, 'xitongrizhi', 'https://my.oschina.net/feinik/blog/1580625', 'system', 2, '运行日志使用ELK',0, 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+COMMIT;
+
+-- ----------------------------
+-- Table structure for sys_role_permission
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_role_permission`;
+CREATE TABLE `sys_role_permission` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `role_id` int(11) unsigned DEFAULT NULL COMMENT '角色Id',
+  `permission_id` int(11) unsigned DEFAULT NULL COMMENT '权限Id',
+  `is_delete` tinyint(4) unsigned NOT NULL DEFAULT 0 COMMENT '是否删除,0-未删除,1-删除',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='角色权限关联表';
+
+-- ----------------------------
+-- Records of sys_role_permission
+-- ----------------------------
+BEGIN;
+INSERT INTO `sys_role_permission` VALUES (1, 2, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_permission` VALUES (2, 2, 2, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_permission` VALUES (3, 2, 3, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_permission` VALUES (4, 2, 4, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_permission` VALUES (5, 2, 5, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_permission` VALUES (6, 2, 6, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_permission` VALUES (7, 2, 7, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_permission` VALUES (8, 2, 8, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_permission` VALUES (9, 2, 9, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_permission` VALUES (10, 2, 10, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_permission` VALUES (11, 2, 11, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_permission` VALUES (12, 2, 13, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_permission` VALUES (13, 2, 13, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_permission` VALUES (14, 3, 11, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_permission` VALUES (15, 3, 12, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_permission` VALUES (16, 3, 13, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;

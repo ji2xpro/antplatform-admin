@@ -3,6 +3,7 @@ package com.antplatform.admin.api.dto;
 import com.antplatform.admin.common.dto.BaseDTO;
 import lombok.Data;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -14,7 +15,7 @@ import java.util.List;
 public class UserDTO extends BaseDTO {
     String token;
 
-    List<String> roles;
+    Collection<String> roles;
     String introduction;
     String avatar;
     String name;

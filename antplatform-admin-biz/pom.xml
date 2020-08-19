@@ -31,9 +31,15 @@
         </dependency>
 
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.antplatform</groupId>
             <artifactId>antplatform-admin-api</artifactId>
         </dependency>
+
 
         <!--<dependency>-->
             <!--<groupId>org.projectlombok</groupId>-->
@@ -45,6 +51,10 @@
             <artifactId>guava</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.antplatform</groupId>
+            <artifactId>antplatform-admin-common</artifactId>
+        </dependency>
 
         <!--<dependency>-->
             <!--<groupId>tk.mybatis</groupId>-->
@@ -102,9 +112,19 @@
                 </executions>
                 <dependencies>
                     <dependency>
+                        <groupId>mysql</groupId>
+                        <artifactId>mysql-connector-java</artifactId>
+                        <version>8.0.17</version>
+                    </dependency>
+                    <dependency>
                         <groupId>tk.mybatis</groupId>
                         <artifactId>mapper</artifactId>
                         <version>4.1.5</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.github.misterchangray.mybatis.generator.plugins</groupId>
+                        <artifactId>myBatisGeneratorPlugins</artifactId>
+                        <version>1.2</version>
                     </dependency>
                 </dependencies>
             </plugin>

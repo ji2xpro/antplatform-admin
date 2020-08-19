@@ -2,7 +2,6 @@ package com.antplatform.admin.common.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.experimental.Accessors;
 
 /**
  * @author: maoyan
@@ -13,6 +12,30 @@ import lombok.experimental.Accessors;
 @Getter
 public enum ResponseCode {
     SUCCESS(1000, "success"),
+
+    ERROR(500,"参数错误"),
+
+    /**
+     * 验证码错误
+     */
+    INVALID_RE_VCODE(10000011, "验证码错误"),
+    /**
+     * 用户名或密码错误
+     */
+    INVALID_USERNAME_PASSWORD(10000003, "账号或密码错误"),
+    /**
+     * 用户已被锁定
+     */
+    USER_LOCKED(10000002,"用户已被锁定，禁止登录"),
+    /**
+     * 用户不存在
+     */
+    INVALID_USER(10000001, "用户不存在"),
+
+    /**
+     * 角色不存在
+     */
+    INVALID_ROLE(10000004, "角色不存在"),
 
     UNKNOWN_INNER_ERROR(2000, "unknown inner error"),
     UNSUPPORTED_REQUEST(2001, "unsupported request"),

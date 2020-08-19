@@ -3,6 +3,8 @@ package com.antplatform.admin.service.port.mapper;
 import com.antplatform.admin.api.dto.UserDTO;
 import com.antplatform.admin.biz.model.User;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 import org.mapstruct.ReportingPolicy;
 
 /**
@@ -14,6 +16,9 @@ import org.mapstruct.ReportingPolicy;
 public interface UserMapper extends EntityMapper<UserDTO, User>{
 
     @Override
+    @Mappings({
+            @Mapping(target = "name", source = "user.username")
+    })
     UserDTO toDto(User user);
 
 }

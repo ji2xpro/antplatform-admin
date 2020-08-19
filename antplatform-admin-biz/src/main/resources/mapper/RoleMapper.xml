@@ -7,7 +7,8 @@
     -->
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="keypoint" jdbcType="VARCHAR" property="keypoint" />
+    <result column="type" jdbcType="INTEGER" property="type" />
     <result column="introduction" jdbcType="VARCHAR" property="introduction" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
     <result column="status" jdbcType="INTEGER" property="status" />
@@ -17,6 +18,6 @@
     <!--
       WARNING - @mbg.generated
     -->
-    id, name, type, introduction, remark, status, is_delete
+    id, name, keypoint, type, introduction, remark, status, is_delete
   </sql>
 </mapper>

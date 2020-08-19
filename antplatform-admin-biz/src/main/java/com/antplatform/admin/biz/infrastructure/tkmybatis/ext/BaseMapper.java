@@ -12,7 +12,7 @@ import tk.mybatis.mapper.common.special.InsertListMapper;
 public interface BaseMapper<T> extends
         Mapper<T>,
         InsertListMapper<T>,
-        ExpandedIdListMapper<T, Long>,
-        UpdateIdListMapper<T, Long>,
+        ExpandedIdListMapper<T, Integer>,
+        UpdateIdListMapper<T, Integer>,
         PageModelMapper<T> {
 }

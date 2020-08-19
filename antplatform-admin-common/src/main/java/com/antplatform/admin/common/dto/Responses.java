@@ -35,6 +35,11 @@ public abstract class Responses {
         return response;
     }
 
+    public static <T> Response<T> fail(ResponseCode responseCode) {
+        return fail(responseCode.getCode(),responseCode.getMsg());
+    }
+
+
     public static <T> Response<T> unknownInnerError() {
         return fail(ResponseCode.UNKNOWN_INNER_ERROR.getCode(), ResponseCode.UNKNOWN_INNER_ERROR.getMsg());
     }

@@ -1,14 +1,16 @@
-package com.antplatform.admin.biz.service;
-
+package com.antplatform.admin.biz.service.impl;
 
 import com.antplatform.admin.api.dto.UserDTO;
 import com.antplatform.admin.api.request.UserMgtSpec;
+import com.antplatform.admin.api.request.UserSpec;
 import com.antplatform.admin.biz.mapper.UserMapper;
 import com.antplatform.admin.biz.model.Role;
 import com.antplatform.admin.biz.model.User;
 import com.antplatform.admin.biz.model.UserRole;
 import com.antplatform.admin.biz.mapper.RoleMapper;
 import com.antplatform.admin.biz.mapper.UserRoleMapper;
+import com.antplatform.admin.biz.model.repository.UserRepository;
+import com.antplatform.admin.biz.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +35,10 @@ public class UserServiceImpl implements UserService {
     @Autowired
     UserRoleMapper userRoleMapper;
 
+
+    @Autowired
+    UserRepository userRepository;
+
     /**
      * 查询指定用户
      *
@@ -46,6 +52,30 @@ public class UserServiceImpl implements UserService {
         criteria.andEqualTo("username",userMgtSpec.getUsername());
         criteria.andEqualTo("password",userMgtSpec.getPassword());
         return userMapper.selectOneByExample(example);
+    }
+
+    /**
+     * 通过userId主键查找
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public User queryByUserId(Integer userId) {
+        return userMapper.selectByPrimaryKey(userId);
+    }
+
+    /**
+     * 根据用户名查找
+     *
+     * @param username
+     * @return
+     */
+    @Override
+    public User queryByUsername(String username) {
+        User user = new User();
+        user.setUsername(username);
+        return userMapper.selectOne(user);
     }
 
     /**
@@ -74,7 +104,7 @@ public class UserServiceImpl implements UserService {
 
                 UserDTO userDTO = new UserDTO();
                 List<String> list = new ArrayList<>();
-                list.add(role.getType());
+                list.add(role.getKeypoint());
                 userDTO.setRoles(list);
                 userDTO.setAvatar("https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
                 userDTO.setName(role.getName());
@@ -84,6 +114,17 @@ public class UserServiceImpl implements UserService {
             }
         }
         return null;
+    }
+
+    /**
+     * 查询用户信息
+     *
+     * @param userSpec
+     * @return
+     */
+    @Override
+    public User findBySpec(UserSpec userSpec) {
+        return userRepository.findBySpec(userSpec);
     }
 }
 

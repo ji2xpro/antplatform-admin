@@ -27,4 +27,12 @@ public interface UserBiz {
      * @return
      */
     Response<UserDTO> queryUserRole(String token);
+
+    /**
+     * 查询用户信息
+     *
+     * @param id
+     * @return
+     */
+    Response<UserDTO> queryUserInfo(Integer id);
 }

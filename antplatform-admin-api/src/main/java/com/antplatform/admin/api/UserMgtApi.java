@@ -24,4 +24,12 @@ public interface UserMgtApi {
      * @return
      */
     Response<UserDTO> queryUserRole(UserMgtSpec userMgtSpec);
+
+    /**
+     * 查询用户信息
+     * @param id
+     * @return
+     */
+    Response<UserDTO> queryUserInfo(Integer id);
+
 }

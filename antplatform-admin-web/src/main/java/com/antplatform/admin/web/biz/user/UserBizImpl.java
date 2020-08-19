@@ -6,10 +6,8 @@ import com.antplatform.admin.api.request.UserMgtSpec;
 import com.antplatform.admin.common.dto.Response;
 import com.antplatform.admin.common.dto.Responses;
 import com.antplatform.admin.common.enums.ResponseCode;
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 /**
@@ -59,6 +57,22 @@ public class UserBizImpl implements UserBiz{
             return userMgtApi.queryUserRole(userMgtSpec);
         }catch (Exception e){
             log.error(String.format("invoke userMgtApi.queryUserRole exception, spec=%", userMgtSpec), e);
+            return Responses.fail(ResponseCode.REQUEST_TIMEOUT.getCode(), "查询用户详情服务超时");
+        }
+    }
+
+    /**
+     * 查询用户信息
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public Response<UserDTO> queryUserInfo(Integer id) {
+        try {
+            return userMgtApi.queryUserInfo(id);
+        }catch (Exception e){
+            log.error(String.format("invoke userMgtApi.queryUserInfo exception, spec=%", id), e);
             return Responses.fail(ResponseCode.REQUEST_TIMEOUT.getCode(), "查询用户详情服务超时");
         }
     }

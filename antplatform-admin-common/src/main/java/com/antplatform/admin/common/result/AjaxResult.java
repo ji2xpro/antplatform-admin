@@ -1,5 +1,7 @@
 package com.antplatform.admin.common.result;
 
+import com.antplatform.admin.common.dto.Response;
+import com.antplatform.admin.common.enums.ResponseCode;
 import lombok.Data;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -105,6 +107,10 @@ public class AjaxResult<T> implements Serializable {
     }
     public static<T> AjaxResult<T> createSuccessResult(T data,String msg){
         return new AjaxResult<T>(AjaxCode.SUCCESS_CODE,msg,data);
+    }
+
+    public static<T> AjaxResult<T> createFailedResult(ResponseCode responseCode) {
+        return new AjaxResult<T>(responseCode.getCode(), responseCode.getMsg(), null);
     }
 
     public boolean isSuccess(){

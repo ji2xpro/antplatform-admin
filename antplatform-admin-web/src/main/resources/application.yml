@@ -1,5 +1,5 @@
-server:
-    port: 6666
 spring:
     profiles:
-        active: @bizactive@,@commonactive@
+        active: @activeProfile@,@bizactive@,@commonactive@
+    application:
+        name: AntPlatform
