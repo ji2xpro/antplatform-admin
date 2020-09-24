@@ -4,7 +4,7 @@
 #    url: jdbc:mysql://127.0.0.1:3306/AntPlatform?characterEncoding=UTF-8
 #    username: root
 #    password: root123456
-#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    driver-class-name: com.mysql.jdbc.Driver
 
 mybatis:
   config-location: classpath:mybatis-config.xml

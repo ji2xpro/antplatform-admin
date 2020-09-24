@@ -1,9 +1,11 @@
-package com.antplatform.admin.web.entity.user;
+package com.antplatform.admin.web.entity.basic;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Builder;
 import lombok.Data;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -15,8 +17,8 @@ import javax.validation.constraints.Size;
  */
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-@ApiModel(value = "LoginUser对象", description = "用户登录信息")
-public class UserRequest {
+@ApiModel(value = "LoginRequest对象", description = "用户登录信息")
+public class LoginRequest {
     @ApiModelProperty(value = "用户账号", required = true, dataType = "String", notes = "账号长度范围应该在2-32位之间。")
     @NotNull(message="账号不能为空")
     @Size(min=2,max=32,message="账号长度不正确")

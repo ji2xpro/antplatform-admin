@@ -1,7 +1,7 @@
 spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://127.0.0.1:3306/AntPlatform?characterEncoding=UTF-8
+    jdbc-url: jdbc:mysql://127.0.0.1:3306/AntPlatform?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
     username: root
     password: root123456
     driver-class-name: com.mysql.cj.jdbc.Driver

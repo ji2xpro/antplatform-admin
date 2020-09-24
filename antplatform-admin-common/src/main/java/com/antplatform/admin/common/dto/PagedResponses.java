@@ -37,8 +37,13 @@ public abstract class PagedResponses {
     }
 
     public static <T> PagedResponse<T> fail(int code, String msg) {
-        if (code == ResponseCode.SUCCESS.getCode()) throw new IllegalArgumentException("Invalid code.");
-        if (msg != null && ResponseCode.SUCCESS.getMsg().equals(msg)) throw new IllegalArgumentException("Invalid msg.");
+        if (code == ResponseCode.SUCCESS.getCode()) {
+            throw new IllegalArgumentException("Invalid code.");
+        }
+
+        if (msg != null && ResponseCode.SUCCESS.getMsg().equals(msg)) {
+            throw new IllegalArgumentException("Invalid msg.");
+        }
         PagedResponse<T> response = new PagedResponse<T>();
         response.setCode(code);
         response.setMsg(msg);

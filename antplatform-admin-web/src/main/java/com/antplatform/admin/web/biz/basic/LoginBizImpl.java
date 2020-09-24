@@ -1,13 +1,13 @@
-package com.antplatform.admin.web.biz.user;
+package com.antplatform.admin.web.biz.basic;
 
 import com.antplatform.admin.api.LoginMgtApi;
-import com.antplatform.admin.api.UserMgtApi;
 import com.antplatform.admin.api.dto.LoginDTO;
 import com.antplatform.admin.api.request.UserMgtSpec;
 import com.antplatform.admin.api.request.UserSpec;
 import com.antplatform.admin.common.dto.Response;
 import com.antplatform.admin.common.dto.Responses;
-import com.antplatform.admin.web.entity.user.UserRequest;
+import com.antplatform.admin.web.biz.basic.LoginBiz;
+import com.antplatform.admin.web.entity.basic.LoginRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service("LoginBiz")
-public class LoginBizImpl implements LoginBiz{
+public class LoginBizImpl implements LoginBiz {
 
     @Autowired
     private LoginMgtApi loginMgtApi;
@@ -73,15 +73,15 @@ public class LoginBizImpl implements LoginBiz{
     /**
      * 注册
      *
-     * @param userRequest
+     * @param loginRequest
      * @return
      */
     @Override
-    public Response<String> register(UserRequest userRequest) {
+    public Response<String> register(LoginRequest loginRequest) {
         try {
             UserMgtSpec userMgtSpec = new UserMgtSpec();
-            userMgtSpec.setUsername(userRequest.getUsername());
-            userMgtSpec.setPassword(userRequest.getPassword());
+            userMgtSpec.setUsername(loginRequest.getUsername());
+            userMgtSpec.setPassword(loginRequest.getPassword());
             return loginMgtApi.register(userMgtSpec);
         }catch (Exception e){
             log.error(String.format("invoke loginMgtApi.submitLogout exception, spec=%", ""), e);

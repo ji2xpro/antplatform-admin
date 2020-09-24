@@ -1,9 +1,9 @@
-package com.antplatform.admin.web.biz.user;
+package com.antplatform.admin.web.biz.basic;
 
 import com.antplatform.admin.api.dto.LoginDTO;
 import com.antplatform.admin.api.request.UserSpec;
 import com.antplatform.admin.common.dto.Response;
-import com.antplatform.admin.web.entity.user.UserRequest;
+import com.antplatform.admin.web.entity.basic.LoginRequest;
 
 /**
  * @author: maoyan
@@ -40,8 +40,8 @@ public interface LoginBiz {
     /**
      * 注册
      *
-     * @param userRequest
+     * @param loginRequest
      * @return
      */
-    Response<String> register(UserRequest userRequest);
+    Response<String> register(LoginRequest loginRequest);
 }

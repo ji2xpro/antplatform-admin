@@ -1,4 +1,4 @@
-package com.antplatform.admin.web.biz.user;
+package com.antplatform.admin.web.biz.system.permission;
 
 import com.antplatform.admin.api.UserMgtApi;
 import com.antplatform.admin.api.dto.UserDTO;
@@ -6,6 +6,7 @@ import com.antplatform.admin.api.request.UserMgtSpec;
 import com.antplatform.admin.common.dto.Response;
 import com.antplatform.admin.common.dto.Responses;
 import com.antplatform.admin.common.enums.ResponseCode;
+import com.antplatform.admin.web.biz.system.permission.UserBiz;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ import org.springframework.stereotype.Service;
 //@Component
 @Slf4j
 @Service("UserBiz")
-public class UserBizImpl implements UserBiz{
+public class UserBizImpl implements UserBiz {
 
     @Autowired
     private UserMgtApi userMgtApi;
@@ -38,7 +39,7 @@ public class UserBizImpl implements UserBiz{
         try {
             return userMgtApi.queryUser(userMgtSpec);
         }catch (Exception e){
-            log.error(String.format("invoke userMgtApi.queryUser exception, spec=%", userMgtSpec), e);
+            log.error(String.format("invoke userMgtApi.queryUser exception, spec = %s", userMgtSpec), e);
             return Responses.requestTimeout();
         }
     }
@@ -56,7 +57,7 @@ public class UserBizImpl implements UserBiz{
         try {
             return userMgtApi.queryUserRole(userMgtSpec);
         }catch (Exception e){
-            log.error(String.format("invoke userMgtApi.queryUserRole exception, spec=%", userMgtSpec), e);
+            log.error(String.format("invoke userMgtApi.queryUserRole exception, spec = %s", userMgtSpec), e);
             return Responses.fail(ResponseCode.REQUEST_TIMEOUT.getCode(), "查询用户详情服务超时");
         }
     }
@@ -72,7 +73,7 @@ public class UserBizImpl implements UserBiz{
         try {
             return userMgtApi.queryUserInfo(id);
         }catch (Exception e){
-            log.error(String.format("invoke userMgtApi.queryUserInfo exception, spec=%", id), e);
+            log.error(String.format("invoke userMgtApi.queryUserInfo exception, spec = %s", id), e);
             return Responses.fail(ResponseCode.REQUEST_TIMEOUT.getCode(), "查询用户详情服务超时");
         }
     }

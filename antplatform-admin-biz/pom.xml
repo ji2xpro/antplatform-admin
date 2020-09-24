@@ -78,6 +78,32 @@
         <!--</dependency>-->
 
 
+        <!--<dependency>-->
+            <!--<groupId>com.dianping.zebra</groupId>-->
+            <!--<artifactId>zebra-api</artifactId>-->
+            <!--<version>2.10.7.5</version>-->
+        <!--</dependency>-->
+
+        <!--&lt;!&ndash; zebra dao start &ndash;&gt;-->
+        <!--<dependency>-->
+            <!--<groupId>com.dianping.zebra</groupId>-->
+            <!--<artifactId>zebra-dao</artifactId>-->
+            <!--<version>0.3.2</version>-->
+            <!--<exclusions>-->
+                <!--<exclusion>-->
+                    <!--<artifactId>mybatis</artifactId>-->
+                    <!--<groupId>org.mybatis</groupId>-->
+                <!--</exclusion>-->
+                <!--<exclusion>-->
+                    <!--<artifactId>mybatis-spring</artifactId>-->
+                    <!--<groupId>org.mybatis</groupId>-->
+                <!--</exclusion>-->
+                <!--<exclusion>-->
+                    <!--<artifactId>zebra-api</artifactId>-->
+                    <!--<groupId>com.dianping.zebra</groupId>-->
+                <!--</exclusion>-->
+            <!--</exclusions>-->
+        <!--</dependency>-->
 
     </dependencies>
 

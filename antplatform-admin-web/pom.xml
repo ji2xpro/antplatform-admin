@@ -47,12 +47,12 @@
         <dependency>
             <groupId>com.antplatform</groupId>
             <artifactId>antplatform-admin-common</artifactId>
-        </dependency>
+		</dependency>
 
         <dependency>
             <groupId>com.antplatform</groupId>
             <artifactId>antplatform-admin-biz</artifactId>
-        </dependency>
+		</dependency>
 
         <dependency>
             <groupId>com.antplatform</groupId>

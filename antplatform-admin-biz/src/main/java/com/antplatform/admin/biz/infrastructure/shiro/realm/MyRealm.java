@@ -10,8 +10,8 @@ import com.antplatform.admin.biz.infrastructure.shiro.jwt.JWTToken;
 import com.antplatform.admin.biz.model.Permission;
 import com.antplatform.admin.biz.model.Role;
 import com.antplatform.admin.biz.model.User;
-import com.antplatform.admin.biz.service.RolePermissionService;
-import com.antplatform.admin.biz.service.UserRoleService;
+import com.antplatform.admin.biz.service.PermissionService;
+import com.antplatform.admin.biz.service.RoleService;
 import com.antplatform.admin.biz.service.UserService;
 import com.antplatform.admin.common.base.component.JwtComponent;
 import lombok.extern.slf4j.Slf4j;
@@ -50,10 +50,10 @@ public class MyRealm extends AuthorizingRealm {
     private UserService userService;
 
     @Autowired
-    private UserRoleService userRoleService;
+    private RoleService roleService;
 
     @Autowired
-    private RolePermissionService rolePermissionService;
+    private PermissionService permissionService;
 
     @Autowired
     private JwtComponent jwtComponent;
@@ -156,7 +156,7 @@ public class MyRealm extends AuthorizingRealm {
         // 查询用户权限
         UserSpec userSpec = new UserSpec();
         userSpec.setUserId(userId);
-        Collection<Role> roleList = userRoleService.findBySpec(userSpec);
+        Collection<Role> roleList = roleService.findBySpec(userSpec);
         // 查询用户所在组织权限(暂不启用)
         // List<Role> orgRoleList = organizationRoleService.queryRolesByOrganizationId( );
         for (Role role : roleList) {
@@ -167,7 +167,7 @@ public class MyRealm extends AuthorizingRealm {
             }
             RoleSpec roleSpec = new RoleSpec();
             roleSpec.setRoleId(role.getId());
-            Collection<Permission> permissionList = rolePermissionService.findBySpec(roleSpec);
+            Collection<Permission> permissionList = permissionService.findBySpec(roleSpec);
             if (!CollectionUtils.isEmpty(permissionList)) {
                 for (Permission perm : permissionList) {
                     if (!StringUtils.isEmpty(perm.getKeypoint())) {

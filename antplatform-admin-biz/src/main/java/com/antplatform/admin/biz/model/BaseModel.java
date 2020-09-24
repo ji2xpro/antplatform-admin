@@ -16,10 +16,10 @@ import java.util.Date;
 @Data
 public class BaseModel extends AbstractDomainObject implements Serializable{
 
-    @Column(name = "create_time")
+    @Column(name = "create_time",insertable = false)
     private Date createTime;
 
-    @Column(name = "update_time")
+    @Column(name = "update_time",insertable = false)
     private Date updateTime;
 
     @Override

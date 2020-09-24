@@ -8,6 +8,7 @@ package com.antplatform.admin.common.enums;
 public interface DataType {
     public static final String STRING = "String";
     public static final String INT = "int";
+    public static final String INTEGER = "Integer";
     public static final String LONG = "long";
     public static final String DOUBLE = "double";
     public static final String FLOAT = "float";

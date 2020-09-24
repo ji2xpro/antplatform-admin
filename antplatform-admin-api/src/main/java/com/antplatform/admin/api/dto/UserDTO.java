@@ -4,7 +4,6 @@ import com.antplatform.admin.common.dto.BaseDTO;
 import lombok.Data;
 
 import java.util.Collection;
-import java.util.List;
 
 /**
  * @author: maoyan
@@ -13,11 +12,12 @@ import java.util.List;
  */
 @Data
 public class UserDTO extends BaseDTO {
-    String token;
+    private String token;
 
-    Collection<String> roles;
-    String introduction;
-    String avatar;
-    String name;
+    private Collection<String> roles;
+    private Collection<PermissionDTO> resources;
+    private String introduction;
+    private String avatar;
+    private String name;
 
 }

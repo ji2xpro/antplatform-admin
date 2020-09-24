@@ -26,6 +26,13 @@ public class Permission extends BaseModel implements Serializable {
     private String name;
 
     /**
+     * 别名
+     */
+    @Column(name = "alias")
+    @ApiModelProperty(value="alias别名")
+    private String alias;
+
+    /**
      * 权限父类ID
      */
     @Column(name = "parent_id")
@@ -61,11 +68,18 @@ public class Permission extends BaseModel implements Serializable {
     private String path;
 
     /**
-     * 网址
+     * 资源路径
      */
     @Column(name = "url")
-    @ApiModelProperty(value="url网址")
+    @ApiModelProperty(value="url资源路径")
     private String url;
+
+    /**
+     * 网页名称
+     */
+    @Column(name = "page_name")
+    @ApiModelProperty(value="pageName网页名称")
+    private String pageName;
 
     /**
      * 优先级
@@ -112,12 +126,14 @@ public class Permission extends BaseModel implements Serializable {
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
         sb.append(", name=").append(name);
+        sb.append(", alias=").append(alias);
         sb.append(", parentId=").append(parentId);
         sb.append(", keypoint=").append(keypoint);
         sb.append(", type=").append(type);
         sb.append(", icon=").append(icon);
         sb.append(", path=").append(path);
         sb.append(", url=").append(url);
+        sb.append(", pageName=").append(pageName);
         sb.append(", level=").append(level);
         sb.append(", description=").append(description);
         sb.append(", status=").append(status);

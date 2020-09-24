@@ -12,5 +12,5 @@ import java.util.Base64;
  */
 @Data
 public class LoginDTO extends BaseDTO {
-    String token;
+    private String token;
 }

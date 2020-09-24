@@ -14,9 +14,10 @@ import com.antplatform.admin.common.result.AjaxCode;
 import com.antplatform.admin.common.result.AjaxResult;
 import com.antplatform.admin.common.utils.captcha.GifCaptcha;
 import com.antplatform.admin.common.utils.captcha.util.CaptchaUtil;
-import com.antplatform.admin.web.biz.user.LoginBiz;
-import com.antplatform.admin.web.biz.user.UserBiz;
-import com.antplatform.admin.web.entity.user.UserRequest;
+import com.antplatform.admin.web.biz.basic.LoginBiz;
+import com.antplatform.admin.web.biz.system.permission.UserBiz;
+import com.antplatform.admin.web.entity.basic.LoginRequest;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
@@ -40,6 +41,7 @@ import javax.servlet.http.HttpServletResponse;
  * @description:
  */
 @RestController
+@Api(value = "LoginController|登录鉴权相关的前端控制器")
 public class LoginAction {
     @Autowired
     private UserBiz userBiz;
@@ -68,12 +70,12 @@ public class LoginAction {
     @PostMapping(value = "/user/login")
     @NoAuthentication
     @ApiOperation(value = "执行登录", notes = "返回token")
-    public AjaxResult<LoginDTO> login(@RequestBody UserRequest userRequest, HttpServletRequest request) {
+    public AjaxResult<LoginDTO> login(@RequestBody LoginRequest loginRequest, HttpServletRequest request) {
         // 对 html 标签进行转义，防止 XSS 攻击
-        String username = HtmlUtils.htmlEscape(userRequest.getUsername());
-        String password = userRequest.getPassword();
-        String vcode = userRequest.getVcode();
-        String verKey = userRequest.getVerkey();
+        String username = HtmlUtils.htmlEscape(loginRequest.getUsername());
+        String password = loginRequest.getPassword();
+        String vcode = loginRequest.getVcode();
+        String verKey = loginRequest.getVerkey();
 
         if (!CaptchaUtil.isVerified(vcode, verKey, request)) {
             return AjaxResult.createFailedResult(ResponseCode.INVALID_RE_VCODE);
@@ -142,10 +144,10 @@ public class LoginAction {
 
     @PostMapping(value = "/user/register")
     @NoAuthentication
-    public AjaxResult<String> register(@RequestBody UserRequest userRequest) {
+    public AjaxResult<String> register(@RequestBody LoginRequest loginRequest) {
         // 对 html 标签进行转义，防止 XSS 攻击
-        String username = HtmlUtils.htmlEscape(userRequest.getUsername());
-        String password = userRequest.getPassword();
+        String username = HtmlUtils.htmlEscape(loginRequest.getUsername());
+        String password = loginRequest.getPassword();
 
         if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
             return AjaxResult.createFailedResult(AjaxCode.ERROR_CODE, "参数错误");
