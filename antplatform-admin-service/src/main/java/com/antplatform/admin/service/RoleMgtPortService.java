@@ -45,7 +45,6 @@ public class RoleMgtPortService implements RoleMgtApi {
     @Autowired
     private RoleMapper roleMapper;
 
-
     @Autowired
     private RolePermissionMapper rolePermissionMapper;
 
@@ -74,8 +73,8 @@ public class RoleMgtPortService implements RoleMgtApi {
     public Response<RoleDTO> findBySpec(RoleSpec spec) {
         Role role = roleService.findBySpec(spec);
 
-        if (role == null){
-            return Responses.fail(ResponseCode.VALIDATION_ERROR.getCode(),"查询用户信息失败");
+        if (role == null) {
+            return Responses.fail(ResponseCode.VALIDATION_ERROR.getCode(), "查询用户信息失败");
         }
         RoleDTO roleDTO = roleMapper.toDto(role);
 
@@ -90,12 +89,11 @@ public class RoleMgtPortService implements RoleMgtApi {
      */
     @Override
     public Response<Boolean> saveOrUpdate(RoleSpec spec) {
-
         Role role = roleMapper.commandToEntity(spec);
 
         Boolean temp = roleService.saveOrUpdate(role);
-        if (!temp){
-            return Responses.fail(ResponseCode.VALIDATION_ERROR.getCode(),"新增或更新角色信息失败");
+        if (!temp) {
+            return Responses.fail(ResponseCode.VALIDATION_ERROR.getCode(), "新增或更新角色信息失败");
         }
         return Responses.of(temp);
     }
@@ -111,7 +109,7 @@ public class RoleMgtPortService implements RoleMgtApi {
         Collection<RolePermission> rolePermissions = new ArrayList<>();
 
         List<RolePermissionDTO> addList = spec.getAddResources();
-        if (!CollectionUtils.isEmpty(addList)){
+        if (!CollectionUtils.isEmpty(addList)) {
             Collection<RolePermission> adds = rolePermissionMapper.commandToEntity(spec.getAddResources());
             adds.forEach(add -> add.setIsDelete(IsDeleteStatus.EXITS.getCode()));
 
@@ -119,13 +117,12 @@ public class RoleMgtPortService implements RoleMgtApi {
         }
 
         List<RolePermissionDTO> delList = spec.getDelResources();
-        if (!CollectionUtils.isEmpty(delList)){
+        if (!CollectionUtils.isEmpty(delList)) {
             Collection<RolePermission> deletes = rolePermissionMapper.commandToEntity(spec.getDelResources());
             deletes.forEach(delete -> delete.setIsDelete(IsDeleteStatus.DELETED.getCode()));
 
             rolePermissions.addAll(deletes);
         }
-
         return Responses.of(roleService.assignPermission(rolePermissions));
     }
 

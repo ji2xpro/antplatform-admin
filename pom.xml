@@ -71,6 +71,12 @@
                 <version>${springboot.version}</version>
                 <scope>provided</scope>
             </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-aop</artifactId>
+                <version>${springboot.version}</version>
+            </dependency>
             <!-- mybatis框架 -->
             <dependency>
                 <groupId>org.mybatis.spring.boot</groupId>
@@ -180,15 +186,6 @@
                 <version>3.10</version>
             </dependency>
 
-
-
-
-            <!--&lt;!&ndash; shiro &ndash;&gt;-->
-            <!--<dependency>-->
-                <!--<groupId>org.apache.shiro</groupId>-->
-                <!--<artifactId>shiro-spring</artifactId>-->
-                <!--<version>1.3.2</version>-->
-            <!--</dependency>-->
             <!-- hsqldb -->
             <dependency>
                 <groupId>org.hsqldb</groupId>
@@ -202,12 +199,6 @@
                 <!--<scope>provided</scope>-->
                 <!--<optional>true</optional>-->
             </dependency>
-
-            <!--<dependency>-->
-                <!--<groupId>tk.mybatis</groupId>-->
-                <!--<artifactId>mapper</artifactId>-->
-                <!--<version>4.1.5</version>-->
-            <!--</dependency>-->
 
             <!--通用mapper-->
             <dependency>
@@ -229,12 +220,11 @@
                 <version>2.13.0</version>
             </dependency>
 
-
             <!-- shiro 相关包 -->
             <dependency>
                 <groupId>org.apache.shiro</groupId>
                 <artifactId>shiro-spring</artifactId>
-                <version>1.5.3</version>
+                <version>1.4.0</version>
             </dependency>
             <dependency>
                 <groupId>org.crazycake</groupId>
@@ -248,7 +238,6 @@
                 <artifactId>java-jwt</artifactId>
                 <version>3.10.3</version>
             </dependency>
-
 
             <dependency>
                 <groupId>com.google.guava</groupId>
@@ -279,8 +268,6 @@
                 <artifactId>fastjson</artifactId>
                 <version>1.2.73</version>
             </dependency>
-
-
 
         </dependencies>
     </dependencyManagement>

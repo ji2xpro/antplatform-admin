@@ -26,6 +26,7 @@ public class LoginBizImpl implements LoginBiz {
 
     /**
      * 登录
+     *
      * @param userSpec
      * @return
      */
@@ -33,8 +34,8 @@ public class LoginBizImpl implements LoginBiz {
     public Response<LoginDTO> submitLogin(UserSpec userSpec) {
         try {
             return loginMgtApi.submitLogin(userSpec);
-        }catch (Exception e){
-            log.error(String.format("invoke loginMgtApi.submitLogin exception, spec=%", userSpec), e);
+        } catch (Exception e) {
+            log.error(String.format("invoke loginMgtApi.submitLogin exception, spec= %s", userSpec), e);
             return Responses.requestTimeout();
         }
     }
@@ -48,8 +49,8 @@ public class LoginBizImpl implements LoginBiz {
     public Response<Boolean> submitLogout() {
         try {
             return loginMgtApi.submitLogout();
-        }catch (Exception e){
-            log.error(String.format("invoke loginMgtApi.submitLogout exception, spec=%", ""), e);
+        } catch (Exception e) {
+            log.error(String.format("invoke loginMgtApi.submitLogout exception, spec= %s", ""), e);
             return Responses.requestTimeout();
         }
     }
@@ -64,7 +65,7 @@ public class LoginBizImpl implements LoginBiz {
     public Response<Object> checkName(String username) {
         try {
             return loginMgtApi.checkName(username);
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error(String.format("invoke loginMgtApi.submitLogout exception, spec=%", ""), e);
             return Responses.requestTimeout();
         }
@@ -83,7 +84,7 @@ public class LoginBizImpl implements LoginBiz {
             userMgtSpec.setUsername(loginRequest.getUsername());
             userMgtSpec.setPassword(loginRequest.getPassword());
             return loginMgtApi.register(userMgtSpec);
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error(String.format("invoke loginMgtApi.submitLogout exception, spec=%", ""), e);
             return Responses.requestTimeout();
         }

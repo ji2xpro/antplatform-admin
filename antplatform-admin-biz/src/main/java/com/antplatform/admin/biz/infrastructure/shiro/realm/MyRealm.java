@@ -14,6 +14,7 @@ import com.antplatform.admin.biz.service.PermissionService;
 import com.antplatform.admin.biz.service.RoleService;
 import com.antplatform.admin.biz.service.UserService;
 import com.antplatform.admin.common.base.component.JwtComponent;
+import com.antplatform.admin.common.utils.JWTUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -67,75 +68,8 @@ public class MyRealm extends AuthorizingRealm {
     }
 
     /**
-     * 提供账户信息返回认证信息（用户的角色信息集合<br>
-     * 默认使用此方法进行用户名正确与否验证，错误抛出异常即可。
-     *
-     * @param authenticationToken
-     * @return
-     * @throws AuthenticationException
-     */
-    @Override
-    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
-        log.info("开始进行身份认证......");
-
-        if (null == userService) {
-            this.userService = SpringContextBean.getBean(UserService.class);
-        }
-        String token = (String) authenticationToken.getCredentials();
-        // 解密token获得username，用于和数据库进行对比
-        String account = jwtComponent.getUserAccount(token);
-        if (account == null) {
-            throw new UnauthorizedException("token invalid");
-        }
-        // 通过username从数据库中查找User对象.
-        // 实际项目中，这里可以根据实际情况做缓存，如果不做，Shiro自己也是有时间间隔机制，2分钟内不会重复执行该方法
-        User user = userService.queryByUsername(account);
-        if (user == null) {
-//            throw new UnauthorizedException("User didn't existed!");
-            throw new UnknownAccountException("账号不存在！");
-        }
-
-        if (user.getStatus() != null && UserStatus.DISABLE.getCode() == user.getStatus()) {
-            throw new LockedAccountException("帐号已被锁定，禁止登录！");
-        }
-
-        if (!jwtComponent.verify(token, account, user.getPassword())) {
-            throw new UnauthorizedException("Username or password error");
-        }
-        String userString = JSONObject.toJSONString(user);
-
-        // 如果身份认证验证成功，返回一个 AuthenticationInfo 实现；
-        return new SimpleAuthenticationInfo(userString, token, this.getName());
-
-//        //获取用户的输入的账号
-//        String userName = (String) authenticationToken.getPrincipal();
-//
-//        // 通过username从数据库中查找User对象.
-//        // 实际项目中，这里可以根据实际情况做缓存，如果不做，Shiro自己也是有时间间隔机制，2分钟内不会重复执行该方法
-//        User user = userService.queryByUsername(userName);
-//        if (Objects.isNull(user)) {
-//            throw new UnknownAccountException("账号不存在！");
-//        }
-//
-//        if (user.getStatus() != null && UserStatus.DISABLE.getCode() == user.getStatus()) {
-//            throw new LockedAccountException("帐号已被锁定，禁止登录！");
-//        }
-//
-//        // 如果身份认证验证成功，返回一个 AuthenticationInfo 实现；
-//        return new SimpleAuthenticationInfo(
-//                // 这里传入的是user对象，比对的是用户名，直接传入用户名也没错，但是在授权部分就需要自己重新从数据库里取权限
-//                user,
-//                // 密码
-//                user.getPassword(),
-//                // salt = username + salt
-//                ByteSource.Util.bytes(userName),
-//                // realm name
-//                getName()
-//        );
-    }
-
-
-    /**
+     * 授权认证<br>
+     * <p>
      * 只有当需要检测用户权限的时候才会调用此方法，例如checkRole,checkPermission之类的
      *
      * @param principalCollection
@@ -211,4 +145,79 @@ public class MyRealm extends AuthorizingRealm {
 //        }
 //        return authorizationInfo;
     }
+
+    /**
+     * 身份认证<br>
+     * <p>
+     * Shiro中，最终是通过 Realm 来获取应用程序中的用户、角色及权限信息的<br>
+     * 默认使用此方法进行用户名正确与否验证，错误抛出异常即可。
+     *
+     * @param authenticationToken
+     * @return 返回封装了用户信息的 AuthenticationInfo 实例
+     * @throws AuthenticationException
+     */
+    @Override
+    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
+        log.info("开始进行身份认证......");
+
+        if (null == userService) {
+            this.userService = SpringContextBean.getBean(UserService.class);
+        }
+        String token = (String) authenticationToken.getCredentials();
+        // 解密token获得username，用于和数据库进行对比
+        String account = JWTUtil.getUserAccount(token);
+        if (account == null) {
+            throw new UnauthorizedException("token invalid");
+        }
+        // 通过username从数据库中查找User对象.
+        // 实际项目中，这里可以根据实际情况做缓存，如果不做，Shiro自己也是有时间间隔机制，2分钟内不会重复执行该方法
+        UserSpec userSpec = new UserSpec();
+        userSpec.setUsername(account);
+        User user = userService.findBySpec(userSpec);
+//        User user = userService.queryByUsername(account);
+        if (user == null) {
+//            throw new UnauthorizedException("User didn't existed!");
+            throw new UnknownAccountException("账号不存在！");
+        }
+
+        if (user.getStatus() != null && UserStatus.DISABLE.getCode() == user.getStatus()) {
+            throw new LockedAccountException("帐号已被锁定，禁止登录！");
+        }
+
+        if (!JWTUtil.verify(token, account, user.getPassword())) {
+            throw new UnauthorizedException("Username or password error");
+        }
+        String userString = JSONObject.toJSONString(user);
+
+        // 如果身份认证验证成功，返回一个 AuthenticationInfo 实现；
+        return new SimpleAuthenticationInfo(userString, token, this.getName());
+
+//        //获取用户的输入的账号
+//        String userName = (String) authenticationToken.getPrincipal();
+//
+//        // 通过username从数据库中查找User对象.
+//        // 实际项目中，这里可以根据实际情况做缓存，如果不做，Shiro自己也是有时间间隔机制，2分钟内不会重复执行该方法
+//        User user = userService.queryByUsername(userName);
+//        if (Objects.isNull(user)) {
+//            throw new UnknownAccountException("账号不存在！");
+//        }
+//
+//        if (user.getStatus() != null && UserStatus.DISABLE.getCode() == user.getStatus()) {
+//            throw new LockedAccountException("帐号已被锁定，禁止登录！");
+//        }
+//
+//        // 如果身份认证验证成功，返回一个 AuthenticationInfo 实现；
+//        return new SimpleAuthenticationInfo(
+//                // 这里传入的是user对象，比对的是用户名，直接传入用户名也没错，但是在授权部分就需要自己重新从数据库里取权限
+//                user,
+//                // 密码
+//                user.getPassword(),
+//                // salt = username + salt
+//                ByteSource.Util.bytes(userName),
+//                // realm name
+//                getName()
+//        );
+    }
+
+
 }

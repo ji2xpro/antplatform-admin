@@ -33,6 +33,7 @@ public class Md5Util {
     public static void main(String[] args) {
         System.out.println(encrypt("123456","admin"));
         System.out.println(encrypt(encrypt("123456","admin")));
+        System.out.println(encrypt(encrypt("123456","editor")));
     }
 
 }

@@ -84,10 +84,10 @@ public class LoginAction {
         if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
             return AjaxResult.createFailedResult(ResponseCode.ERROR);
         }
-//        Response<UserDTO> response = userBiz.queryUser(username,password);
 
         UserSpec userSpec = new UserSpec();
         userSpec.setUsername(username);
+        userSpec.setPassword(password);
         Response<LoginDTO> response = loginBiz.submitLogin(userSpec);
 
         if (response.isSuccess()) {
@@ -99,15 +99,6 @@ public class LoginAction {
     @GetMapping(value = "/user/info")
     @RequiresAuthentication
     @ApiOperation(value = "登录后获取用户个人信息")
-//    public AjaxResult<UserDTO> getUserInfo(@RequestParam String token){
-//        Response<UserDTO> response = userBiz.queryUserRole(token);
-//
-//        if (response.isSuccess()) {
-//            return AjaxResult.createSuccessResult(response.getData());
-//        }
-//        return AjaxResult.createFailedResult(AjaxCode.ERROR_CODE,"");
-//    }
-
     public AjaxResult<UserDTO> getUserInfo(@ApiIgnore @CurrentUser User user) {
         int userId = user.getId();
         Response<UserDTO> response = userBiz.queryUserInfo(userId);
@@ -152,8 +143,6 @@ public class LoginAction {
         if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
             return AjaxResult.createFailedResult(AjaxCode.ERROR_CODE, "参数错误");
         }
-
         return null;
-
     }
 }

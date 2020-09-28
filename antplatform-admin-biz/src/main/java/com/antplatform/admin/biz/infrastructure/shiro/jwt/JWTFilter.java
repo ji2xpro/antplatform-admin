@@ -6,6 +6,7 @@ import com.antplatform.admin.biz.model.User;
 import com.antplatform.admin.biz.service.UserService;
 import com.antplatform.admin.common.base.Constant;
 import com.antplatform.admin.common.base.component.JwtComponent;
+import com.antplatform.admin.common.utils.JWTUtil;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
@@ -76,9 +77,10 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
      */
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
+        //判断请求的请求头是否带上 "Authorization"
         if (isLoginAttempt(request, response)) {
             try {
-                // 执行登录
+                // 如果存在，则进入 executeLogin 方法执行登录，检查 token 是否正确
                 executeLogin(request, response);
                 Subject subject = getSubject(request, response);
                 String[] perms = (String[]) mappedValue;
@@ -98,13 +100,13 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
                     }
 
                 }
-
                 return isPermitted;
             } catch (Exception e) {
                 e.printStackTrace();
                 responseTimeOut(request, response);
             }
         }
+        //如果请求头不存在 Authorization，则可能是执行登陆操作或者是游客状态访问，无需检查 token，直接返回 true
         return true;
     }
 
@@ -112,7 +114,7 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
         if (this.userService == null) {
             this.userService = SpringContextBean.getBean(UserService.class);
         }
-        String userAccount = jwtComponent.getUserAccount(String.valueOf(token.getCredentials()));
+        String userAccount = JWTUtil.getUserAccount(String.valueOf(token.getCredentials()));
 
         UserSpec userSpec = new UserSpec();
         userSpec.setUsername(userAccount);

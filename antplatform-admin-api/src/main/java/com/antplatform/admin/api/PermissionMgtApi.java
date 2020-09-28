@@ -18,22 +18,19 @@ import java.util.List;
  * @description:
  */
 public interface PermissionMgtApi {
-
     /**
-     * 查询角色列表
+     * 查询权限列表
      * @param spec
      * @return
      */
     Response<List<PermissionDTO>> findBySpec(PermissionSpec spec);
 
-
     /**
-     * 查询角色权限
+     * 查询角色权限列表
      * @param roleId
      * @return
      */
     Response<Collection<PermissionDTO>> findBySpec(int roleId);
-
 
     /**
      * 查询角色权限
@@ -41,5 +38,4 @@ public interface PermissionMgtApi {
      * @return
      */
     Response<Collection<RolePermissionDTO>> findBySpec1(int roleId);
-
 }

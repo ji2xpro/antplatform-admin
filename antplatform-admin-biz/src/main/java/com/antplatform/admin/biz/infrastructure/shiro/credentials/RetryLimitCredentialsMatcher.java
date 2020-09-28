@@ -1,5 +1,6 @@
 package com.antplatform.admin.biz.infrastructure.shiro.credentials;
 
+import com.antplatform.admin.api.request.UserSpec;
 import com.antplatform.admin.biz.model.User;
 import com.antplatform.admin.biz.service.UserService;
 import org.apache.shiro.SecurityUtils;
@@ -41,7 +42,11 @@ public class RetryLimitCredentialsMatcher extends CredentialsMatcher{
     public boolean doCredentialsMatch(AuthenticationToken token, AuthenticationInfo info) {
         User shiroUser = (User) info.getPrincipals().getPrimaryPrincipal();
         int userId = shiroUser.getId();
-        User user = userService.queryByUserId(userId);
+//        User user = userService.queryByUserId(userId);
+        UserSpec userSpec = new UserSpec();
+        userSpec.setUserId(userId);
+        User user = userService.findBySpec(userSpec);
+
         String username = user.getUsername();
         // 访问一次，计数一次
         ValueOperations<String, String> opsForValue = redisTemplate.opsForValue();

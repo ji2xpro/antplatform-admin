@@ -12,6 +12,4 @@ import java.util.Collection;
 @Data
 public class PermissionSpec {
     private Integer parentId;
-
-
 }

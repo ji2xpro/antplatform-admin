@@ -25,9 +25,9 @@ public class TestApi {
 
     @Test
     public void test11(){
-        PermissionListSpec permissionListSpec = new PermissionListSpec();
-        Collection<Permission> list = permissionService.findBySpec(permissionListSpec);
-
-        System.out.println(list);
+//        PermissionListSpec permissionListSpec = new PermissionListSpec();
+//        Collection<Permission> list = permissionService.findBySpec(permissionListSpec);
+//
+//        System.out.println(list);
     }
 }

@@ -55,9 +55,8 @@ public class PermissionMgtPortService implements PermissionMgtApi {
     @Autowired
     private RolePermissionMapper rolePermissionMapper;
 
-
     /**
-     * 查询角色列表
+     * 查询权限列表
      *
      * @param spec
      * @return
@@ -75,7 +74,7 @@ public class PermissionMgtPortService implements PermissionMgtApi {
     }
 
     /**
-     * 查询角色权限
+     * 查询角色权限列表
      *
      * @param roleId
      * @return

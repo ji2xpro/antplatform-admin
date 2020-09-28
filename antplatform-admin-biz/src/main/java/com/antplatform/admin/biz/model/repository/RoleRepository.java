@@ -43,16 +43,13 @@ public class RoleRepository {
     @Autowired
     private PermissionService permissionService;
 
+    /**
+     * 分页查询角色列表
+     *
+     * @param spec
+     * @return
+     */
     public PageModel findPageBySpec(RolePageSpec spec) {
-
-        Example example1 = new Example(Role.class);
-        Example.Criteria criteria = example1.createCriteria();
-        criteria.andEqualTo("name","Admin");
-        List<Role> roles = roleMapper.selectByExample(example1);
-
-        System.out.println("======"+roles);
-
-
         PageModel pageModel = new PageModel(spec.getPageNo(), spec.getPageSize());
         Sqls sqls = Sqls.custom();
         if (spec.getId() != null && spec.getId() > 0) {
@@ -75,36 +72,44 @@ public class RoleRepository {
         return pageModel;
     }
 
-    public Role findBySpec(RoleSpec roleSpec){
+    /**
+     * 查询角色信息
+     *
+     * @param roleSpec
+     * @return
+     */
+    public Role findBySpec(RoleSpec roleSpec) {
         Example example = new Example(Role.class);
         Example.Criteria criteria = example.createCriteria();
 
-        if (roleSpec.getRoleId() != null){
-            criteria.andNotEqualTo("id",roleSpec.getRoleId());
+        if (roleSpec.getRoleId() != null) {
+            criteria.andNotEqualTo("id", roleSpec.getRoleId());
         }
-        if (roleSpec.getName() != null){
-            criteria.andEqualTo("name",roleSpec.getName());
+        if (roleSpec.getName() != null) {
+            criteria.andEqualTo("name", roleSpec.getName());
         }
-        if (roleSpec.getKeypoint() != null){
-            criteria.andEqualTo("keypoint",roleSpec.getKeypoint());
+        if (roleSpec.getKeypoint() != null) {
+            criteria.andEqualTo("keypoint", roleSpec.getKeypoint());
         }
 
         List<Role> roles = roleMapper.selectByExample(example);
         return CollectionUtils.isEmpty(roles) ? null : roles.get(0);
     }
 
-    public Boolean saveOrUpdate(Role role){
-
+    /**
+     * 新增或更新角色信息
+     *
+     * @param role
+     * @return
+     */
+    public Boolean saveOrUpdate(Role role) {
         Role oldRole = roleMapper.selectByPrimaryKey(role.getId());
         int index;
-        if (oldRole == null){
-           index =  roleMapper.insertSelective(role);
-        }else {
+        if (oldRole == null) {
+            index = roleMapper.insertSelective(role);
+        } else {
             index = roleMapper.updateByPrimaryKeySelective(role);
         }
-
-
-
 //        Example example = new Example(Role.class);
 //        Example.Criteria criteria = example.createCriteria();
 //        int index = 0;
@@ -115,46 +120,101 @@ public class RoleRepository {
 //
 //             index = roleMapper.updateByExampleSelective(role,example);
 //        }
-        return index != 0 ;
+        return index != 0;
     }
 
-    public Boolean assignPermission(Collection<RolePermission> rolePermissions){
-        Map<Boolean,List<RolePermission>> rolePermMap = rolePermissions.stream().collect(Collectors.partitioningBy(rolePermission -> rolePermission.getIsDelete() == IsDeleteStatus.EXITS.getCode()));
+    /**
+     * 角色分配权限
+     *
+     * @param rolePermissions
+     * @return
+     */
+    public Boolean assignPermission(Collection<RolePermission> rolePermissions) {
+        Map<Boolean, List<RolePermission>> rolePermMap = rolePermissions.stream().collect(Collectors.partitioningBy(rolePermission -> rolePermission.getIsDelete() == IsDeleteStatus.EXITS.getCode()));
 
-
-        if (!rolePermMap.get(Boolean.TRUE).isEmpty()){
+        if (!rolePermMap.get(Boolean.TRUE).isEmpty()) {
             List<RolePermission> newList = rolePermMap.get(Boolean.TRUE);
 
-            Collection<RolePermission> oldList = permissionService.findBySpec(newList.get(0).getRoleId(),null);
+            assign(newList);
 
-            Map<Integer,RolePermission> rolePermissionMap = oldList.stream().collect(Collectors.toMap(RolePermission::getPermissionId,Function.identity()));
-
-            List<RolePermission> insertList = new ArrayList<>();
-            List<RolePermission> updateList = new ArrayList<>();
-
-            for (RolePermission rolePerm: newList) {
-                RolePermission rolePermission = rolePermissionMap.get(rolePerm.getPermissionId());
-                if (rolePermission  == null){
-                    insertList.add(rolePerm);
-                }else {
-                    rolePerm.setId(rolePermission.getId());
-                    updateList.add(rolePerm);
-                }
-            }
-
-            if (!insertList.isEmpty()){
-                rolePermissionMapper.insertList(insertList);
-
-            }
-            if (!updateList.isEmpty()){
-                rolePermissionMapper.bulkUpdateByExampleSelective(updateList);
-            }
-
-//            rolePermissionMapper.insertList(rolePermMap.get(Boolean.TRUE));
+//            Collection<RolePermission> oldList = permissionService.findBySpec(newList.get(0).getRoleId(), null);
+//
+//            Map<Integer, RolePermission> oldMap = oldList.stream().collect(Collectors.toMap(RolePermission::getPermissionId, Function.identity()));
+//
+//            List<RolePermission> insertList = new ArrayList<>();
+//            List<RolePermission> updateList = new ArrayList<>();
+//
+//            for (RolePermission rolePermission : newList) {
+//                RolePermission isExit = oldMap.get(rolePermission.getPermissionId());
+//                if (isExit == null) {
+//                    insertList.add(rolePermission);
+//                } else {
+//                    rolePermission.setId(isExit.getId());
+//                    updateList.add(rolePermission);
+//                }
+//            }
+//
+//            if (!insertList.isEmpty()) {
+//                rolePermissionMapper.insertList(insertList);
+//
+//            }
+//            if (!updateList.isEmpty()) {
+//                rolePermissionMapper.bulkUpdateByExampleSelective(updateList);
+//            }
         }
-        if (!rolePermMap.get(Boolean.FALSE).isEmpty()){
-            rolePermissionMapper.bulkUpdateByExampleSelective(rolePermMap.get(Boolean.FALSE));
+        if (!rolePermMap.get(Boolean.FALSE).isEmpty()) {
+            List<RolePermission> newList = rolePermMap.get(Boolean.FALSE);
+
+//            Collection<RolePermission> oldList = permissionService.findBySpec(newList.get(0).getRoleId(), IsDeleteStatus.EXITS.getCode());
+//
+//            Map<Integer, RolePermission> oldMap = oldList.stream().collect(Collectors.toMap(RolePermission::getPermissionId, Function.identity()));
+//
+//            List<RolePermission> updateList = new ArrayList<>();
+//
+//            for (RolePermission rolePermission : newList) {
+//                RolePermission isExit = oldMap.get(rolePermission.getPermissionId());
+//                if (isExit != null) {
+//                    rolePermission.setId(isExit.getId());
+//                    updateList.add(rolePermission);
+//                }
+//            }
+//
+//            if (!updateList.isEmpty()) {
+//                rolePermissionMapper.bulkUpdateByExampleSelective(updateList);
+//            }
+            assign(newList);
         }
+        return true;
+    }
+
+    private Boolean assign(List<RolePermission> rolePermissions){
+        List<RolePermission> newList = rolePermissions;
+
+        Collection<RolePermission> oldList = permissionService.findBySpec(newList.get(0).getRoleId(), null);
+
+        Map<Integer, RolePermission> oldMap = oldList.stream().collect(Collectors.toMap(RolePermission::getPermissionId, Function.identity()));
+
+        List<RolePermission> insertList = new ArrayList<>();
+        List<RolePermission> updateList = new ArrayList<>();
+
+        for (RolePermission rolePermission : newList) {
+            RolePermission isExit = oldMap.get(rolePermission.getPermissionId());
+            if (isExit == null) {
+                insertList.add(rolePermission);
+            } else {
+                rolePermission.setId(isExit.getId());
+                updateList.add(rolePermission);
+            }
+        }
+
+        if (!insertList.isEmpty()) {
+            rolePermissionMapper.insertList(insertList);
+
+        }
+        if (!updateList.isEmpty()) {
+            rolePermissionMapper.bulkUpdateByExampleSelective(updateList);
+        }
+
         return true;
     }
 }

@@ -19,8 +19,6 @@ public interface LoginBiz {
      */
     Response<LoginDTO> submitLogin(UserSpec userSpec);
 
-
-
     /**
      * 登出
      *

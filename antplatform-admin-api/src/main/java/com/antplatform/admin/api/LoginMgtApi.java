@@ -19,7 +19,6 @@ public interface LoginMgtApi {
      */
     Response<LoginDTO> submitLogin(UserSpec userSpec);
 
-
     /**
      * 登出
      *
@@ -27,14 +26,12 @@ public interface LoginMgtApi {
      */
     Response<Boolean> submitLogout();
 
-
     /**
      * 校验username是否存在
      * @param username
      * @return
      */
     Response<Object> checkName(String username);
-
 
     /**
      * 注册

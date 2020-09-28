@@ -1,6 +1,5 @@
 package com.antplatform.admin.biz.service;
 
-import com.antplatform.admin.api.enums.IsDeleteStatus;
 import com.antplatform.admin.api.request.PermissionListSpec;
 import com.antplatform.admin.api.request.PermissionSpec;
 import com.antplatform.admin.api.request.RoleSpec;
@@ -15,9 +14,9 @@ import java.util.Collection;
  * @description:
  */
 public interface PermissionService {
-
     /**
      * 查询角色权限
+     *
      * @param roleSpec
      * @return
      */
@@ -31,9 +30,8 @@ public interface PermissionService {
      */
     Collection<Permission> findBySpec(PermissionListSpec permissionListSpec);
 
-
     /**
-     * 获取权限列表
+     * 查询权限列表(根据父节点)
      *
      * @param permissionSpec
      * @return
@@ -41,11 +39,11 @@ public interface PermissionService {
     Collection<Permission> findBySpec(PermissionSpec permissionSpec);
 
     /**
-     * 查询角色权限
+     * 查询角色权限关联
+     *
      * @param roleId
+     * @param isDeleteStatus
      * @return
      */
     Collection<RolePermission> findBySpec(int roleId, Integer isDeleteStatus);
-
-
 }

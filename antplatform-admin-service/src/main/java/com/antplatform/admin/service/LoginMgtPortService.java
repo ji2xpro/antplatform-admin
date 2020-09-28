@@ -6,7 +6,6 @@ import com.antplatform.admin.api.enums.UserStatus;
 import com.antplatform.admin.api.request.UserMgtSpec;
 import com.antplatform.admin.api.request.UserSpec;
 import com.antplatform.admin.biz.infrastructure.shiro.jwt.JWTFilter;
-import com.antplatform.admin.biz.infrastructure.shiro.realm.MyRealm;
 import com.antplatform.admin.biz.model.User;
 import com.antplatform.admin.biz.service.UserService;
 import com.antplatform.admin.common.base.Constant;
@@ -14,6 +13,7 @@ import com.antplatform.admin.common.base.component.JwtComponent;
 import com.antplatform.admin.common.dto.Response;
 import com.antplatform.admin.common.dto.Responses;
 import com.antplatform.admin.common.enums.ResponseCode;
+import com.antplatform.admin.common.utils.JWTUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -56,20 +56,15 @@ public class LoginMgtPortService implements LoginMgtApi {
         if (StringUtils.isEmpty(user)){
             return Responses.fail(ResponseCode.INVALID_USERNAME_PASSWORD);
         }
-
         if (user.getStatus() == UserStatus.DISABLE.getCode()){
             return Responses.fail(ResponseCode.USER_LOCKED);
         }
 
         LoginDTO loginDTO = new LoginDTO();
-
-        String token = jwtComponent.sign(user.getUsername(), user.getPassword(), Constant.ExpTimeType.WEB);
-
+        String token = JWTUtil.sign(user.getUsername(), user.getPassword(), Constant.ExpTimeType.WEB);
         loginDTO.setToken(token);
-//        loginDTO.setToken("admin-token");
 
         return Responses.of(loginDTO);
-
 
 
 //        // 将用户名和密码封装到UsernamePasswordToken
@@ -120,7 +115,9 @@ public class LoginMgtPortService implements LoginMgtApi {
      */
     @Override
     public Response<Object> checkName(String username) {
-        User user =  userService.queryByUsername(username);
+        UserSpec userSpec = new UserSpec();
+        userSpec.setUsername(username);
+        User user = userService.findBySpec(userSpec);
 
         if (user == null){
             return Responses.of(null,"");

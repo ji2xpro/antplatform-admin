@@ -24,18 +24,19 @@ import java.util.List;
  */
 @Slf4j
 @Service("RoleBiz")
-public class RoleBizImpl implements RoleBiz{
+public class RoleBizImpl implements RoleBiz {
 
     @Autowired
     private RoleMgtApi roleMgtApi;
+
     /**
-     * 查询角色列表
+     * 分页查询角色列表
      *
      * @param rolePageSpec
      * @return
      */
     @Override
-    public PagedResponse<RoleDTO> queryRoles(RolePageSpec rolePageSpec) {
+    public PagedResponse<RoleDTO> queryRolePage(RolePageSpec rolePageSpec) {
         try {
             return roleMgtApi.findPageBySpec(rolePageSpec);
         } catch (Exception e) {
@@ -52,10 +53,10 @@ public class RoleBizImpl implements RoleBiz{
      */
     @Override
     public Response<RoleDTO> queryRole(RoleSpec roleSpec) {
-        try{
+        try {
             return roleMgtApi.findBySpec(roleSpec);
-        }catch (Exception e){
-            log.error(String.format("invoke roleMgtApi.findBySpec exception, spec = %s",roleSpec),e);
+        } catch (Exception e) {
+            log.error(String.format("invoke roleMgtApi.findBySpec exception, spec = %s", roleSpec), e);
             return Responses.requestTimeout();
         }
     }
@@ -68,10 +69,10 @@ public class RoleBizImpl implements RoleBiz{
      */
     @Override
     public Response<Boolean> saveRole(RoleSpec roleSpec) {
-        try{
+        try {
             return roleMgtApi.saveOrUpdate(roleSpec);
-        }catch (Exception e){
-            log.error(String.format("invoke roleMgtApi.saveOrUpdate exception, spec = %s",roleSpec),e);
+        } catch (Exception e) {
+            log.error(String.format("invoke roleMgtApi.saveOrUpdate exception, spec = %s", roleSpec), e);
             return Responses.requestTimeout();
         }
     }
@@ -84,10 +85,10 @@ public class RoleBizImpl implements RoleBiz{
      */
     @Override
     public Response<Boolean> saveRolePermission(RolePermissionSpec rolePermissionSpec) {
-        try{
+        try {
             return roleMgtApi.assignPermission(rolePermissionSpec);
-        }catch (Exception e){
-            log.error(String.format("invoke roleMgtApi.assignPermission exception, spec = %s",rolePermissionSpec),e);
+        } catch (Exception e) {
+            log.error(String.format("invoke roleMgtApi.assignPermission exception, spec = %s", rolePermissionSpec), e);
             return Responses.requestTimeout();
         }
     }
@@ -100,10 +101,10 @@ public class RoleBizImpl implements RoleBiz{
      */
     @Override
     public Response<Boolean> delete(RoleSpec roleSpec) {
-        try{
+        try {
             return roleMgtApi.delete(roleSpec);
-        }catch (Exception e){
-            log.error(String.format("invoke roleMgtApi.delete exception, spec = %s",roleSpec),e);
+        } catch (Exception e) {
+            log.error(String.format("invoke roleMgtApi.delete exception, spec = %s", roleSpec), e);
             return Responses.requestTimeout();
         }
     }

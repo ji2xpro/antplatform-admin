@@ -49,7 +49,7 @@ public class PermissionBizImpl implements PermissionBiz{
     }
 
     /**
-     * 查询角色权限
+     * 查询角色权限列表
      *
      * @param roleId
      * @return

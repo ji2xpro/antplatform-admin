@@ -35,86 +35,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     UserRoleMapper userRoleMapper;
 
-
     @Autowired
     UserRepository userRepository;
-
-    /**
-     * 查询指定用户
-     *
-     * @param userMgtSpec
-     * @return
-     */
-    @Override
-    public User getUser(UserMgtSpec userMgtSpec) {
-        Example example = new Example(User.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("username",userMgtSpec.getUsername());
-        criteria.andEqualTo("password",userMgtSpec.getPassword());
-        return userMapper.selectOneByExample(example);
-    }
-
-    /**
-     * 通过userId主键查找
-     *
-     * @param userId
-     * @return
-     */
-    @Override
-    public User queryByUserId(Integer userId) {
-        return userMapper.selectByPrimaryKey(userId);
-    }
-
-    /**
-     * 根据用户名查找
-     *
-     * @param username
-     * @return
-     */
-    @Override
-    public User queryByUsername(String username) {
-        User user = new User();
-        user.setUsername(username);
-        return userMapper.selectOne(user);
-    }
-
-    /**
-     * 查询用户信息
-     * @param userMgtSpec
-     * @return
-     */
-    @Override
-    public UserDTO getUserRole(UserMgtSpec userMgtSpec) {
-        String token = userMgtSpec.getToken();
-        if(StringUtils.isNoneBlank(token)){
-            if ("admin-token".equals(token)){
-                Example example = new Example(UserRole.class);
-                Example.Criteria criteria = example.createCriteria();
-                criteria.andEqualTo("userId",1);
-                UserRole userRole =  userRoleMapper.selectOneByExample(example);
-
-                Example example1 = new Example(Role.class);
-                Example.Criteria criteria1 = example1.createCriteria();
-                criteria1.andEqualTo("id",userRole.getRoleId());
-                Role role =  roleMapper.selectOneByExample(example1);
-
-                if (role == null){
-                    return null;
-                }
-
-                UserDTO userDTO = new UserDTO();
-                List<String> list = new ArrayList<>();
-                list.add(role.getKeypoint());
-                userDTO.setRoles(list);
-                userDTO.setAvatar("https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
-                userDTO.setName(role.getName());
-                userDTO.setIntroduction(role.getIntroduction());
-
-                return userDTO;
-            }
-        }
-        return null;
-    }
 
     /**
      * 查询用户信息

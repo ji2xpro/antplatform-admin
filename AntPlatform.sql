@@ -19,7 +19,7 @@
  执行此脚本，会导致数据库所有数据初始化，初次执行，请慎重！！！！
 */
 
--- DROP DATABASE IF EXISTS AntPlatform;
+# DROP DATABASE IF EXISTS AntPlatform;
 # CREATE DATABASE IF NOT EXISTS AntPlatform DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
 CREATE DATABASE IF NOT EXISTS AntPlatform CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -79,11 +79,6 @@ CREATE TABLE `sys_role` (
 -- Records of sys_role
 -- ----------------------------
 BEGIN;
-# INSERT INTO `sys_role` VALUES (1, 'Super Admin', 'admin', 'I am a super administrator', '超级管理员', 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-# INSERT INTO `sys_role` VALUES (2, 'Admin', 'admin', 'I am an administrator', '管理员', 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-# INSERT INTO `sys_role` VALUES (3, 'Normal Editor', 'editor', 'I am an editor', '普通用户', 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-
-
 INSERT INTO `sys_role` VALUES (1, 'Super Admin', 'super admin', 0, 'I am a super administrator', '超级管理员', 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO `sys_role` VALUES (2, 'Admin', 'admin', 1, 'I am an administrator', '系统管理员', 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO `sys_role` VALUES (3, 'Normal Editor', 'editor', 2, 'I am an editor', '普通用户', 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
@@ -122,10 +117,10 @@ CREATE TABLE `sys_permission` (
   `parent_id` int(11) unsigned DEFAULT NULL COMMENT '权限父类ID',
   `keypoint` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '权限点',
   `type` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '类型,0-模块,1-菜单,2-按钮,3-链接',
-  `icon` varchar(255) COLLATE utf8mb4_unicode_ci  DEFAULT NULL comment '图标',
-  `path` varchar(255) COLLATE utf8mb4_unicode_ci  DEFAULT NULL comment '路径',
-  `url` varchar(255) COLLATE utf8mb4_unicode_ci  DEFAULT NULL comment '资源路径',
-  `page_name` varchar(255) COLLATE utf8mb4_unicode_ci  DEFAULT NULL comment '网页名称',
+  `icon` varchar(255) COLLATE utf8mb4_unicode_ci  DEFAULT NULL COMMENT '图标',
+  `path` varchar(255) COLLATE utf8mb4_unicode_ci  DEFAULT NULL COMMENT '路径',
+  `url` varchar(255) COLLATE utf8mb4_unicode_ci  DEFAULT NULL COMMENT '资源路径',
+  `page_name` varchar(255) COLLATE utf8mb4_unicode_ci  DEFAULT NULL COMMENT '网页名称',
   `level` int(11) unsigned DEFAULT NULL COMMENT '优先级',
   `description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '介绍',
   `status` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '状态,0-启用,-1禁用',
@@ -142,36 +137,20 @@ CREATE TABLE `sys_permission` (
 -- Records of sys_permission
 -- ----------------------------
 BEGIN;
-INSERT INTO `sys_permission` VALUES (1, '基础系统管理', 'system',  0, 'system:mgr', 0, 'system', 'system', 'system', NULL, 1000,'基础系统管理', 0, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_permission` VALUES (2, '系统管理', 'system', 1, 'system:cfg', 1, 'system', 'system', 'Layout', NULL, 1000, '系统管理',  0, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_permission` VALUES (3, '权限管理','permission', 2, 'system:permission', 1, 'permission', 'permission', 'nested', NULL, 1, '权限管理', 0, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_permission` VALUES (1, '基础系统管理', 'system',  0, 'system:mgr', 0, 'system', 'system', 'system', NULL, 1000,'基础系统管理', 0, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_permission` VALUES (2, '系统管理', 'system', 0, 'system:cfg', 0, 'system', 'system', 'Layout', NULL, 1000, '系统管理',  0, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_permission` VALUES (3, '权限管理','permission', 2, 'system:permission', 0, 'permission', 'permission', 'nested', NULL, 1, '权限管理', 0, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO `sys_permission` VALUES (4, '用户管理', 'userTable', 3, 'userTable', 1, 'userTable', 'userTable', 'system/permission/userTable', 'userTable', 1, '用户管理菜单', 0, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO `sys_permission` VALUES (5, '角色管理', 'roleTable', 3, 'roleTable', 1, 'roleTable', 'roleTable', 'system/permission/roleTable', 'roleTable', 2, '角色管理', 0, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO `sys_permission` VALUES (6, '资源管理', 'resourceTable', 3, 'resourceTable', 1, 'resourceTable', 'resourceTable', 'system/permission/resourceTable', 'resourceTable', 3, '资源管理', 0, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO `sys_permission` VALUES (7, '组织管理', 'organizationTable', 3, 'organizationTable', 1, 'organizationTable', 'organizationTable', 'system/permission/organizationTable', 'organizationTable', 4, '组织管理',0, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_permission` VALUES (8, '基础配置', 'config', 2, 'system:base:cfg', 1, 'config', 'config', 'nested','config', 2, '系统配置',0, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_permission` VALUES (8, '基础配置', 'config', 2, 'system:base:cfg', 0, 'config', 'config', 'nested','config', 2, '系统配置',0, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO `sys_permission` VALUES (9, '数据字典', 'dictTable', 8, 'system:config:dict', 1, 'dictTable', 'dictTable', 'system/config/dictTable','dictTable', 1, '数据字典',0, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO `sys_permission` VALUES (10, '定时任务', 'timingtask', 8, 'system:task', 1, 'timingtask', 'https://github.com/xuxueli/xxl-job', 'system/task', NULL, 2, '定时任务',0, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_permission` VALUES (11, '日志管理', 'log', 2, 'system:log:mgr', 1, 'log', 'log', 'nested', NULL, 3, '日志管理', 0, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_permission` VALUES (11, '日志管理', 'log', 2, 'system:log:mgr', 0, 'log', 'log', 'nested', NULL, 3, '日志管理', 0, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO `sys_permission` VALUES (12, '操作日志', 'operationTable', 11, 'system:log:operation', 1, 'operationTable', 'operationTable', 'system/log/operationTable', 'operationTable', 1, '管理员操作日志，只记录重要关键日志，请勿频繁记录，系统运行日志记录到log文件。',0, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_permission` VALUES (13, '系统日志', 'systemTable',11, 'system:log:run', 1, 'systemTable', 'https://my.oschina.net/feinik/blog/1580625', 'system', NULL, 2, '运行日志使用ELK',0, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_permission` VALUES (13, '系统日志', 'systemTable',11, 'system:log:run', 1, 'systemTable', 'https://my.oschina.net/feinik/blog/1580625', 'systemTable', NULL, 2, '运行日志使用ELK',0, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 COMMIT;
-
--- BEGIN;
--- INSERT INTO `sys_permission` VALUES (1, '基础系统管理', 'system',  0, 'system:mgr', 0, 'xitongguanli', 'system', 'system', NULL, 1000,'基础系统管理', 0, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
--- INSERT INTO `sys_permission` VALUES (2, '系统管理', 'system', 1, 'system:cfg', 1, 'xitongguanli', 'system', 'Layout', NULL, 1000, '系统管理',  0, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
--- INSERT INTO `sys_permission` VALUES (3, '权限管理','permission', 2, 'system:permission', 1, 'quanxianguanli', 'permission', 'nested', NULL, 1, '权限管理', 0, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
--- INSERT INTO `sys_permission` VALUES (4, '用户管理', 'userTable', 3, 'userTable', 1, 'yonghuguanli', 'userTable', 'system/permission/userTable', 'userTable', 1, '用户管理菜单', 0, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
--- INSERT INTO `sys_permission` VALUES (5, '角色管理', 'roleTable', 3, 'roleTable', 1, 'jiaoseguanli', 'roleTable', 'system/permission/roleTable', 'roleTable', 2, '角色管理', 0, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
--- INSERT INTO `sys_permission` VALUES (6, '资源管理', 'resourceTable', 3, 'resourceTable', 1, 'quanxianguanli', 'resourceTable', 'system/permission/resourceTable', 'resourceTable', 3, '资源管理', 0, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
--- INSERT INTO `sys_permission` VALUES (7, '组织管理', 'organizationTable', 3, 'organizationTable', 1, 'zuzhiguanli', 'organizationTable', 'system/permission/organizationTable', 'organizationTable', 4, '组织管理',0, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
--- INSERT INTO `sys_permission` VALUES (8, '基础配置', 'systemBase', 2, 'system:base:cfg', 1, 'jichupeizhi', 'systemBase', 'nested','systemBase', 2, '系统配置',0, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
--- INSERT INTO `sys_permission` VALUES (9, '数据字典', 'dictTable', 8, 'system:config:dict', 1, 'shujuzidian', 'dictTable', 'system/common/dict/dictTable','dictTable', 1, '数据字典',0, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
--- INSERT INTO `sys_permission` VALUES (10, '定时任务', 'timingtask', 8, 'system:task', 1, 'timingtask', 'https://github.com/xuxueli/xxl-job', 'system/task', NULL, 2, '定时任务',0, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
--- INSERT INTO `sys_permission` VALUES (11, '日志管理', 'logTable', 2, 'system:log:mgr', 1, 'rizhiguanli', 'system/log', 'nested', NULL, 3, '日志管理', 0, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
--- INSERT INTO `sys_permission` VALUES (12, '操作日志', 'operationLogTable', 11, 'system:log:operation', 1, 'caozuorizhi', 'logTable', 'system/common/log/logTable', 'logTable', 1, '管理员操作日志，只记录重要关键日志，请勿频繁记录，系统运行日志记录到log文件。',0, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
--- INSERT INTO `sys_permission` VALUES (13, '系统日志', 'systemLogTable',11, 'system:log:run', 1, 'xitongrizhi', 'https://my.oschina.net/feinik/blog/1580625', 'system', NULL, 2, '运行日志使用ELK',0, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
--- COMMIT;
 
 -- ----------------------------
 -- Table structure for sys_role_permission
@@ -185,13 +164,13 @@ CREATE TABLE `sys_role_permission` (
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='角色权限关联表';
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='角色权限关联表';
 
 -- ----------------------------
 -- Records of sys_role_permission
 -- ----------------------------
 BEGIN;
-INSERT INTO `sys_role_permission` VALUES (1, 2, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_permission` VALUES (1, 2, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO `sys_role_permission` VALUES (2, 2, 2, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO `sys_role_permission` VALUES (3, 2, 3, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO `sys_role_permission` VALUES (4, 2, 4, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
@@ -202,7 +181,7 @@ INSERT INTO `sys_role_permission` VALUES (8, 2, 8, 0, CURRENT_TIMESTAMP, CURRENT
 INSERT INTO `sys_role_permission` VALUES (9, 2, 9, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO `sys_role_permission` VALUES (10, 2, 10, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO `sys_role_permission` VALUES (11, 2, 11, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_role_permission` VALUES (12, 2, 13, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_permission` VALUES (12, 2, 12, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO `sys_role_permission` VALUES (13, 2, 13, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO `sys_role_permission` VALUES (14, 3, 11, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO `sys_role_permission` VALUES (15, 3, 12, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);

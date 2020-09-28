@@ -18,15 +18,16 @@ import java.util.List;
  */
 public interface RoleBiz {
     /**
-     * 查询角色列表
-     *s
+     * 分页查询角色列表
+     *
      * @param rolePageSpec
      * @return
      */
-    PagedResponse<RoleDTO> queryRoles(RolePageSpec rolePageSpec);
+    PagedResponse<RoleDTO> queryRolePage(RolePageSpec rolePageSpec);
 
     /**
      * 查询角色信息
+     *
      * @param roleSpec
      * @return
      */
@@ -34,14 +35,15 @@ public interface RoleBiz {
 
     /**
      * 保存角色信息
+     *
      * @param roleSpec
      * @return
      */
     Response<Boolean> saveRole(RoleSpec roleSpec);
 
-
     /**
      * 保存角色权限
+     *
      * @param rolePermissionSpec
      * @return
      */
@@ -49,15 +51,11 @@ public interface RoleBiz {
 
     /**
      * 删除角色信息
+     *
      * @param roleSpec
      * @return
      */
     Response<Boolean> delete(RoleSpec roleSpec);
-
-
-
-
-
 
 
 }

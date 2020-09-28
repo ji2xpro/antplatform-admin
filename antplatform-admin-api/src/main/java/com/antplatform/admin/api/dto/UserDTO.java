@@ -12,7 +12,7 @@ import java.util.Collection;
  */
 @Data
 public class UserDTO extends BaseDTO {
-    private String token;
+//    private String token;
 
     private Collection<String> roles;
     private Collection<PermissionDTO> resources;

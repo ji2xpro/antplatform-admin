@@ -31,10 +31,8 @@ public class PermissionServiceImpl implements PermissionService {
     @Autowired
     PermissionMapper permissionMapper;
 
-
     @Autowired
     RolePermissionMapper rolePermissionMapper;
-
 
     @Autowired
     PermissionRepository permissionRepository;
@@ -47,34 +45,11 @@ public class PermissionServiceImpl implements PermissionService {
      */
     @Override
     public Collection<Permission> findBySpec(RoleSpec roleSpec) {
-//        RolePermission rolePermission = new RolePermission();
-//        rolePermission.setRoleId(roleSpec.getRoleId());
-//
-//        List<RolePermission> rolePermissions = rolePermissionMapper.select(rolePermission);
-
         Collection<Permission> permissions = permissionRepository.findBySpec(roleSpec);
 
 //        return permissions.stream().filter(permission -> permission.getType() == 1 && permission.getIsDelete() == 0).collect(Collectors.toList());
 
         return permissions.stream().filter(permission -> permission.getIsDelete() == 0).collect(Collectors.toList());
-
-
-//        Example example = new Example(RolePermission.class);
-//        Example.Criteria criteria = example.createCriteria();
-//        if (roleSpec.getRoleId() > 0){
-//            criteria.andEqualTo("roleId",roleSpec.getRoleId());
-//        }
-//        if (CollectionUtils.isEmpty(roleSpec.getRoleIds())){
-//            criteria.andIn("roleId",roleSpec.getRoleIds());
-//        }
-//
-//        List<RolePermission> rolePermissions = rolePermissionMapper.selectByExample(example);
-//
-//
-//        if (CollectionUtils.isEmpty(rolePermissions)) {
-//            return Collections.emptyList();
-//        }
-//        return permissionMapper.selectByIdList(rolePermissions.stream().map(RolePermission::getPermissionId).collect(Collectors.toList()));
     }
 
     /**
@@ -107,31 +82,33 @@ public class PermissionServiceImpl implements PermissionService {
      */
     @Override
     public Collection<Permission> findBySpec(PermissionSpec permissionSpec) {
-        Example example = new Example(Permission.class);
-        Example.Criteria criteria = example.createCriteria();
+//        Example example = new Example(Permission.class);
+//        Example.Criteria criteria = example.createCriteria();
+//
+//        if (permissionSpec.getParentId() >= 0){
+//            criteria.andEqualTo("parentId",permissionSpec.getParentId());
+//        }
+//        criteria.andEqualTo("isDelete",IsDeleteStatus.EXITS.getCode());
+//
+//        List<Permission> permissions = permissionMapper.selectByExample(example);
+//
+//        Collection<Permission> permissionCollection = new ArrayList<>();
+//        for (Permission p: permissions) {
+//            PermissionSpec spec = new PermissionSpec();
+//            spec.setParentId(p.getId());
+//
+//            permissionCollection = permissionRepository.findBySpec(spec);
+//        }
+//
+//        permissions.addAll(permissionCollection);
 
-        if (permissionSpec.getParentId() >= 0){
-            criteria.andEqualTo("parentId",permissionSpec.getParentId());
-        }
-        criteria.andEqualTo("isDelete",IsDeleteStatus.EXITS.getCode());
-
-        List<Permission> permissions = permissionMapper.selectByExample(example);
-
-        Collection<Permission> permissionCollection = new ArrayList<>();
-        for (Permission p: permissions) {
-            PermissionSpec spec = new PermissionSpec();
-            spec.setParentId(p.getId());
-
-            permissionCollection = permissionRepository.findBySpec(spec);
-        }
-
-        permissions.addAll(permissionCollection);
+        Collection<Permission> permissions = permissionRepository.findBySpec(permissionSpec);
 
         return permissions;
     }
 
     /**
-     * 查询角色权限
+     * 查询角色权限关联
      *
      * @param roleId
      * @return
@@ -148,21 +125,8 @@ public class PermissionServiceImpl implements PermissionService {
             criteria.andEqualTo("isDelete",isDeleteStatus);
         }
 
-//        Example example1 = new Example(Permission.class);
-//        Example.Criteria criteria1 = example1.createCriteria();
-//        criteria1.andEqualTo("type",1);
-//        criteria1.andEqualTo("isDelete",IsDeleteStatus.EXITS.getCode());
-//        List<Permission> permissions = permissionMapper.selectByExample(example1);
-//
-//        List<Integer> permissionIds = new ArrayList<>();
-//        for (Permission p: permissions) {
-//            permissionIds.add(p.getId());
-//        }
-//        criteria.andIn("permissionId",permissionIds);
-
         List<RolePermission> rolePermissions = rolePermissionMapper.selectByExample(example);
 
         return rolePermissions;
     }
-
 }

@@ -34,7 +34,6 @@ public interface RoleService {
      */
     PageModel findPageBySpec(RolePageSpec spec);
 
-
     /**
      * 查询角色信息
      *
@@ -51,14 +50,10 @@ public interface RoleService {
      */
     Boolean saveOrUpdate(Role role);
 
-
     /**
      * 角色分配权限
      * @param rolePermissions
      * @return
      */
-   Boolean assignPermission(Collection<RolePermission> rolePermissions);
-
-
-
+    Boolean assignPermission(Collection<RolePermission> rolePermissions);
 }

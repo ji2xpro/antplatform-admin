@@ -15,23 +15,6 @@ import com.antplatform.admin.common.dto.Response;
  */
 public interface UserBiz {
     /**
-     * 查询指定用户
-     *
-     * @param username
-     * @param password
-     * @return
-     */
-    Response<UserDTO> queryUser(String username, String password);
-
-    /**
-     * 查询用户信息
-     *
-     * @param token
-     * @return
-     */
-    Response<UserDTO> queryUserRole(String token);
-
-    /**
      * 查询用户信息
      *
      * @param id

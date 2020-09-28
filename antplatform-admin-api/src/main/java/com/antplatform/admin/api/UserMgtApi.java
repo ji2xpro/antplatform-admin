@@ -10,21 +10,6 @@ import com.antplatform.admin.common.dto.Response;
  * @description:
  */
 public interface UserMgtApi {
-
-    /**
-     * 查询指定用户
-     * @param userMgtSpec
-     * @return
-     */
-    Response<UserDTO> queryUser(UserMgtSpec userMgtSpec);
-
-    /**
-     * 查询用户信息
-     * @param userMgtSpec
-     * @return
-     */
-    Response<UserDTO> queryUserRole(UserMgtSpec userMgtSpec);
-
     /**
      * 查询用户信息
      * @param id

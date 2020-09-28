@@ -28,12 +28,8 @@ public class PermissionRepository {
     @Autowired
     PermissionMapper permissionMapper;
 
-
     @Autowired
     RolePermissionMapper rolePermissionMapper;
-
-
-
 
     public Collection<Permission> findBySpec(RoleSpec roleSpec) {
 //        RolePermission rolePermission = new RolePermission();
@@ -49,9 +45,9 @@ public class PermissionRepository {
         if (!CollectionUtils.isEmpty(roleSpec.getRoleIds())){
             criteria.andIn("roleId",roleSpec.getRoleIds());
         }
+        criteria.andEqualTo("isDelete",IsDeleteStatus.EXITS.getCode());
 
         List<RolePermission> rolePermissions = rolePermissionMapper.selectByExample(example);
-
 
         if (CollectionUtils.isEmpty(rolePermissions)) {
             return Collections.emptyList();
@@ -63,7 +59,7 @@ public class PermissionRepository {
         Example example = new Example(Permission.class);
         Example.Criteria criteria = example.createCriteria();
 
-        if (permissionSpec.getParentId() > 0){
+        if (permissionSpec.getParentId() != null && permissionSpec.getParentId() >= 0){
             criteria.andEqualTo("parentId",permissionSpec.getParentId());
         }
         criteria.andEqualTo("isDelete",IsDeleteStatus.EXITS.getCode());

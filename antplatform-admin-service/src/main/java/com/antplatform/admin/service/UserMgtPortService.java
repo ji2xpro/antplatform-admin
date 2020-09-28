@@ -55,41 +55,6 @@ public class UserMgtPortService implements UserMgtApi {
     private PermissionMapper permissionMapper;
 
     /**
-     * 查询指定用户
-     *
-     * @param userMgtSpec
-     * @return
-     */
-    @Override
-    public Response<UserDTO> queryUser(UserMgtSpec userMgtSpec) {
-        User user = userService.getUser(userMgtSpec);
-        if (user == null){
-            return Responses.fail(ResponseCode.VALIDATION_ERROR.getCode(),"用户名或密码输入错误");
-        }
-
-        UserDTO userDTO = userMapper.toDto(user);
-        userDTO.setToken("admin-token");
-
-        return Responses.of(userDTO);
-    }
-
-    /**
-     * 查询用户信息
-     *
-     * @param userMgtSpec
-     * @return
-     */
-    @Override
-    public Response<UserDTO> queryUserRole(UserMgtSpec userMgtSpec) {
-        UserDTO userDTO = userService.getUserRole(userMgtSpec);
-
-        if (userDTO == null){
-            return Responses.fail(ResponseCode.VALIDATION_ERROR.getCode(),"");
-        }
-        return Responses.of(userDTO);
-    }
-
-    /**
      * 查询用户信息
      *
      * @param id

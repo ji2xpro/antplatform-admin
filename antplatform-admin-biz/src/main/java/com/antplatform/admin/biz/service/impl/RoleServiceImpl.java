@@ -1,10 +1,8 @@
 package com.antplatform.admin.biz.service.impl;
 
 import com.antplatform.admin.api.request.RolePageSpec;
-import com.antplatform.admin.api.request.RolePermissionSpec;
 import com.antplatform.admin.api.request.RoleSpec;
 import com.antplatform.admin.api.request.UserSpec;
-import com.antplatform.admin.biz.infrastructure.exception.ErrorCode;
 import com.antplatform.admin.biz.mapper.RoleMapper;
 import com.antplatform.admin.biz.mapper.UserRoleMapper;
 import com.antplatform.admin.biz.model.Role;
@@ -13,12 +11,9 @@ import com.antplatform.admin.biz.model.UserRole;
 import com.antplatform.admin.biz.model.repository.RoleRepository;
 import com.antplatform.admin.biz.service.RoleService;
 import com.antplatform.admin.common.dto.PageModel;
-import com.antplatform.admin.common.exception.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
-import tk.mybatis.mapper.entity.Example;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -109,6 +104,4 @@ public class RoleServiceImpl implements RoleService {
 //        }
         return roleRepository.assignPermission(rolePermissions);
     }
-
-
 }
