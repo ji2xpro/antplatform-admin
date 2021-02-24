@@ -1,10 +1,8 @@
 package com.antplatform.admin.api.request;
 
-import com.antplatform.admin.api.dto.RolePermissionDTO;
 import lombok.Data;
 
 import java.util.Collection;
-import java.util.List;
 
 /**
  * @author: maoyan

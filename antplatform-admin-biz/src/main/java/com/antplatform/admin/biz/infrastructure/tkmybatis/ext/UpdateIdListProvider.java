@@ -6,6 +6,8 @@ import tk.mybatis.mapper.mapperhelper.MapperHelper;
 import tk.mybatis.mapper.mapperhelper.SqlHelper;
 
 /**
+ * 批量更新的SqlProvider
+ *
  * @author: maoyan
  * @date: 2020/7/8 19:31:53
  * @description:

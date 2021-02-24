@@ -14,7 +14,7 @@ public class Constant {
     /**
      * 忽略鉴权的方法列表
      */
-    public static Set<String> METHOD_URL_SET = new HashSet<>();
+    public static Set<String> IGNORE_PATH_SET = new HashSet<>();
 
     /**
      * 数组取值
@@ -45,5 +45,21 @@ public class Constant {
 
         public static final String APP = "app";
 
+    }
+
+    /**
+     * 过期时间
+     */
+    public static class ExpireTime {
+        private ExpireTime() {
+        }
+        public static final int TEN_SEC =  10;//10s
+        public static final int THIRTY_SEC =  30;//30s
+        public static final int ONE_MINUTE =  60;//一分钟
+        public static final int THIRTY_MINUTES =  60 * 30;//30分钟
+        public static final int ONE_HOUR = 60 * 60;//一小时
+        public static final int THREE_HOURS = 60 * 60 * 3;//三小时
+        public static final int TWELVE_HOURS =  60 * 60 * 12;//十二小时，单位s
+        public static final int ONE_DAY = 60 * 60 * 24;//二十四小时
     }
 }

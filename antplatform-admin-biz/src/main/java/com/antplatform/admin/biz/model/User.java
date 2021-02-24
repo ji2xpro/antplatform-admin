@@ -68,10 +68,10 @@ public class User extends BaseModel implements Serializable {
     private String remark;
 
     /**
-     * 状态,0-启用,1-禁用
+     * 状态,0-启用,1-停用
      */
     @Column(name = "status")
-    @ApiModelProperty(value="status状态,0-启用,1-禁用")
+    @ApiModelProperty(value="status状态,0-启用,1-停用")
     private Integer status;
 
     /**

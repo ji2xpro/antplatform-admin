@@ -39,7 +39,7 @@ public class ScanNoAuthenticationMethod implements CommandLineRunner {
     public void run(String... args) throws Exception {
         doScanner(scanPackage);
         Set<String> urlAndMethodSet = new HashSet<>();
-        for (String aClassName : Constant.METHOD_URL_SET) {
+        for (String aClassName : Constant.IGNORE_PATH_SET) {
             Class<?> clazz = Class.forName(aClassName);
             String baseUrl = "";
             String[] classUrl = {};
@@ -85,7 +85,7 @@ public class ScanNoAuthenticationMethod implements CommandLineRunner {
                 }
             }
         }
-        Constant.METHOD_URL_SET = urlAndMethodSet;
+        Constant.IGNORE_PATH_SET = urlAndMethodSet;
         logger.info("@NoAuthentication:" + urlAndMethodSet);
     }
 
@@ -131,7 +131,7 @@ public class ScanNoAuthenticationMethod implements CommandLineRunner {
             String str1 = souc.substring(0,souc.indexOf("com"));
 
             String str2 = souc.substring(str1.length(), souc.length());
-            Constant.METHOD_URL_SET.add(str2);
+            Constant.IGNORE_PATH_SET.add(str2);
         }
     }
 }

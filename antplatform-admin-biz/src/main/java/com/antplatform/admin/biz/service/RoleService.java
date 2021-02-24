@@ -51,6 +51,22 @@ public interface RoleService {
     Boolean saveOrUpdate(Role role);
 
     /**
+     * 新增角色信息
+     *
+     * @param role
+     * @return
+     */
+    Boolean create(Role role);
+
+    /**
+     * 更新角色信息
+     *
+     * @param role
+     * @return
+     */
+    Boolean update(Role role);
+
+    /**
      * 角色分配权限
      * @param rolePermissions
      * @return

@@ -33,10 +33,10 @@ public class Permission extends BaseModel implements Serializable {
     private String alias;
 
     /**
-     * 权限父类ID
+     * 父权限id
      */
     @Column(name = "parent_id")
-    @ApiModelProperty(value="parentId权限父类ID")
+    @ApiModelProperty(value="parentId父权限id")
     private Integer parentId;
 
     /**
@@ -89,17 +89,17 @@ public class Permission extends BaseModel implements Serializable {
     private Integer level;
 
     /**
-     * 介绍
+     * 描述
      */
     @Column(name = "description")
-    @ApiModelProperty(value="description介绍")
+    @ApiModelProperty(value="description描述")
     private String description;
 
     /**
-     * 状态,0-启用,-1禁用
+     * 状态,0-启用,1-停用
      */
     @Column(name = "status")
-    @ApiModelProperty(value="status状态,0-启用,-1禁用")
+    @ApiModelProperty(value="status状态,0-启用,1-停用")
     private Integer status;
 
     /**

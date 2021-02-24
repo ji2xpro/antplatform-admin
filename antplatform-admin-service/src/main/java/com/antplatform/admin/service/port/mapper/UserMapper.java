@@ -7,6 +7,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.mapstruct.ReportingPolicy;
 
+import java.util.Collection;
+
 /**
  * @author: maoyan
  * @date: 2020/7/9 13:52:10
@@ -20,5 +22,8 @@ public interface UserMapper extends EntityMapper<UserDTO, User> {
             @Mapping(source = "user.username", target = "name")
     })
     UserDTO toDto(User user);
+
+    @Override
+    Collection<UserDTO> toDto(Collection<User> entityList);
 
 }

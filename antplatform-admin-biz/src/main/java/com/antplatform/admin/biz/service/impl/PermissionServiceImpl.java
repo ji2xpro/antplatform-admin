@@ -47,7 +47,7 @@ public class PermissionServiceImpl implements PermissionService {
     public Collection<Permission> findBySpec(RoleSpec roleSpec) {
         Collection<Permission> permissions = permissionRepository.findBySpec(roleSpec);
 
-//        return permissions.stream().filter(permission -> permission.getType() == 1 && permission.getIsDelete() == 0).collect(Collectors.toList());
+//        return permissions.stream().filter(resource -> resource.getType() == 1 && resource.getIsDelete() == 0).collect(Collectors.toList());
 
         return permissions.stream().filter(permission -> permission.getIsDelete() == 0).collect(Collectors.toList());
     }

@@ -1,12 +1,52 @@
 spring:
+  # 配置数据源
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    jdbc-url: jdbc:mysql://127.0.0.1:3306/AntPlatform?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
-    username: root
-    password: root123456
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    druid:
+      name: AntPlatform
+      url: jdbc:mysql://127.0.0.1:3306/AntPlatform?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+      username: root
+      password: root123456
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      #Spring Boot 默认是不注入这些属性值的，需要自己绑定
+      #druid 数据源专有配置
+      initialSize: 5
+      minIdle: 5
+      maxActive: 20
+      maxWait: 60000
+      timeBetweenEvictionRunsMillis: 60000
+      minEvictableIdleTimeMillis: 300000
+      validationQuery: SELECT 1 FROM DUAL
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      # 打开PSCache
+      poolPreparedStatements: true
+      #配置监控统计拦截的filters，stat:监控统计、log4j：日志记录、wall：防御sql注入
+      #如果允许时报错  java.lang.ClassNotFoundException: org.apache.log4j.Priority
+      #则导入 log4j 依赖即可，Maven 地址：https://mvnrepository.com/artifact/log4j/log4j
+      filters: stat,wall,log4j,config
+      #指定每个连接上PSCache的大小
+      maxPoolPreparedStatementPerConnectionSize: 20
+      #合并多个DruidDataSource的监控数据
+      useGlobalDataSourceStat: true
+      #通过connectProperties属性来打开mergeSql功能；慢SQL记录
+      connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
+  # Redis数据源
   redis:
+    database: 0
     host: localhost
     port: 6379
     password:
+    # 连接超时时间 单位 ms（毫秒）
     timeout: 2000s
+    lettuce:
+      pool:
+        # 连接池中的最小空闲连接，默认值也是0
+        min-idle: 10
+        # 连接池中的最大空闲连接，默认值也是8
+        max-idle: 50
+        # 连接池最大连接数（使用负值表示没有限制）
+        max-active: 200
+        # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: 3000

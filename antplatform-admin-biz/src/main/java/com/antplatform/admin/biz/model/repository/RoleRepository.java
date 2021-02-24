@@ -102,7 +102,7 @@ public class RoleRepository {
      * @param role
      * @return
      */
-    public Boolean saveOrUpdate(Role role) {
+    public Boolean createOrUpdate(Role role) {
         Role oldRole = roleMapper.selectByPrimaryKey(role.getId());
         int index;
         if (oldRole == null) {

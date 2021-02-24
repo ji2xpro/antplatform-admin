@@ -3,3 +3,40 @@ spring:
         active: @activeProfile@,@bizactive@,@commonactive@
     application:
         name: AntPlatform
+token:
+  # token有效时间 单位:分钟 24*60=1440
+  tokenExpireTime: 1440
+  # 更新令牌时间 单位:分钟 2*60=120
+  refreshCheckTime: 120
+#   # RefreshToken过期时间，单位:分钟, 24*60=1440
+#   refreshTokenExpireTime: 1440
+  # shiro缓存有效期，单位分钟,2*60=120
+  shiroCacheExpireTime: 120
+  # token加密密钥
+  secretKey: antPlatform-admin
+  expireTime: {"web": 10800000, "app": 15768000000}
+#动态设置拦截器
+permission-config:
+  perms:
+    - key: /user/logout
+      value: logout
+    - key: /401
+      value: anon
+    - key: /404
+      value: anon
+    - key: /500
+      value: anon
+    - key: /swagger-ui.html
+      value: anon
+    - key: /swagger-resources/configuration/ui
+      value: anon
+    - key: /swagger-resources
+      value: anon
+    - key: /swagger-resources/configuration/security
+      value: anon
+    - key: /v2/api-docs
+      value: anon
+    - key: /error
+      value: anon
+    - key: /webjars/springfox-swagger-ui/**
+      value: anon

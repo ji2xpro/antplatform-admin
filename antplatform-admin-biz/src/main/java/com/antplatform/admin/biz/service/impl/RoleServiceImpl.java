@@ -11,6 +11,7 @@ import com.antplatform.admin.biz.model.UserRole;
 import com.antplatform.admin.biz.model.repository.RoleRepository;
 import com.antplatform.admin.biz.service.RoleService;
 import com.antplatform.admin.common.dto.PageModel;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -47,7 +48,9 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Collection<Role> findBySpec(UserSpec userSpec) {
         UserRole userRole = new UserRole();
-        userRole.setUserId(userSpec.getUserId());
+        if (userSpec.getUserId() > 0){
+            userRole.setUserId(userSpec.getUserId());
+        }
 
         List<UserRole> userRoles = userRoleMapper.select(userRole);
 
@@ -87,7 +90,29 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     public Boolean saveOrUpdate(Role role) {
-        return roleRepository.saveOrUpdate(role);
+        return roleRepository.createOrUpdate(role);
+    }
+
+    /**
+     * 新增角色信息
+     *
+     * @param role
+     * @return
+     */
+    @Override
+    public Boolean create(Role role) {
+        return roleRepository.createOrUpdate(role);
+    }
+
+    /**
+     * 更新角色信息
+     *
+     * @param role
+     * @return
+     */
+    @Override
+    public Boolean update(Role role) {
+        return roleRepository.createOrUpdate(role);
     }
 
     /**

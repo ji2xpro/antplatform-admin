@@ -1,7 +1,7 @@
 server:
     port: 1234
     servlet:
-        context-path: /dev-api
+      context-path: /dev-api
 system:
   #注册用户默认密码
   defaultPwd: 123456

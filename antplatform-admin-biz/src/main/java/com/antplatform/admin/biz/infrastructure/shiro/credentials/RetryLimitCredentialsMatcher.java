@@ -1,30 +1,28 @@
 package com.antplatform.admin.biz.infrastructure.shiro.credentials;
 
-import com.antplatform.admin.api.request.UserSpec;
-import com.antplatform.admin.biz.model.User;
+import com.antplatform.admin.biz.infrastructure.shiro.jwt.JwtUtil;
 import com.antplatform.admin.biz.service.UserService;
-import org.apache.shiro.SecurityUtils;
+import com.antplatform.admin.common.base.Constants.GlobalData;
+import com.antplatform.admin.common.utils.RedisUtil;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.apache.shiro.authc.AccountException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.ExcessiveAttemptsException;
+import org.apache.shiro.util.AntPathMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 
 import java.util.concurrent.TimeUnit;
 
 /**
+ * Shiro-密码输入错误的状态下重试次数的匹配管理
+ *
  * @author: maoyan
  * @date: 2020/7/10 11:41:42
  * @description:
  */
-public class RetryLimitCredentialsMatcher extends CredentialsMatcher{
-    /**
-     * User 的 session key;k
-     */
-    private static final String USER_SESSION_KEY = "user";
-
+public class RetryLimitCredentialsMatcher extends CredentialsMatcher {
+    private static String loginCountKey;
     /**
      * 用户登录次数计数  redisKey 前缀
      */
@@ -33,57 +31,67 @@ public class RetryLimitCredentialsMatcher extends CredentialsMatcher{
      * 用户登录是否被锁定    一小时 redisKey 前缀
      */
     private static final String SHIRO_IS_LOCK = "shiro_is_lock_";
-    @Autowired
-    private RedisTemplate redisTemplate;
+    /**
+     * 登录重试次数
+     */
+    private static final Integer MAX_RETRY_COUNT = 5;
+
+    private AntPathMatcher antPathMatcher = new AntPathMatcher();
+
     @Autowired
     private UserService userService;
 
     @Override
     public boolean doCredentialsMatch(AuthenticationToken token, AuthenticationInfo info) {
-        User shiroUser = (User) info.getPrincipals().getPrimaryPrincipal();
-        int userId = shiroUser.getId();
-//        User user = userService.queryByUserId(userId);
-        UserSpec userSpec = new UserSpec();
-        userSpec.setUserId(userId);
-        User user = userService.findBySpec(userSpec);
+        if (GlobalData.isLogin) {
+            GlobalData.isLogin = false;
+            int retryCount = retryLimitCount(token, info);
+            try {
+                super.doCredentialsMatch(token, info);
+            } catch (JWTVerificationException e) {
+                String msg = retryCount <= 0 ? "您的账号一小时内禁止登录！" : "您还剩" + retryCount + "次重试的机会";
+                throw new AccountException("帐号或密码不正确！" + msg);
+            }
+            //清空登录计数
+            RedisUtil.del(loginCountKey);
+            try {
+//            userService.updateUserLastLoginInfo(user);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return true;
+        }
+        return super.doCredentialsMatch(token, info);
+    }
 
-        String username = user.getUsername();
+    /**
+     * 登录重试次数查询
+     *
+     * @param token
+     * @param info
+     * @return
+     */
+    private int retryLimitCount(AuthenticationToken token, AuthenticationInfo info) {
+        String jwtToken = (String) token.getCredentials();
+        String userName = JwtUtil.getClaim(jwtToken);
         // 访问一次，计数一次
-        ValueOperations<String, String> opsForValue = redisTemplate.opsForValue();
-        String loginCountKey = SHIRO_LOGIN_COUNT + username;
-        String isLockKey = SHIRO_IS_LOCK + username;
-        opsForValue.increment(loginCountKey, 1);
+        loginCountKey = SHIRO_LOGIN_COUNT + userName;
+        String isLockKey = SHIRO_IS_LOCK + userName;
+        RedisUtil.incr(loginCountKey, 1);
 
-        if (redisTemplate.hasKey(isLockKey)) {
-            throw new ExcessiveAttemptsException("帐号[" + username + "]已被禁止登录！");
+        if (RedisUtil.hasKey(isLockKey)) {
+            throw new ExcessiveAttemptsException("帐号[" + userName + "]已被禁止登录！");
         }
 
         // 计数大于5时，设置用户被锁定一小时
-        String loginCount = String.valueOf(opsForValue.get(loginCountKey));
-        int retryCount = (5 - Integer.parseInt(loginCount));
+        String loginCount = String.valueOf(RedisUtil.get(loginCountKey));
+        int retryCount = (MAX_RETRY_COUNT - Integer.parseInt(loginCount));
         if (retryCount <= 0) {
-            opsForValue.set(isLockKey, "LOCK");
-            redisTemplate.expire(isLockKey, 1, TimeUnit.HOURS);
-            redisTemplate.expire(loginCountKey, 1, TimeUnit.HOURS);
-            throw new ExcessiveAttemptsException("由于密码输入错误次数过多，帐号[" + username + "]已被禁止登录！");
+            RedisUtil.set(isLockKey, "LOCK");
+            RedisUtil.expire(isLockKey, 1, TimeUnit.HOURS);
+            RedisUtil.expire(loginCountKey, 1, TimeUnit.HOURS);
+            throw new ExcessiveAttemptsException("由于密码输入错误次数过多，帐号[" + userName + "]已被禁止登录！");
         }
-
-        boolean matches = super.doCredentialsMatch(token, info);
-        if (!matches) {
-            String msg = retryCount <= 0 ? "您的账号一小时内禁止登录！" : "您还剩" + retryCount + "次重试的机会";
-            throw new AccountException("帐号或密码不正确！" + msg);
-        }
-
-        //清空登录计数
-        redisTemplate.delete(loginCountKey);
-        try {
-//            userService.updateUserLastLoginInfo(user);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        // 当验证都通过后，把用户信息放在session里
-        // 注：User必须实现序列化
-        SecurityUtils.getSubject().getSession().setAttribute(USER_SESSION_KEY, user);
-        return true;
+        return retryCount;
     }
 }

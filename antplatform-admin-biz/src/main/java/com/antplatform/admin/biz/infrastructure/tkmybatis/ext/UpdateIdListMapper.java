@@ -7,6 +7,8 @@ import tk.mybatis.mapper.additional.idlist.IdListMapper;
 import java.util.List;
 
 /**
+ * 批量update
+ *
  * @author: maoyan
  * @date: 2020/7/8 19:31:31
  * @description:

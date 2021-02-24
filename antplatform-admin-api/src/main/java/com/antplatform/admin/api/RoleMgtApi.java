@@ -38,6 +38,22 @@ public interface RoleMgtApi {
     Response<Boolean> saveOrUpdate(RoleSpec spec);
 
     /**
+     * 新增角色信息
+     *
+     * @param spec
+     * @return
+     */
+    Response<Boolean> createRole(RoleSpec spec);
+
+    /**
+     * 更新角色信息
+     *
+     * @param spec
+     * @return
+     */
+    Response<Boolean> updateRole(RoleSpec spec);
+
+    /**
      * 角色分配权限
      *
      * @param spec

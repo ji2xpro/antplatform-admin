@@ -5,19 +5,21 @@ import com.antplatform.admin.api.dto.LoginDTO;
 import com.antplatform.admin.api.enums.UserStatus;
 import com.antplatform.admin.api.request.UserMgtSpec;
 import com.antplatform.admin.api.request.UserSpec;
-import com.antplatform.admin.biz.infrastructure.shiro.jwt.JWTFilter;
+import com.antplatform.admin.biz.infrastructure.shiro.jwt.JwtToken;
 import com.antplatform.admin.biz.model.User;
 import com.antplatform.admin.biz.service.UserService;
 import com.antplatform.admin.common.base.Constant;
-import com.antplatform.admin.common.base.component.JwtComponent;
 import com.antplatform.admin.common.dto.Response;
 import com.antplatform.admin.common.dto.Responses;
 import com.antplatform.admin.common.enums.ResponseCode;
-import com.antplatform.admin.common.utils.JWTUtil;
+import com.antplatform.admin.biz.infrastructure.shiro.jwt.JwtUtil;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AccountException;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.ExcessiveAttemptsException;
 import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -38,10 +40,6 @@ public class LoginMgtPortService implements LoginMgtApi {
     @Autowired
     private UserService userService;
 
-
-    @Autowired
-    private JwtComponent jwtComponent;
-
     /**
      * 登录
      *
@@ -61,7 +59,24 @@ public class LoginMgtPortService implements LoginMgtApi {
         }
 
         LoginDTO loginDTO = new LoginDTO();
-        String token = JWTUtil.sign(user.getUsername(), user.getPassword(), Constant.ExpTimeType.WEB);
+        String token = JwtUtil.genToken(user.getUsername(), userSpec.getPassword(), Constant.ExpTimeType.WEB,System.currentTimeMillis());
+
+        try {
+            // 提交给realm进行登入，如果错误他会抛出异常并被捕获
+            Subject subject = SecurityUtils.getSubject();
+            AuthenticationToken authenticationToken = new JwtToken(token);
+            subject.login(authenticationToken);
+        }catch (UnknownAccountException e) {
+            log.error("账户不存在！", e);
+            return Responses.fail(ResponseCode.BUSINESS_ERROR.getCode(),e.getMessage());
+        } catch (LockedAccountException | ExcessiveAttemptsException e) {
+            log.error("帐号已被锁定，禁止登录！", e);
+            return Responses.fail(ResponseCode.BUSINESS_ERROR.getCode(), e.getMessage());
+        } catch (AccountException e) {
+            log.error("用户名或密码输入错误！", e);
+            return Responses.fail(ResponseCode.BUSINESS_ERROR.getCode(),e.getMessage());
+        }
+
         loginDTO.setToken(token);
 
         return Responses.of(loginDTO);

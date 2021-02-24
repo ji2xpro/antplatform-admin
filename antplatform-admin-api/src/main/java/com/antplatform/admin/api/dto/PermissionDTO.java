@@ -1,10 +1,7 @@
 package com.antplatform.admin.api.dto;
 
-import com.antplatform.admin.common.dto.BaseDTO;
+import com.antplatform.admin.common.dto.TreeDTO;
 import lombok.Data;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author: maoyan
@@ -12,10 +9,10 @@ import java.util.List;
  * @description:
  */
 @Data
-public class PermissionDTO extends BaseDTO {
-    private Integer id;
-
-    private Integer parentId;
+public class PermissionDTO extends TreeDTO {
+//    private Integer id;
+//
+//    private Integer parentId;
 
     private String name;
 
@@ -35,5 +32,5 @@ public class PermissionDTO extends BaseDTO {
 
     private Integer isDelete;
 
-    private List<PermissionDTO> children = new ArrayList<>();
+//    private List<PermissionDTO> children = new ArrayList<>();
 }

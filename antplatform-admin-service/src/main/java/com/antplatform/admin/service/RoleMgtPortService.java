@@ -99,6 +99,40 @@ public class RoleMgtPortService implements RoleMgtApi {
     }
 
     /**
+     * 新增角色信息
+     *
+     * @param spec
+     * @return
+     */
+    @Override
+    public Response<Boolean> createRole(RoleSpec spec) {
+        Role role = roleMapper.commandToEntity(spec);
+
+        Boolean temp = roleService.create(role);
+        if (!temp) {
+            return Responses.fail(ResponseCode.VALIDATION_ERROR.getCode(), "新增角色信息失败");
+        }
+        return Responses.of(temp);
+    }
+
+    /**
+     * 更新角色信息
+     *
+     * @param spec
+     * @return
+     */
+    @Override
+    public Response<Boolean> updateRole(RoleSpec spec) {
+        Role role = roleMapper.commandToEntity(spec);
+
+        Boolean temp = roleService.update(role);
+        if (!temp) {
+            return Responses.fail(ResponseCode.VALIDATION_ERROR.getCode(), "更新角色信息失败");
+        }
+        return Responses.of(temp);
+    }
+
+    /**
      * 角色分配权限
      *
      * @param spec

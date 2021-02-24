@@ -66,9 +66,15 @@ public class PermissionMgtPortService implements PermissionMgtApi {
 
         Collection<Permission> permissions = permissionService.findBySpec(spec);
 
+//        Collection<PermissionDTO> permissionDTOS = permissionMapper.toDto(permissions);
+//
+//        List<PermissionDTO> menus = this.assembleResourceTree(permissionDTOS);
+
+//        List<PermissionDTO> menus = Lists.newArrayList(portService.getPermissionTree(permissions,true));
+
         Collection<PermissionDTO> permissionDTOS = permissionMapper.toDto(permissions);
 
-        List<PermissionDTO> menus = this.assembleResourceTree(permissionDTOS);
+        List<PermissionDTO> menus = UtilHandler.assembleResourceTree(permissionDTOS);
 
         return Responses.of(menus);
     }
@@ -87,6 +93,8 @@ public class PermissionMgtPortService implements PermissionMgtApi {
         Collection<Permission> permissions = permissionService.findBySpec(roleSpec);
 
         Collection<PermissionDTO> permissionDTOS = permissionMapper.toDto(permissions);
+
+//        Collection<PermissionDTO> permissionDTOS = portService.getPermissionTree(permissions,false);
 
         return Responses.of(permissionDTOS);
     }
@@ -125,32 +133,31 @@ public class PermissionMgtPortService implements PermissionMgtApi {
         return Responses.of(rolePermissionDTOS);
     }
 
-
     /**
      * 组装子父级目录
      * @param resourceList
      * @return
      */
-    private List<PermissionDTO> assembleResourceTree(Collection<PermissionDTO> resourceList) {
-        Map<Integer, PermissionDTO> resourceMap = new HashMap<>();
-        List<PermissionDTO> menus = new ArrayList<>();
-        for (PermissionDTO resource : resourceList) {
-            resourceMap.put(resource.getId(), resource);
-        }
-        for (PermissionDTO resource : resourceList) {
-            Integer treePId = resource.getParentId();
-            PermissionDTO resourceTree = resourceMap.get(treePId);
-            if (null != resourceTree && !resource.equals(resourceTree)) {
-                List<PermissionDTO> nodes = resourceTree.getChildren();
-                if (null == nodes) {
-                    nodes = new ArrayList<>();
-                    resourceTree.setChildren(nodes);
-                }
-                nodes.add(resource);
-            } else {
-                menus.add(resource);
-            }
-        }
-        return menus;
-    }
+//    private List<PermissionDTO> assembleResourceTree(Collection<PermissionDTO> resourceList) {
+//        Map<Integer, PermissionDTO> resourceMap = new HashMap<>();
+//        List<PermissionDTO> menus = new ArrayList<>();
+//        for (PermissionDTO resource : resourceList) {
+//            resourceMap.put(resource.getId(), resource);
+//        }
+//        for (PermissionDTO resource : resourceList) {
+//            Integer treePId = resource.getParentId();
+//            PermissionDTO resourceTree = resourceMap.get(treePId);
+//            if (null != resourceTree && !resource.equals(resourceTree)) {
+//                List<PermissionDTO> nodes = resourceTree.getChildren();
+//                if (null == nodes) {
+//                    nodes = new ArrayList<>();
+//                    resourceTree.setChildren(nodes);
+//                }
+//                nodes.add(resource);
+//            } else {
+//                menus.add(resource);
+//            }
+//        }
+//        return menus;
+//    }
 }
