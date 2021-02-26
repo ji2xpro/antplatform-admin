@@ -1,8 +1,6 @@
 package com.antplatform.admin.biz.infrastructure.shiro.credentials;
 
 import com.antplatform.admin.biz.infrastructure.shiro.jwt.JwtUtil;
-import com.auth0.jwt.exceptions.JWTVerificationException;
-import org.apache.shiro.authc.AccountException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.credential.SimpleCredentialsMatcher;

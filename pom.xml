@@ -63,6 +63,13 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-web</artifactId>
                 <version>${springboot.version}</version>
+                <!-- 打包的时候以war包形式，这里要把springboot集成的tomcat去除 -->
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-starter-tomcat</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <!-- springboot tomcat 支持 -->
             <dependency>
@@ -329,13 +336,14 @@
 
     <build>
         <plugins>
-            <!--<plugin>-->
-                <!--<groupId>org.springframework.boot</groupId>-->
-                <!--<artifactId>spring-boot-maven-plugin</artifactId>-->
-            <!--</plugin>-->
+<!--            <plugin>-->
+<!--                <groupId>org.springframework.boot</groupId>-->
+<!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
+<!--            </plugin>-->
 
 
             <!-- 注意: 因为我们不需要demo-parent是一个可运行的项目，所以修改原来的打包方式为maven打包方式 -->
+            <!-- 指定JDK编译版本 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

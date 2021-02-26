@@ -1,9 +1,8 @@
 package com.antplatform.admin.biz.infrastructure.shiro.cache;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.antplatform.admin.biz.infrastructure.shiro.jwt.JwtProperties;
 import com.antplatform.admin.biz.infrastructure.shiro.jwt.JwtUtil;
+import com.antplatform.admin.biz.infrastructure.shiro.realm.JwtRealm;
 import com.antplatform.admin.common.base.Constants.SecurityConstant;
 import com.antplatform.admin.common.utils.RedisUtil;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -109,7 +108,7 @@ public class ShiroCache<K,V> implements Cache<K,V> {
 
     /**
      * 缓存的key名称获取为shiro:cache:account
-     * @param key  {@link com.antplatform.admin.biz.infrastructure.shiro.realm.MyRealm#doGetAuthenticationInfo(AuthenticationToken)} 指向的是SimpleAuthenticationInfo构造时第一个参数对象，目前是token
+     * @param key {@link JwtRealm#doGetAuthenticationInfo(AuthenticationToken)} 指向的是SimpleAuthenticationInfo构造时第一个参数对象，目前是token
      * @return
      */
     private String getKey(Object key) {

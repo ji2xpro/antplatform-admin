@@ -6,7 +6,6 @@ import com.antplatform.admin.api.request.UserSpec;
 import com.antplatform.admin.biz.model.User;
 import com.antplatform.admin.common.annotation.auth.CurrentUser;
 import com.antplatform.admin.common.annotation.auth.NoAuthentication;
-import com.antplatform.admin.common.base.Constants.GlobalData;
 import com.antplatform.admin.common.dto.Response;
 import com.antplatform.admin.common.enums.DataType;
 import com.antplatform.admin.common.enums.ParamType;
@@ -24,17 +23,13 @@ import com.antplatform.admin.web.entity.basic.LoginVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
-import org.apache.shiro.authz.annotation.RequiresRoles;
-import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.HtmlUtils;
@@ -43,7 +38,6 @@ import springfox.documentation.annotations.ApiIgnore;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.UnsupportedEncodingException;
 
 /**
  * @author: maoyan
@@ -86,8 +80,6 @@ public class LoginAction {
         String password = loginRequest.getPassword();
         String vcode = loginRequest.getVcode();
         String verKey = loginRequest.getVerkey();
-
-        GlobalData.isLogin = true;
 
         if (!CaptchaUtil.isVerified(vcode, verKey, request)) {
             return AjaxResult.createFailedResult(ResponseCode.INVALID_RE_VCODE);

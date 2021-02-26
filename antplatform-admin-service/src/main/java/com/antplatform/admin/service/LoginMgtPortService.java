@@ -5,19 +5,17 @@ import com.antplatform.admin.api.dto.LoginDTO;
 import com.antplatform.admin.api.enums.UserStatus;
 import com.antplatform.admin.api.request.UserMgtSpec;
 import com.antplatform.admin.api.request.UserSpec;
-import com.antplatform.admin.biz.infrastructure.shiro.jwt.JwtToken;
+import com.antplatform.admin.biz.infrastructure.shiro.jwt.JwtUtil;
 import com.antplatform.admin.biz.model.User;
 import com.antplatform.admin.biz.service.UserService;
+import com.antplatform.admin.biz.infrastructure.shiro.realm.UserRealm;
 import com.antplatform.admin.common.base.Constant;
 import com.antplatform.admin.common.dto.Response;
 import com.antplatform.admin.common.dto.Responses;
 import com.antplatform.admin.common.enums.ResponseCode;
-import com.antplatform.admin.biz.infrastructure.shiro.jwt.JwtUtil;
-import com.auth0.jwt.exceptions.JWTVerificationException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AccountException;
-import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.ExcessiveAttemptsException;
 import org.apache.shiro.authc.LockedAccountException;
@@ -57,15 +55,20 @@ public class LoginMgtPortService implements LoginMgtApi {
         if (user.getStatus() == UserStatus.DISABLE.getCode()){
             return Responses.fail(ResponseCode.USER_LOCKED);
         }
-
-        LoginDTO loginDTO = new LoginDTO();
-        String token = JwtUtil.genToken(user.getUsername(), userSpec.getPassword(), Constant.ExpTimeType.WEB,System.currentTimeMillis());
-
         try {
-            // 提交给realm进行登入，如果错误他会抛出异常并被捕获
+            // 将用户名和密码封装到UsernamePasswordToken
+            UsernamePasswordToken token = new UsernamePasswordToken(user.getUsername(), userSpec.getPassword());
+            // 获取Subject实例对象，用户实例
             Subject subject = SecurityUtils.getSubject();
-            AuthenticationToken authenticationToken = new JwtToken(token);
-            subject.login(authenticationToken);
+            /**
+             * 提交给realm进行登入，如果错误他会抛出异常并被捕获
+             * 在调用了login方法后,SecurityManager会收到AuthenticationToken,并将其发送给已配置的Realm执行必须的认证检查
+             * 每个Realm都能在必要时对提交的AuthenticationTokens作出反应
+             * 所以这一步在调用login(token)方法时,它会走到xxRealm.doGetAuthenticationInfo()方法中,具体验证方式详见此方法
+             *
+             * {@link UserRealm#doGetAuthenticationInfo(AuthenticationToken)}
+             */
+            subject.login(token);
         }catch (UnknownAccountException e) {
             log.error("账户不存在！", e);
             return Responses.fail(ResponseCode.BUSINESS_ERROR.getCode(),e.getMessage());
@@ -77,39 +80,10 @@ public class LoginMgtPortService implements LoginMgtApi {
             return Responses.fail(ResponseCode.BUSINESS_ERROR.getCode(),e.getMessage());
         }
 
+        LoginDTO loginDTO = new LoginDTO();
+        String token = JwtUtil.genToken(user.getUsername(), userSpec.getPassword(), Constant.ExpTimeType.WEB,System.currentTimeMillis());
         loginDTO.setToken(token);
-
         return Responses.of(loginDTO);
-
-
-//        // 将用户名和密码封装到UsernamePasswordToken
-//        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(userSpec.getUsername(), userSpec.getPassword());
-//        // 获取Subject实例对象，用户实例
-//        Subject currentUser = SecurityUtils.getSubject();
-//        try {
-//            /**
-//             * 在调用了login方法后,SecurityManager会收到AuthenticationToken,并将其发送给已配置的Realm执行必须的认证检查
-//             * 每个Realm都能在必要时对提交的AuthenticationTokens作出反应
-//             * 所以这一步在调用login(token)方法时,它会走到xxRealm.doGetAuthenticationInfo()方法中,具体验证方式详见此方法
-//             *
-//             * {@link MyRealm#doGetAuthenticationInfo(AuthenticationToken)}
-//             */
-//            currentUser.login(usernamePasswordToken);
-//
-//            LoginDTO loginDTO = new LoginDTO();
-//            loginDTO.setToken("admin-token");
-//
-//            return Responses.of(loginDTO);
-//        } catch (UnknownAccountException e) {
-//            log.error("账户不存在！", e);
-//            return Responses.fail(ResponseCode.BUSINESS_ERROR.getCode(),e.getMessage());
-//        } catch (LockedAccountException e){
-//            log.error("帐号已被锁定，禁止登录！", e);
-//            return Responses.fail(ResponseCode.BUSINESS_ERROR.getCode(),e.getMessage());
-//        } catch (AuthenticationException e) {
-//            log.error("用户名或密码输入错误！", e);
-//            return Responses.fail(ResponseCode.BUSINESS_ERROR.getCode(),"用户名或密码输入错误！");
-//        }
     }
 
     /**

@@ -3,14 +3,20 @@ package com.antplatform.admin.biz.infrastructure.shiro.jwt;
 import com.antplatform.admin.api.request.PermissionListSpec;
 import com.antplatform.admin.biz.infrastructure.shiro.ShiroFilterProperties;
 import com.antplatform.admin.biz.infrastructure.shiro.cache.ShiroCacheManager;
+import com.antplatform.admin.biz.infrastructure.shiro.credentials.CredentialsMatcher;
 import com.antplatform.admin.biz.infrastructure.shiro.credentials.RetryLimitCredentialsMatcher;
-import com.antplatform.admin.biz.infrastructure.shiro.realm.MyRealm;
+import com.antplatform.admin.biz.infrastructure.shiro.realm.UserRealm;
+import com.antplatform.admin.biz.infrastructure.shiro.realm.JwtRealm;
 import com.antplatform.admin.biz.model.Permission;
 import com.antplatform.admin.biz.service.PermissionService;
 import com.antplatform.admin.common.base.Constant;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authc.pam.AuthenticationStrategy;
+import org.apache.shiro.authc.pam.FirstSuccessfulStrategy;
+import org.apache.shiro.authc.pam.ModularRealmAuthenticator;
 import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
 import org.apache.shiro.mgt.DefaultSubjectDAO;
+import org.apache.shiro.realm.Realm;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -27,6 +33,7 @@ import org.springframework.util.StringUtils;
 
 import javax.servlet.Filter;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -102,13 +109,17 @@ public class ShiroConfig {
     @ConditionalOnMissingBean(SecurityManager.class)
     public DefaultWebSecurityManager securityManager(ShiroCacheManager shiroCacheManager) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-        // 注入域 自定义Realm
-        securityManager.setRealm(myRealm());
 
-        /*
-         * 关闭shiro自带的session，详情见文档
-         * http://shiro.apache.org/session-management.html#SessionManagement-StatelessApplications%28Sessionless%29
-         */
+        // 1.Authenticator
+        securityManager.setAuthenticator(authenticator());
+
+        // 2.注入域 自定义Realm
+        List<Realm> realms = new ArrayList<Realm>(16);
+        realms.add(jwtRealm());
+        realms.add(userRealm());
+        securityManager.setRealms(realms);
+
+         // 3.关闭shiro自带的session，详情见文档 http://shiro.apache.org/session-management.html#SessionManagement-StatelessApplications%28Sessionless%29
         DefaultSessionStorageEvaluator defaultSessionStorageEvaluator = new DefaultSessionStorageEvaluator();
         defaultSessionStorageEvaluator.setSessionStorageEnabled(false);
         DefaultSubjectDAO subjectDAO = new DefaultSubjectDAO();
@@ -124,11 +135,11 @@ public class ShiroConfig {
      * 注入安全过滤器
      * 先走 filter, 然后 filter 如果检测到请求头存在 token，则用 token 去 login，走 Realm 去验证
      *
+     * 如果没有此name,将会找不到shiroFilter的Bean
      * @param securityManager
      * @return
      */
-    //如果没有此name,将会找不到shiroFilter的Bean
-    @Bean("shiroFilter")
+    @Bean(name = "shiroFilter")
     @ConditionalOnMissingBean(ShiroFilter.class)
     public ShiroFilterFactoryBean shiroFilter(DefaultWebSecurityManager securityManager) {
         ShiroFilterFactoryBean shiroFilter = new ShiroFilterFactoryBean();
@@ -190,16 +201,29 @@ public class ShiroConfig {
     }
 
     /**
-     * 自定义身份认证 realm;
+     * 用于JWT token认证的realm
      *
      * @return
      */
     @Bean
-    public MyRealm myRealm() {
-        MyRealm myRealm = new MyRealm();
+    public JwtRealm jwtRealm() {
+        JwtRealm jwtRealm = new JwtRealm();
         // 设置认证器 RetryLimitCredentialsMatcher
-        myRealm.setCredentialsMatcher(retryLimitCredentialsMatcher());
-        return myRealm;
+        jwtRealm.setCredentialsMatcher(credentialsMatcher());
+        return jwtRealm;
+    }
+
+    /**
+     * 用于用户名密码登录时认证的realm
+     *
+     * @return
+     */
+    @Bean
+    public UserRealm userRealm() {
+        UserRealm userRealm = new UserRealm();
+        // 设置认证器 RetryLimitCredentialsMatcher
+        userRealm.setCredentialsMatcher(retryLimitCredentialsMatcher());
+        return userRealm;
     }
 
     /**
@@ -209,6 +233,27 @@ public class ShiroConfig {
     @Bean
     public RetryLimitCredentialsMatcher retryLimitCredentialsMatcher() {
         return new RetryLimitCredentialsMatcher();
+    }
+
+    /**
+     * 注入自定义认证器
+     * @return
+     */
+    @Bean
+    public CredentialsMatcher credentialsMatcher() {
+        return new CredentialsMatcher();
+    }
+
+    /**
+     * 配置 ModularRealmAuthenticator
+     */
+    @Bean
+    public ModularRealmAuthenticator authenticator() {
+        ModularRealmAuthenticator authenticator = new MultiRealmAuthenticator();
+        // 设置多个Realm的认证策略，一个成功即跳过其它的，默认 AtLeastOneSuccessfulStrategy
+        AuthenticationStrategy strategy = new FirstSuccessfulStrategy();
+        authenticator.setAuthenticationStrategy(strategy);
+        return authenticator;
     }
 
 //    @Bean
