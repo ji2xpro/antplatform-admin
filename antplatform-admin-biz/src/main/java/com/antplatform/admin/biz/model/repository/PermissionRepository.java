@@ -3,9 +3,13 @@ package com.antplatform.admin.biz.model.repository;
 import com.antplatform.admin.api.enums.IsDeleteStatus;
 import com.antplatform.admin.api.request.PermissionSpec;
 import com.antplatform.admin.api.request.RoleSpec;
+import com.antplatform.admin.biz.mapper.AuthorityMapper;
 import com.antplatform.admin.biz.mapper.PermissionMapper;
+import com.antplatform.admin.biz.mapper.RoleAuthorityMapper;
 import com.antplatform.admin.biz.mapper.RolePermissionMapper;
+import com.antplatform.admin.biz.model.Authority;
 import com.antplatform.admin.biz.model.Permission;
+import com.antplatform.admin.biz.model.RoleAuthority;
 import com.antplatform.admin.biz.model.RolePermission;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +35,12 @@ public class PermissionRepository {
     @Autowired
     RolePermissionMapper rolePermissionMapper;
 
+    @Autowired
+    AuthorityMapper authorityMapper;
+
+    @Autowired
+    RoleAuthorityMapper roleAuthorityMapper;
+
     public Collection<Permission> findBySpec(RoleSpec roleSpec) {
 //        RolePermission rolePermission = new RolePermission();
 //        rolePermission.setRoleId(roleSpec.getRoleId());
@@ -53,6 +63,25 @@ public class PermissionRepository {
             return Collections.emptyList();
         }
         return permissionMapper.selectByIdList(rolePermissions.stream().map(RolePermission::getPermissionId).collect(Collectors.toList()));
+    }
+
+    public Collection<Authority> findBySpec1(RoleSpec roleSpec) {
+        Example example = new Example(RoleAuthority.class);
+        Example.Criteria criteria = example.createCriteria();
+        if (roleSpec.getRoleId() != null){
+            criteria.andEqualTo("roleId",roleSpec.getRoleId());
+        }
+        if (!CollectionUtils.isEmpty(roleSpec.getRoleIds())){
+            criteria.andIn("roleId",roleSpec.getRoleIds());
+        }
+        criteria.andEqualTo("isDelete",IsDeleteStatus.EXITS.getCode());
+
+        List<RoleAuthority> roleAuthorities = roleAuthorityMapper.selectByExample(example);
+
+        if (CollectionUtils.isEmpty(roleAuthorities)) {
+            return Collections.emptyList();
+        }
+        return authorityMapper.selectByIdList(roleAuthorities.stream().map(RoleAuthority::getAuthorityId).collect(Collectors.toList()));
     }
 
     public Collection<Permission> findBySpec(PermissionSpec permissionSpec){

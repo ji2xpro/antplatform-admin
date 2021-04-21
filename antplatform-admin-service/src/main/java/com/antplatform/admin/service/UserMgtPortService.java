@@ -1,6 +1,7 @@
 package com.antplatform.admin.service;
 
 import com.antplatform.admin.api.UserMgtApi;
+import com.antplatform.admin.api.dto.MenuDTO;
 import com.antplatform.admin.api.dto.PermissionDTO;
 import com.antplatform.admin.api.dto.RoleDTO;
 import com.antplatform.admin.api.dto.UserDTO;
@@ -9,9 +10,13 @@ import com.antplatform.admin.api.request.RoleSpec;
 import com.antplatform.admin.api.request.UserMgtSpec;
 import com.antplatform.admin.api.request.UserPageSpec;
 import com.antplatform.admin.api.request.UserSpec;
+import com.antplatform.admin.biz.model.Authority;
+import com.antplatform.admin.biz.model.Menu;
 import com.antplatform.admin.biz.model.Permission;
 import com.antplatform.admin.biz.model.Role;
 import com.antplatform.admin.biz.model.User;
+import com.antplatform.admin.biz.service.AuthorityService;
+import com.antplatform.admin.biz.service.MenuService;
 import com.antplatform.admin.biz.service.PermissionService;
 import com.antplatform.admin.biz.service.RoleService;
 import com.antplatform.admin.biz.service.UserService;
@@ -22,9 +27,11 @@ import com.antplatform.admin.common.dto.PagedResponses;
 import com.antplatform.admin.common.dto.Response;
 import com.antplatform.admin.common.dto.Responses;
 import com.antplatform.admin.common.enums.ResponseCode;
+import com.antplatform.admin.service.port.mapper.MenuMapper;
 import com.antplatform.admin.service.port.mapper.PermissionMapper;
 import com.antplatform.admin.service.port.mapper.UserMapper;
 import com.google.common.collect.Lists;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -37,6 +44,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author: maoyan
@@ -55,8 +63,16 @@ public class UserMgtPortService implements UserMgtApi {
     private PermissionService permissionService;
 
     @Autowired
+    private AuthorityService authorityService;
+
+    @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private MenuService menuService;
+
+    @Autowired
+    private MenuMapper menuMapper;
 
     @Autowired
     private PermissionMapper permissionMapper;
@@ -88,28 +104,32 @@ public class UserMgtPortService implements UserMgtApi {
             roles.add(role.getKeypoint());
             ids.add(role.getId());
         }
-        // 根据角色查询权限
         RoleSpec roleSpec = new RoleSpec();
         roleSpec.setRoleIds(ids);
+
+        // 根据角色查询权限（旧、准备废弃）
         Collection<Permission> permissions = permissionService.findBySpec(roleSpec);
-
-//        PermissionListSpec permissionListSpec = new PermissionListSpec();
-//        permissionListSpec.setIds(ids);
-//        Collection<Permission> permissions = permissionService.findBySpec(permissionListSpec);
-
-
         Collection<PermissionDTO> permissionDTOS = permissionMapper.toDto(permissions);
+        List<PermissionDTO> resources = UtilHandler.assembleResourceTree(permissionDTOS);
 
+        // 根据角色查询权限
+        Collection<Authority> authorities = authorityService.findBySpec(roleSpec);
+        Set<String> authCode = authorities.stream().map(Authority::getCode).collect(Collectors.toSet());
+//        Collection<String> authCode = authorities.stream().map(Authority::getCode).collect(Collectors.toList());
+
+        // 根据角色查询菜单
+        Set<Integer> authSet = authorities.stream().map(e -> e.getId()).collect(Collectors.toSet());
+        Collection<Menu> menus = menuService.findBySpec();
+        menus =  menus.stream().filter(e->authSet.contains(e.getAuthorityId())).collect(Collectors.toList());
+        Collection<MenuDTO> menuDTOS = menuMapper.toDto(menus);
+        List<MenuDTO> menuDTOList = UtilHandler.assembleResourceTree(menuDTOS);
+
+        // 组装数据
         UserDTO userDTO = userMapper.toDto(user);
         userDTO.setRoles(roles);
-
-//        List<PermissionDTO> menus = this.assembleResourceTree(permissionDTOS);
-
-//        List<PermissionDTO> menus = Lists.newArrayList(portService.getPermissionTree(permissions,true));
-
-        List<PermissionDTO> menus = UtilHandler.assembleResourceTree(permissionDTOS);
-
-        userDTO.setResources(menus);
+        userDTO.setAuth(authCode);
+        userDTO.setResources(resources);
+        userDTO.setMenus(menuDTOList);
 
         return Responses.of(userDTO);
     }
@@ -137,32 +157,4 @@ public class UserMgtPortService implements UserMgtApi {
         return PagedResponses.of(userDTOList,
                 pageModel.getRecordCount(), PageModelHelper.hasNext(pageModel));
     }
-
-    /**
-     * 组装子父级目录
-     * @param resourceList
-     * @return
-     */
-//    private List<PermissionDTO> assembleResourceTree(Collection<PermissionDTO> resourceList) {
-//        Map<Integer, PermissionDTO> resourceMap = new HashMap<>();
-//        List<PermissionDTO> menus = new ArrayList<>();
-//        for (PermissionDTO resource : resourceList) {
-//            resourceMap.put(resource.getId(), resource);
-//        }
-//        for (PermissionDTO resource : resourceList) {
-//            Integer treePId = resource.getParentId();
-//            PermissionDTO resourceTree = resourceMap.get(treePId);
-//            if (null != resourceTree && !resource.equals(resourceTree)) {
-//                List<PermissionDTO> nodes = resourceTree.getChildren();
-//                if (null == nodes) {
-//                    nodes = new ArrayList<>();
-//                    resourceTree.setChildren(nodes);
-//                }
-//                nodes.add(resource);
-//            } else {
-//                menus.add(resource);
-//            }
-//        }
-//        return menus;
-//    }
 }

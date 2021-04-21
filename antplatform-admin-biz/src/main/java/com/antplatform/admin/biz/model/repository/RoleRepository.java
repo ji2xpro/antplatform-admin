@@ -5,11 +5,17 @@ import com.antplatform.admin.api.enums.IsDeleteStatus;
 import com.antplatform.admin.api.request.RolePageSpec;
 import com.antplatform.admin.api.request.RolePermissionSpec;
 import com.antplatform.admin.api.request.RoleSpec;
+import com.antplatform.admin.biz.infrastructure.shiro.account.UserContext;
+import com.antplatform.admin.biz.mapper.AuthorityMapper;
+import com.antplatform.admin.biz.mapper.RoleAuthorityMapper;
 import com.antplatform.admin.biz.mapper.RoleMapper;
 import com.antplatform.admin.biz.mapper.RolePermissionMapper;
+import com.antplatform.admin.biz.model.Authority;
 import com.antplatform.admin.biz.model.Role;
+import com.antplatform.admin.biz.model.RoleAuthority;
 import com.antplatform.admin.biz.model.RolePermission;
 import com.antplatform.admin.biz.model.User;
+import com.antplatform.admin.biz.service.AuthorityService;
 import com.antplatform.admin.biz.service.PermissionService;
 import com.antplatform.admin.common.dto.PageModel;
 import org.apache.commons.collections.CollectionUtils;
@@ -42,6 +48,12 @@ public class RoleRepository {
 
     @Autowired
     private PermissionService permissionService;
+
+    @Autowired
+    private AuthorityService authorityService;
+
+    @Autowired
+    private RoleAuthorityMapper roleAuthorityMapper;
 
     /**
      * 分页查询角色列表
@@ -110,16 +122,6 @@ public class RoleRepository {
         } else {
             index = roleMapper.updateByPrimaryKeySelective(role);
         }
-//        Example example = new Example(Role.class);
-//        Example.Criteria criteria = example.createCriteria();
-//        int index = 0;
-//
-//        if (role.getId() != null && role.getId() > 0){
-//
-//            criteria.andEqualTo("id",role.getId());
-//
-//             index = roleMapper.updateByExampleSelective(role,example);
-//        }
         return index != 0;
     }
 
@@ -213,6 +215,49 @@ public class RoleRepository {
         }
         if (!updateList.isEmpty()) {
             rolePermissionMapper.bulkUpdateByExampleSelective(updateList);
+        }
+
+        return true;
+    }
+
+    /**
+     * 角色分配权限
+     *
+     * @param roleAuthorities
+     * @return
+     */
+    public Boolean assignAuth(Collection<RoleAuthority> roleAuthorities) {
+        if (CollectionUtils.isEmpty(roleAuthorities)){
+            return true;
+        }
+        List<RoleAuthority> roleAuthorityList = new ArrayList<>(roleAuthorities);
+        int roleId = roleAuthorityList.get(0).getRoleId();
+
+        Collection<RoleAuthority> oldAuths = authorityService.findBySpec(roleId);
+
+        Map<Integer, RoleAuthority> oldAuthMap = oldAuths.stream().collect(Collectors.toMap(RoleAuthority::getAuthorityId, Function.identity()));
+
+        List<RoleAuthority> insertList = new ArrayList<>();
+        List<RoleAuthority> updateList = new ArrayList<>();
+
+        for (RoleAuthority roleAuthority : roleAuthorityList) {
+            RoleAuthority isExit = oldAuthMap.get(roleAuthority.getAuthorityId());
+            if (isExit == null) {
+                roleAuthority.setCreator(UserContext.getCurrentUser().getAccount());
+                insertList.add(roleAuthority);
+            } else {
+                roleAuthority.setId(isExit.getId());
+                roleAuthority.setEditor(UserContext.getCurrentUser().getAccount());
+                updateList.add(roleAuthority);
+            }
+        }
+
+        if (!insertList.isEmpty()) {
+            roleAuthorityMapper.insertList(insertList);
+
+        }
+        if (!updateList.isEmpty()) {
+            roleAuthorityMapper.bulkUpdateByExampleSelective(updateList);
         }
 
         return true;

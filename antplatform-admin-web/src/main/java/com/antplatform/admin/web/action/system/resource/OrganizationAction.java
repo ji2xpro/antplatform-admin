@@ -1,43 +1,31 @@
 package com.antplatform.admin.web.action.system.resource;
 
 import com.antplatform.admin.api.dto.OrganizationDTO;
-import com.antplatform.admin.api.dto.RoleDTO;
 import com.antplatform.admin.api.request.OrganizationPageSpec;
 import com.antplatform.admin.api.request.OrganizationSpec;
-import com.antplatform.admin.api.request.RolePageSpec;
-import com.antplatform.admin.api.request.RolePermissionSpec;
-import com.antplatform.admin.api.request.RoleSpec;
 import com.antplatform.admin.common.dto.PagedResponse;
 import com.antplatform.admin.common.dto.Response;
 import com.antplatform.admin.common.result.AjaxResult;
 import com.antplatform.admin.common.result.Paging;
 import com.antplatform.admin.common.utils.TransformUtils;
 import com.antplatform.admin.web.biz.system.resource.OrganizationBiz;
-import com.antplatform.admin.web.biz.system.resource.RoleBiz;
-import com.antplatform.admin.web.entity.system.resource.OrganizationRequest;
-import com.antplatform.admin.web.entity.system.resource.OrganizationVO;
-import com.antplatform.admin.web.entity.system.resource.RolePermissionRequest;
-import com.antplatform.admin.web.entity.system.resource.RoleRequest;
-import com.antplatform.admin.web.entity.system.resource.RoleVO;
+import com.antplatform.admin.web.entity.system.resource.request.OrganizationRequest;
+import com.antplatform.admin.web.entity.system.resource.vo.OrganizationVO;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.beans.BeanCopier;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -49,6 +37,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/organization")
+@Validated
 @Api(value = "OrganizationAction|组织相关的前端控制器")
 public class OrganizationAction {
 
@@ -98,7 +87,7 @@ public class OrganizationAction {
     @RequiresRoles("admin")
     @ApiOperation(value = "校验组织标识是否存在", notes = "校验组织标识是否存在")
     public AjaxResult<Boolean> checkOrganizationKey(@RequestParam(value = "id", required = false) Integer id,
-                                            @RequestParam(value = "organizationKey") String organizationKey) {
+                                                    @NotEmpty(message="组织标识不能为空") @RequestParam(value = "organizationKey") String organizationKey) {
         OrganizationSpec organizationSpec = new OrganizationSpec();
         organizationSpec.setOrganizationId(id);
         organizationSpec.setKeypoint(organizationKey);

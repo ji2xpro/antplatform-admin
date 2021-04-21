@@ -39,6 +39,11 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+
         <dependency>
             <groupId>com.antplatform</groupId>
             <artifactId>antplatform-admin-common</artifactId>
@@ -61,9 +66,12 @@
 			<!--<groupId>org.springframework.boot</groupId>-->
 			<!--<artifactId>spring-boot-starter-aop</artifactId>-->
 		<!--</dependency>-->
+
 	</dependencies>
 
 	<build>
+<!--		&lt;!&ndash; 应与application.properties(或application.yml)中context-path保持一致 &ndash;&gt;-->
+<!--		<finalName>dev-api</finalName>-->
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

@@ -26,6 +26,7 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,6 +47,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @RestController
 @Api(value = "LoginController|登录鉴权相关的前端控制器")
+@Validated
 public class LoginAction {
     @Autowired
     private UserBiz userBiz;
@@ -74,7 +76,7 @@ public class LoginAction {
     @PostMapping(value = "/user/login")
     @NoAuthentication
     @ApiOperation(value = "执行登录", notes = "返回token")
-    public AjaxResult<LoginVO> login(@RequestBody LoginRequest loginRequest, HttpServletRequest request) {
+    public AjaxResult<LoginVO> login(@Validated @RequestBody LoginRequest loginRequest, HttpServletRequest request) {
         // 对 html 标签进行转义，防止 XSS 攻击
         String username = HtmlUtils.htmlEscape(loginRequest.getUsername());
         String password = loginRequest.getPassword();
@@ -85,9 +87,9 @@ public class LoginAction {
             return AjaxResult.createFailedResult(ResponseCode.INVALID_RE_VCODE);
         }
 
-        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
-            return AjaxResult.createFailedResult(ResponseCode.ERROR);
-        }
+//        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
+//            return AjaxResult.createFailedResult(ResponseCode.ERROR);
+//        }
 
         UserSpec userSpec = new UserSpec();
         userSpec.setUsername(username);

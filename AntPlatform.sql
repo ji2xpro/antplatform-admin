@@ -36,13 +36,15 @@ CREATE TABLE `sys_user` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
   `username` varchar(225) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '用户名',
   `password` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '用户密码',
-  `nickname` varchar(255) COLLATE utf8mb4_unicode_ci  DEFAULT NULL COMMENT '昵称',
+  `nickname` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '昵称',
   `mobile` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '手机号',
   `email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '邮箱',
   `avatar` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT 'http://news.mydrivers.com/Img/20110518/04481549.png' COMMENT '用户头像',
   `remark` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '用户备注',
   `status` tinyint(4) unsigned NOT NULL DEFAULT 0 COMMENT '状态,0-启用,1-停用',
   `is_delete` tinyint(1) unsigned NOT NULL DEFAULT 0 COMMENT '是否删除,0-未删除,1-删除',
+  `creator` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '创建人',
+  `editor` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '修改人',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`)
@@ -53,8 +55,8 @@ CREATE TABLE `sys_user` (
 -- ----------------------------
 BEGIN;
 
-INSERT INTO `sys_user` VALUES (1, 'admin', '43286a86708820e38c333cdd4c496355', '超级管理员', NULL, NULL, 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif', NULL, 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_user` VALUES (2, 'editor', '123456', '普通用户', NULL, NULL, 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif', NULL, 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_user` VALUES (1, 'admin', '43286a86708820e38c333cdd4c496355', '超级管理员', NULL, NULL, 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif', NULL, 0, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_user` VALUES (2, 'editor', '123456', '普通用户', NULL, NULL, 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif', NULL, 0, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 COMMIT;
 
 -- ----------------------------
@@ -70,6 +72,8 @@ CREATE TABLE `sys_role` (
   `remark` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '备注',
   `status` tinyint(4) unsigned NOT NULL DEFAULT 0 COMMENT '状态,0-启用,1-停用',
   `is_delete` tinyint(1) unsigned NOT NULL DEFAULT 0 COMMENT '是否删除,0-未删除,1-删除',
+  `creator` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '创建人',
+  `editor` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '修改人',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`)
@@ -79,9 +83,9 @@ CREATE TABLE `sys_role` (
 -- Records of sys_role
 -- ----------------------------
 BEGIN;
-INSERT INTO `sys_role` VALUES (1, 'Super Admin', 'super admin', 0, 'I am a super administrator', '超级管理员', 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_role` VALUES (2, 'Admin', 'admin', 1, 'I am an administrator', '系统管理员', 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_role` VALUES (3, 'Normal Editor', 'editor', 2, 'I am an editor', '普通用户', 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role` VALUES (1, 'Super Admin', 'super admin', 0, 'I am a super administrator', '超级管理员', 1, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role` VALUES (2, 'Admin', 'admin', 1, 'I am an administrator', '系统管理员', 0, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role` VALUES (3, 'Normal Editor', 'editor', 2, 'I am an editor', '普通用户', 0, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 COMMIT;
 
 -- ----------------------------
@@ -93,6 +97,8 @@ CREATE TABLE `sys_user_role` (
   `user_id` int(11) unsigned DEFAULT NULL COMMENT '用户Id',
   `role_id` int(11) unsigned DEFAULT NULL COMMENT '角色Id',
   `is_delete` tinyint(1) unsigned NOT NULL DEFAULT 0 COMMENT '是否删除,0-未删除,1-删除',
+  `creator` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '创建人',
+  `editor` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '修改人',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`)
@@ -102,8 +108,8 @@ CREATE TABLE `sys_user_role` (
 -- Records of sys_user_role
 -- ----------------------------
 BEGIN;
-INSERT INTO `sys_user_role` VALUES (1, 1, 2, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_user_role` VALUES (2, 2, 3, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_user_role` VALUES (1, 1, 2, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_user_role` VALUES (2, 2, 3, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 COMMIT;
 
 -- ----------------------------
@@ -117,15 +123,17 @@ CREATE TABLE `sys_permission` (
   `parent_id` int(11) unsigned DEFAULT NULL COMMENT '父权限id',
   `keypoint` varchar(225) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '权限点',
   `type` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '类型,0-模块,1-菜单,2-按钮,3-链接',
-  `icon` varchar(255) COLLATE utf8mb4_unicode_ci  DEFAULT NULL COMMENT '图标',
-  `path` varchar(255) COLLATE utf8mb4_unicode_ci  DEFAULT NULL COMMENT '路径',
-  `url` varchar(255) COLLATE utf8mb4_unicode_ci  DEFAULT NULL COMMENT '资源路径',
-  `page_name` varchar(255) COLLATE utf8mb4_unicode_ci  DEFAULT NULL COMMENT '网页名称',
+  `icon` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '图标',
+  `path` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '路径',
+  `url` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '资源路径',
+  `page_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '网页名称',
   `level` int(11) unsigned DEFAULT NULL COMMENT '优先级',
   `description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '描述',
   `status` tinyint(4) unsigned NOT NULL DEFAULT 0 COMMENT '状态,0-启用,1-停用',
   `is_cache` tinyint(1) unsigned DEFAULT 0 COMMENT '是否缓存,0-缓存,1-不缓存',
   `is_delete` tinyint(1) unsigned NOT NULL DEFAULT 0 COMMENT '是否删除,0-未删除,1-删除',
+  `creator` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '创建人',
+  `editor` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '修改人',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`),
@@ -137,19 +145,180 @@ CREATE TABLE `sys_permission` (
 -- Records of sys_permission
 -- ----------------------------
 BEGIN;
-INSERT INTO `sys_permission` VALUES (1, '基础系统管理', 'system',  0, 'system:mgr', 0, 'system', 'system', 'system', NULL, 1000,'基础系统管理', 0, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_permission` VALUES (2, '系统管理', 'system', 0, 'system:cfg', 0, 'system', 'system', 'Layout', NULL, 1000, '系统管理',  0, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_permission` VALUES (3, '资源管理', 'resource', 2, 'system:resource', 0, 'resource', 'resource', 'nested', NULL, 1, '资源管理', 0, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_permission` VALUES (4, '用户管理', 'userTable', 3, 'userTable', 1, 'userTable', 'userTable', 'system/resource/userTable', 'userTable', 1, '用户管理菜单', 0, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_permission` VALUES (5, '角色管理', 'roleTable', 3, 'roleTable', 1, 'roleTable', 'roleTable', 'system/resource/roleTable', 'roleTable', 2, '角色管理', 0, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_permission` VALUES (6, '权限管理', 'permissionTable', 3, 'permissionTable', 1, 'permissionTable', 'permissionTable', 'system/resource/permissionTable', 'permissionTable', 3, '权限管理', 0, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_permission` VALUES (7, '组织管理', 'organizationTable', 3, 'organizationTable', 1, 'organizationTable', 'organizationTable', 'system/resource/organizationTable', 'organizationTable', 4, '组织管理', 0, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_permission` VALUES (8, '基础配置', 'config', 2, 'system:base:cfg', 0, 'config', 'config', 'nested','config', 2, '系统配置',0, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_permission` VALUES (9, '数据字典', 'dictTable', 8, 'system:config:dict', 1, 'dictTable', 'dictTable', 'system/config/dictTable','dictTable', 1, '数据字典',0, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_permission` VALUES (10, '定时任务', 'timingtask', 8, 'system:task', 1, 'timingtask', 'https://github.com/xuxueli/xxl-job', 'system/task', NULL, 2, '定时任务',0, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_permission` VALUES (11, '日志管理', 'log', 2, 'system:log:mgr', 0, 'log', 'log', 'nested', NULL, 3, '日志管理', 0, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_permission` VALUES (12, '操作日志', 'operationTable', 11, 'system:log:operation', 1, 'operationTable', 'operationTable', 'system/log/operationTable', 'operationTable', 1, '管理员操作日志，只记录重要关键日志，请勿频繁记录，系统运行日志记录到log文件。',0, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_permission` VALUES (13, '系统日志', 'systemTable',11, 'system:log:run', 1, 'systemTable', 'https://my.oschina.net/feinik/blog/1580625', 'systemTable', NULL, 2, '运行日志使用ELK',0, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_permission` VALUES (1, '基础系统管理', 'system',  0, 'system:mgr', 0, 'system', 'system', 'system', NULL, 1000,'基础系统管理', 0, 1, 1, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_permission` VALUES (2, '系统管理', 'system', 0, 'system:cfg', 0, 'system', 'system', 'Layout', NULL, 1000, '系统管理',  0, 1, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_permission` VALUES (3, '资源管理', 'resource', 2, 'system:resource', 0, 'resource', 'resource', 'nested', NULL, 1, '资源管理', 0, 1, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_permission` VALUES (4, '用户管理', 'userTable', 3, 'userTable', 1, 'userTable', 'userTable', 'system/resource/userTable', 'userTable', 1, '用户管理菜单', 0, 1, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_permission` VALUES (5, '角色管理', 'roleTable', 3, 'roleTable', 1, 'roleTable', 'roleTable', 'system/resource/roleTable', 'roleTable', 2, '角色管理', 0, 1, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_permission` VALUES (6, '权限管理', 'permissionTable', 3, 'permissionTable', 1, 'permissionTable', 'permissionTable', 'system/resource/permissionTable', 'permissionTable', 3, '权限管理', 0, 1, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_permission` VALUES (7, '组织管理', 'organizationTable', 3, 'organizationTable', 1, 'organizationTable', 'organizationTable', 'system/resource/organizationTable', 'organizationTable', 4, '组织管理', 0, 1, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_permission` VALUES (8, '基础配置', 'config', 2, 'system:base:cfg', 0, 'config', 'config', 'nested','config', 2, '系统配置',0, 1, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_permission` VALUES (9, '数据字典', 'dictTable', 8, 'system:config:dict', 1, 'dictTable', 'dictTable', 'system/config/dictTable','dictTable', 1, '数据字典',0, 1, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_permission` VALUES (10, '定时任务', 'timingtask', 8, 'system:task', 1, 'timingtask', 'https://github.com/xuxueli/xxl-job', 'system/task', NULL, 2, '定时任务',0, 1, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_permission` VALUES (11, '日志管理', 'log', 2, 'system:log:mgr', 0, 'log', 'log', 'nested', NULL, 3, '日志管理', 0, 1, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_permission` VALUES (12, '操作日志', 'operationTable', 11, 'system:log:operation', 1, 'operationTable', 'operationTable', 'system/log/operationTable', 'operationTable', 1, '管理员操作日志，只记录重要关键日志，请勿频繁记录，系统运行日志记录到log文件。',0, 1, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_permission` VALUES (13, '系统日志', 'systemTable',11, 'system:log:run', 1, 'systemTable', 'https://my.oschina.net/feinik/blog/1580625', 'systemTable', NULL, 2, '运行日志使用ELK',0, 1, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+COMMIT;
+
+-- ----------------------------
+-- Table structure for sys_menu
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_menu`;
+CREATE TABLE `sys_menu` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `name` varchar(225) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '菜单名称',
+  `parent_id` int(11) unsigned DEFAULT NULL COMMENT '父菜单Id',
+  `path_id` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '菜单编号路径',
+  `authority_id` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '权限Id',
+  `icon` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '图标',
+  `path` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '路径',
+  `url` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '资源路径',
+  `description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '描述',
+  `sort` int(11) unsigned DEFAULT NULL COMMENT '排序',
+  `status` tinyint(4) unsigned NOT NULL DEFAULT 0 COMMENT '状态,0-启用,1-停用',
+  `is_cache` tinyint(1) unsigned DEFAULT 0 COMMENT '是否缓存,0-缓存,1-不缓存',
+  `is_delete` tinyint(1) unsigned NOT NULL DEFAULT 0 COMMENT '是否删除,0-未删除,1-删除',
+  `creator` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '创建人',
+  `editor` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '修改人',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  KEY `INDEX_PERM_NAME` (`name`) USING BTREE,
+  KEY `INDEX_PERM_PID` (`parent_id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='权限表';
+
+-- ----------------------------
+-- Records of sys_menu
+-- ----------------------------
+BEGIN;
+INSERT INTO `sys_menu` VALUES (1, '系统管理', 0, '0', 1, 'system', 'system', 'Layout', '系统管理', 1000, 0, 1, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_menu` VALUES (2, '资源管理', 1, '0-1', 0, 'resource', 'resource', 'nested', '资源管理', 1, 0, 1, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_menu` VALUES (3, '基础配置', 1, '0-1', 0, 'config', 'config', 'nested', '系统配置', 2, 0, 1, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_menu` VALUES (4, '日志管理', 1, '0-1', 0, 'log', 'log', 'nested', '日志管理', 3, 0, 1, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_menu` VALUES (5, '用户管理', 2, '0-1-2', 15, 'userTable', 'userTable', 'system/resource/userTable', '用户管理', 1, 0, 1, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_menu` VALUES (6, '角色管理', 2, '0-1-2', 18, 'roleTable', 'roleTable', 'system/resource/roleTable', '角色管理', 2, 0, 1, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_menu` VALUES (7, '菜单管理', 2, '0-1-2', 21, 'menuTable', 'menuTable', 'system/resource/menuTable', '菜单管理', 3, 0, 1, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_menu` VALUES (8, '权限管理', 2, '0-1-2', 24, 'authorityTable', 'authorityTable', 'system/resource/authorityTable', '权限管理', 4, 0, 1, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_menu` VALUES (9, '组织管理', 2, '0-1-2', 1, 'organizationTable', 'organizationTable', 'system/resource/organizationTable', '组织管理', 5, 0, 1, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_menu` VALUES (10, '数据字典', 3, '0-1-3', 1, 'dictTable', 'dictTable', 'system/config/dictTable', '数据字典', 1, 0, 1, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_menu` VALUES (11, '定时任务', 3, '0-1-3', 1, 'timingTask', 'https://github.com/xuxueli/xxl-job', 'system/task', '定时任务', 2, 0, 1, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_menu` VALUES (12, '操作日志', 4, '0-1-4', 1, 'operationTable', 'operationTable', 'system/log/operationTable', '管理员操作日志，只记录重要关键日志，请勿频繁记录，系统运行日志记录到log文件。', 1, 0, 1, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_menu` VALUES (13, '系统日志', 4, '0-1-4', 1, 'systemTable', 'https://my.oschina.net/feinik/blog/1580625', 'systemTable', '运行日志使用ELK', 2, 0, 1, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_menu` VALUES (14, '系统监控', 0, '0', 1, 'monitor', 'monitor', 'Layout', '这是一个系统监控页面', 1, 0, 0, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_menu` VALUES (15, '服务监控', 14, '0-14', 30, 'server', 'server', 'monitor/server', '这是一个服务监控', 1, 0, 0, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_menu` VALUES (16, '缓存监控', 14, '0-14', 1, 'cache', 'cache', 'monitor/cache', '缓存监控', 2, 1, 0, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_menu` VALUES (17, '系统帮助', 0, '0', 1, 'help', 'help', 'Layout', '这是一个帮助页面', 1, 0, 0, 0, 'admin', , CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_menu` VALUES (18, '源码更新', 17, '0-17', 1, 'code', 'https://github.com/ji2xpro/antplatform-web-v4.3.1', NULL, '这是源码', 1, 0, 0, 0, 'admin', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_menu` VALUES (19, '开发文档', 17, '0-17', 1, 'document', 'https://panjiachen.github.io/vue-element-admin-site/zh/', NULL, '开发', 1, 0, 0, 0, 'admin', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+COMMIT;
+
+-- ----------------------------
+-- Table structure for sys_authority
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_authority`;
+CREATE TABLE `sys_authority`  (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `name` varchar(225) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '权限名称',
+  `code` varchar(225) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '权限编码',
+  `parent_id` int(11) unsigned DEFAULT NULL COMMENT '父权限id',
+  `path_id` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '编号路径',
+  `type` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '类型,0-目录,1-菜单,2-按钮,3-链接',
+  `description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '权限描述',
+  `sort` int(11) unsigned DEFAULT NULL COMMENT '排序',
+  `status` tinyint(4) unsigned NOT NULL DEFAULT 0 COMMENT '状态,0-有效,1-无效',
+  `is_delete` tinyint(1) unsigned NOT NULL DEFAULT 0 COMMENT '是否删除,0-未删除,1-删除',
+  `creator` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '创建人',
+  `editor` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '修改人',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='权限表';
+
+-- ----------------------------
+-- Records of sys_authority
+-- ----------------------------
+BEGIN;
+INSERT INTO `sys_authority` VALUES (1, '公共', 'public', 0, '0', '0', NULL, 1, 0, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_authority` VALUES (2, '系统管理', 'sysmgr',0,  '0', '0', NULL, 1, 0, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_authority` VALUES (3, '资源管理', 'sysmgr.resource', 2, '0-2', '0', NULL, 1, 0, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_authority` VALUES (4, '基础配置', 'sysmgr.config', 2, '0-2', '0', NULL, 2, 0, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_authority` VALUES (5, '日志管理', 'sysmgr.log', 2, '0-2', '0', NULL, 3, 0, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_authority` VALUES (6, '用户管理', 'sysmgr.resource.user', 3, '0-2-3', '1', NULL, 1, 0, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_authority` VALUES (7, '角色管理', 'sysmgr.resource.role', 3, '0-2-3', '1', NULL, 2, 0, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_authority` VALUES (8, '菜单管理', 'sysmgr.resource.menu', 3, '0-2-3', '1', NULL, 3, 0, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_authority` VALUES (9, '权限管理', 'sysmgr.resource.authority', 3, '0-2-3', '1', NULL, 4, 0, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_authority` VALUES (10, '组织管理', 'sysmgr.resource.organization', 3, '0-2-3', '1', NULL, 5, 0, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_authority` VALUES (11, '数据字典', 'sysmgr.config.dict', 4, '0-2-4', '1', NULL, 1, 0, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_authority` VALUES (12, '定时任务', 'sysmgr.config.task', 4, '0-2-4', '1', NULL, 2, 0, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_authority` VALUES (13, '操作日志', 'sysmgr.log.operation', 5, '0-2-5', '1', NULL, 1, 0, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_authority` VALUES (14, '系统日志', 'sysmgr.log.system', 5, '0-2-5', '1', NULL, 2, 0, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_authority` VALUES (15, '查询用户', 'sysmgr.resource.user.query', 6, '0-2-3-6', '2', NULL, 1, 0, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_authority` VALUES (16, '编辑用户', 'sysmgr.resource.user.save', 6, '0-2-3-6', '2', NULL, 2, 0, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_authority` VALUES (17, '删除用户', 'sysmgr.resource.user.delete', 6, '0-2-3-6', '2', NULL, 3, 0, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_authority` VALUES (18, '查询角色', 'sysmgr.resource.role.query', 7, '0-2-3-7', '2', NULL, 1, 0, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_authority` VALUES (19, '编辑角色', 'sysmgr.resource.role.save', 7, '0-2-3-7', '2', NULL, 2, 0, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_authority` VALUES (20, '删除角色', 'sysmgr.resource.role.delete', 7, '0-2-3-7', '2', NULL, 3, 0, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_authority` VALUES (21, '查询菜单', 'sysmgr.resource.menu.query', 8, '0-2-3-8', '2', NULL, 1, 0, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_authority` VALUES (22, '编辑菜单', 'sysmgr.resource.menu.save', 8, '0-2-3-8', '2', NULL, 2, 0, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_authority` VALUES (23, '删除菜单', 'sysmgr.resource.menu.delete', 8, '0-2-3-8', '2', NULL, 3, 0, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_authority` VALUES (24, '查询权限', 'sysmgr.resource.authority.query', 9, '0-2-3-9', '2', NULL, 1, 0, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_authority` VALUES (25, '编辑权限', 'sysmgr.resource.authority.save', 9, '0-2-3-9', '2', NULL, 2, 0, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_authority` VALUES (26, '删除权限', 'sysmgr.resource.authority.delete', 9, '0-2-3-9', '2', NULL, 3, 0, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_authority` VALUES (28, '系统监控', 'monitor', 0, '0', 0, NULL, 1, 0, 0, 'admin', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_authority` VALUES (29, '服务监控', 'monitor.server', 28, '0-28', 1, NULL, 1, 0, 0, 'admin', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_authority` VALUES (30, '查询服务', 'monitor.server.query', 29, '0-28-29', 2, NULL, 1, 0, 0, 'admin', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+COMMIT;
+
+-- ----------------------------
+-- Table structure for sys_role_authority
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_role_authority`;
+CREATE TABLE `sys_role_authority` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `role_id` int(11) unsigned DEFAULT NULL COMMENT '角色Id',
+  `authority_id` int(11) unsigned DEFAULT NULL COMMENT '权限Id',
+  `is_delete` tinyint(1) unsigned NOT NULL DEFAULT 0 COMMENT '是否删除,0-未删除,1-删除',
+  `creator` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '创建人',
+  `editor` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '修改人',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='角色权限关联表';
+
+-- ----------------------------
+-- Records of sys_role_authority
+-- ----------------------------
+BEGIN;
+INSERT INTO `sys_role_authority` VALUES (1, 2, 1, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_authority` VALUES (2, 2, 2, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_authority` VALUES (3, 2, 3, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_authority` VALUES (4, 2, 4, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_authority` VALUES (5, 2, 5, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_authority` VALUES (6, 2, 6, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_authority` VALUES (7, 2, 7, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_authority` VALUES (8, 2, 8, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_authority` VALUES (9, 2, 9, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_authority` VALUES (10, 2, 10, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_authority` VALUES (11, 2, 11, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_authority` VALUES (12, 2, 12, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_authority` VALUES (13, 2, 13, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_authority` VALUES (14, 2, 14, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_authority` VALUES (15, 2, 15, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_authority` VALUES (16, 2, 16, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_authority` VALUES (17, 2, 17, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_authority` VALUES (18, 2, 18, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_authority` VALUES (19, 2, 19, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_authority` VALUES (20, 2, 20, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_authority` VALUES (21, 2, 21, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_authority` VALUES (22, 2, 22, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_authority` VALUES (23, 2, 23, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_authority` VALUES (24, 2, 24, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_authority` VALUES (25, 2, 25, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_authority` VALUES (26, 2, 26, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_authority` VALUES (27, 3, 2, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_authority` VALUES (28, 3, 11, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_authority` VALUES (29, 3, 12, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_authority` VALUES (30, 3, 13, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 COMMIT;
 
 -- ----------------------------
@@ -161,6 +330,8 @@ CREATE TABLE `sys_role_permission` (
   `role_id` int(11) unsigned DEFAULT NULL COMMENT '角色Id',
   `permission_id` int(11) unsigned DEFAULT NULL COMMENT '权限Id',
   `is_delete` tinyint(1) unsigned NOT NULL DEFAULT 0 COMMENT '是否删除,0-未删除,1-删除',
+  `creator` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '创建人',
+  `editor` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '修改人',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`)
@@ -170,23 +341,23 @@ CREATE TABLE `sys_role_permission` (
 -- Records of sys_role_permission
 -- ----------------------------
 BEGIN;
-INSERT INTO `sys_role_permission` VALUES (1, 2, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_role_permission` VALUES (2, 2, 2, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_role_permission` VALUES (3, 2, 3, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_role_permission` VALUES (4, 2, 4, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_role_permission` VALUES (5, 2, 5, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_role_permission` VALUES (6, 2, 6, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_role_permission` VALUES (7, 2, 7, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_role_permission` VALUES (8, 2, 8, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_role_permission` VALUES (9, 2, 9, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_role_permission` VALUES (10, 2, 10, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_role_permission` VALUES (11, 2, 11, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_role_permission` VALUES (12, 2, 12, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_role_permission` VALUES (13, 2, 13, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_role_permission` VALUES (14, 3, 2, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_role_permission` VALUES (15, 3, 11, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_role_permission` VALUES (16, 3, 12, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_role_permission` VALUES (17, 3, 13, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_permission` VALUES (1, 2, 1, 1, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_permission` VALUES (2, 2, 2, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_permission` VALUES (3, 2, 3, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_permission` VALUES (4, 2, 4, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_permission` VALUES (5, 2, 5, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_permission` VALUES (6, 2, 6, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_permission` VALUES (7, 2, 7, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_permission` VALUES (8, 2, 8, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_permission` VALUES (9, 2, 9, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_permission` VALUES (10, 2, 10, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_permission` VALUES (11, 2, 11, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_permission` VALUES (12, 2, 12, 1, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_permission` VALUES (13, 2, 13, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_permission` VALUES (14, 3, 2, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_permission` VALUES (15, 3, 11, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_permission` VALUES (16, 3, 12, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_role_permission` VALUES (17, 3, 13, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 COMMIT;
 
 -- ----------------------------
@@ -208,6 +379,8 @@ CREATE TABLE `sys_organization` (
   `description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '描述',
   `status` tinyint(4) unsigned NOT NULL DEFAULT 0 COMMENT '状态,0-启用,1-停用',
   `is_delete` tinyint(1) unsigned NOT NULL DEFAULT 0 COMMENT '是否删除,0-未删除,1-删除',
+  `creator` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '创建人',
+  `editor` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '修改人',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`),
@@ -218,11 +391,11 @@ CREATE TABLE `sys_organization` (
 -- Records of sys_organization
 -- ----------------------------
 BEGIN;
-INSERT INTO `sys_organization` VALUES (1, 0, '猫眼网络有限公司', 0, '0001', '', '1', '140000', '140400', '140421', '天山西路789号', '猫眼网络有限公司', 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_organization` VALUES (2, 1, '猫眼网络上海分公司', 1, '0001', '', '1', '140000', '140400', '140421', '天山西路789号', '猫眼网络有限公司', 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_organization` VALUES (3, 1, '猫眼网络北京分公司', 1, '0002', '', '1', '140000', '140400', '140421', '天山西路789号', '猫眼网络有限公司', 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_organization` VALUES (4, 2, '猫眼网络演出事业部', 2, '0002', '', '1', '140000', '140400', '140421', '天山西路789号', '猫眼网络有限公司', 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_organization` VALUES (5, 0, '蚂蚁网络有限公司', 0, '0001', '', '1', '140000', '140400', '140421', '天山西路789号', '猫眼网络有限公司', 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_organization` VALUES (1, 0, '猫眼网络有限公司', 0, '0001', '', '1', '140000', '140400', '140421', '天山西路789号', '猫眼网络有限公司', 0, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_organization` VALUES (2, 1, '猫眼网络上海分公司', 1, '0001', '', '1', '140000', '140400', '140421', '天山西路789号', '猫眼网络有限公司', 0, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_organization` VALUES (3, 1, '猫眼网络北京分公司', 1, '0002', '', '1', '140000', '140400', '140421', '天山西路789号', '猫眼网络有限公司', 0, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_organization` VALUES (4, 2, '猫眼网络演出事业部', 2, '0002', '', '1', '140000', '140400', '140421', '天山西路789号', '猫眼网络有限公司', 0, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_organization` VALUES (5, 0, '蚂蚁网络有限公司', 0, '0001', '', '1', '140000', '140400', '140421', '天山西路789号', '猫眼网络有限公司', 0, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 COMMIT;
 
 -- ----------------------------
@@ -234,6 +407,8 @@ CREATE TABLE `sys_organization_user` (
   `organization_id` int(11) unsigned DEFAULT NULL COMMENT '组织Id',
   `user_id` int(11) unsigned DEFAULT NULL COMMENT '用户Id',
   `is_delete` tinyint(1) unsigned NOT NULL DEFAULT 0 COMMENT '是否删除,0-未删除,1-删除',
+  `creator` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '创建人',
+  `editor` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '修改人',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`)
@@ -243,8 +418,8 @@ CREATE TABLE `sys_organization_user` (
 -- Records of sys_organization_user
 -- ----------------------------
 BEGIN;
-INSERT INTO `sys_organization_user` VALUES (1, 1, 1, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_organization_user` VALUES (2, 1, 2, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_organization_user` VALUES (1, 1, 1, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_organization_user` VALUES (2, 1, 2, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 COMMIT;
 
 -- ----------------------------
@@ -265,7 +440,6 @@ CREATE TABLE `sys_district` (
   KEY `INDEX_PERM_NAME` (`name`) USING BTREE,
   KEY `INDEX_PERM_PID` (`parent_id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=7072 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='城市映射表';
-
 
 -- ----------------------------
 -- Records of sys_district

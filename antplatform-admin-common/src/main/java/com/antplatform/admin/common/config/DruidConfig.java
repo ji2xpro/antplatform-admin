@@ -2,6 +2,8 @@ package com.antplatform.admin.common.config;
 
 import com.alibaba.druid.support.http.StatViewServlet;
 import com.alibaba.druid.support.http.WebStatFilter;
+import com.alibaba.druid.wall.WallConfig;
+import com.alibaba.druid.wall.WallFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -51,5 +53,24 @@ public class DruidConfig {
         //忽略过滤的形式
         filterRegistrationBean.addInitParameter("exclusions", "*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico,/druid/*");
         return filterRegistrationBean;
+    }
+
+    @Bean
+    public WallFilter wallFilter(){
+        WallFilter wallFilter = new WallFilter();
+        wallFilter.setConfig(wallConfig());
+        return wallFilter;
+    }
+
+    @Bean
+    public WallConfig wallConfig(){
+        WallConfig wallConfig = new WallConfig();
+        //允许一次执行多条语句
+        wallConfig.setMultiStatementAllow(true);
+        //是否允许非以上基本语句的其他语句
+        wallConfig.setNoneBaseStatementAllow(true);
+        //是否进行严格的语法检测
+        wallConfig.setStrictSyntaxCheck(false);
+        return wallConfig;
     }
 }

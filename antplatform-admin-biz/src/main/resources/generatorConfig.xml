@@ -377,7 +377,99 @@
             <!--<ignoreColumn column="UpdateTime"/>-->
         <!--</table>-->
 
-        <table tableName="sys_user" domainObjectName="User" enableCountByExample="false"
+<!--        <table tableName="sys_user" domainObjectName="User" enableCountByExample="false"-->
+<!--               enableUpdateByExample="false"-->
+<!--               enableDeleteByExample="false"-->
+<!--               enableSelectByExample="false"-->
+<!--               selectByExampleQueryId="false">-->
+
+<!--            <columnOverride column="status" property="status" javaType="Integer"/>-->
+<!--            <columnOverride column="is_delete" property="isDelete" javaType="Integer"/>-->
+
+<!--            <ignoreColumn column="create_time"/>-->
+<!--            <ignoreColumn column="update_time"/>-->
+<!--        </table>-->
+
+
+<!--        <table tableName="sys_role" domainObjectName="Role" enableCountByExample="false"-->
+<!--               enableUpdateByExample="false"-->
+<!--               enableDeleteByExample="false"-->
+<!--               enableSelectByExample="false"-->
+<!--               selectByExampleQueryId="false">-->
+
+<!--            <columnOverride column="status" property="status" javaType="Integer"/>-->
+<!--            <columnOverride column="is_delete" property="isDelete" javaType="Integer"/>-->
+
+<!--            <ignoreColumn column="create_time"/>-->
+<!--            <ignoreColumn column="update_time"/>-->
+<!--        </table>-->
+
+<!--        <table tableName="sys_user_role" domainObjectName="UserRole" enableCountByExample="false"-->
+<!--               enableUpdateByExample="false"-->
+<!--               enableDeleteByExample="false"-->
+<!--               enableSelectByExample="false"-->
+<!--               selectByExampleQueryId="false">-->
+
+<!--            <columnOverride column="is_delete" property="isDelete" javaType="Integer"/>-->
+
+<!--            <ignoreColumn column="create_time"/>-->
+<!--            <ignoreColumn column="update_time"/>-->
+<!--        </table>-->
+
+<!--        <table tableName="sys_permission" domainObjectName="Permission" enableCountByExample="false"-->
+<!--               enableUpdateByExample="false"-->
+<!--               enableDeleteByExample="false"-->
+<!--               enableSelectByExample="false"-->
+<!--               selectByExampleQueryId="false">-->
+
+<!--            <columnOverride column="status" property="status" javaType="Integer"/>-->
+<!--            <columnOverride column="is_cache" property="isCache" javaType="Integer"/>-->
+<!--            <columnOverride column="is_delete" property="isDelete" javaType="Integer"/>-->
+
+<!--            <ignoreColumn column="create_time"/>-->
+<!--            <ignoreColumn column="update_time"/>-->
+<!--        </table>-->
+
+
+<!--        <table tableName="sys_role_permission" domainObjectName="RolePermission" enableCountByExample="false"-->
+<!--               enableUpdateByExample="false"-->
+<!--               enableDeleteByExample="false"-->
+<!--               enableSelectByExample="false"-->
+<!--               selectByExampleQueryId="false">-->
+
+<!--            <columnOverride column="is_delete" property="isDelete" javaType="Integer"/>-->
+
+<!--            <ignoreColumn column="create_time"/>-->
+<!--            <ignoreColumn column="update_time"/>-->
+<!--        </table>-->
+
+<!--        <table tableName="sys_organization" domainObjectName="Organization" enableCountByExample="false"-->
+<!--               enableUpdateByExample="false"-->
+<!--               enableDeleteByExample="false"-->
+<!--               enableSelectByExample="false"-->
+<!--               selectByExampleQueryId="false">-->
+
+<!--            <columnOverride column="status" property="status" javaType="Integer"/>-->
+<!--            <columnOverride column="is_delete" property="isDelete" javaType="Integer"/>-->
+
+<!--            <ignoreColumn column="create_time"/>-->
+<!--            <ignoreColumn column="update_time"/>-->
+<!--        </table>-->
+
+
+<!--        <table tableName="sys_organization_user" domainObjectName="OrganizationUser" enableCountByExample="false"-->
+<!--               enableUpdateByExample="false"-->
+<!--               enableDeleteByExample="false"-->
+<!--               enableSelectByExample="false"-->
+<!--               selectByExampleQueryId="false">-->
+
+<!--            <columnOverride column="is_delete" property="isDelete" javaType="Integer"/>-->
+
+<!--            <ignoreColumn column="create_time"/>-->
+<!--            <ignoreColumn column="update_time"/>-->
+<!--        </table>-->
+
+        <table tableName="sys_authority" domainObjectName="Authority" enableCountByExample="false"
                enableUpdateByExample="false"
                enableDeleteByExample="false"
                enableSelectByExample="false"
@@ -390,33 +482,7 @@
             <ignoreColumn column="update_time"/>
         </table>
 
-
-        <table tableName="sys_role" domainObjectName="Role" enableCountByExample="false"
-               enableUpdateByExample="false"
-               enableDeleteByExample="false"
-               enableSelectByExample="false"
-               selectByExampleQueryId="false">
-
-            <columnOverride column="status" property="status" javaType="Integer"/>
-            <columnOverride column="is_delete" property="isDelete" javaType="Integer"/>
-
-            <ignoreColumn column="create_time"/>
-            <ignoreColumn column="update_time"/>
-        </table>
-
-        <table tableName="sys_user_role" domainObjectName="UserRole" enableCountByExample="false"
-               enableUpdateByExample="false"
-               enableDeleteByExample="false"
-               enableSelectByExample="false"
-               selectByExampleQueryId="false">
-
-            <columnOverride column="is_delete" property="isDelete" javaType="Integer"/>
-
-            <ignoreColumn column="create_time"/>
-            <ignoreColumn column="update_time"/>
-        </table>
-
-        <table tableName="sys_permission" domainObjectName="Permission" enableCountByExample="false"
+        <table tableName="sys_menu" domainObjectName="Menu" enableCountByExample="false"
                enableUpdateByExample="false"
                enableDeleteByExample="false"
                enableSelectByExample="false"
@@ -426,48 +492,25 @@
             <columnOverride column="is_cache" property="isCache" javaType="Integer"/>
             <columnOverride column="is_delete" property="isDelete" javaType="Integer"/>
 
+            <ignoreColumn column="creator"/>
+            <ignoreColumn column="editor"/>
             <ignoreColumn column="create_time"/>
             <ignoreColumn column="update_time"/>
         </table>
 
+<!--            <table tableName="sys_role_authority" domainObjectName="RoleAuthority" enableCountByExample="false"-->
+<!--                   enableUpdateByExample="false"-->
+<!--                   enableDeleteByExample="false"-->
+<!--                   enableSelectByExample="false"-->
+<!--                   selectByExampleQueryId="false">-->
 
-        <table tableName="sys_role_permission" domainObjectName="RolePermission" enableCountByExample="false"
-               enableUpdateByExample="false"
-               enableDeleteByExample="false"
-               enableSelectByExample="false"
-               selectByExampleQueryId="false">
+<!--                <columnOverride column="is_delete" property="isDelete" javaType="Integer"/>-->
 
-            <columnOverride column="is_delete" property="isDelete" javaType="Integer"/>
-
-            <ignoreColumn column="create_time"/>
-            <ignoreColumn column="update_time"/>
-        </table>
-
-        <table tableName="sys_organization" domainObjectName="Organization" enableCountByExample="false"
-               enableUpdateByExample="false"
-               enableDeleteByExample="false"
-               enableSelectByExample="false"
-               selectByExampleQueryId="false">
-
-            <columnOverride column="status" property="status" javaType="Integer"/>
-            <columnOverride column="is_delete" property="isDelete" javaType="Integer"/>
-
-            <ignoreColumn column="create_time"/>
-            <ignoreColumn column="update_time"/>
-        </table>
-
-
-        <table tableName="sys_organization_user" domainObjectName="OrganizationUser" enableCountByExample="false"
-               enableUpdateByExample="false"
-               enableDeleteByExample="false"
-               enableSelectByExample="false"
-               selectByExampleQueryId="false">
-
-            <columnOverride column="is_delete" property="isDelete" javaType="Integer"/>
-
-            <ignoreColumn column="create_time"/>
-            <ignoreColumn column="update_time"/>
-        </table>
+<!--                <ignoreColumn column="creator"/>-->
+<!--                <ignoreColumn column="editor"/>-->
+<!--                <ignoreColumn column="create_time"/>-->
+<!--                <ignoreColumn column="update_time"/>-->
+<!--            </table>-->
 
     </context>
 </generatorConfiguration>

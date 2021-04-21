@@ -62,4 +62,47 @@ public class Constant {
         public static final int TWELVE_HOURS =  60 * 60 * 12;//十二小时，单位s
         public static final int ONE_DAY = 60 * 60 * 24;//二十四小时
     }
+
+    /**
+     * win 系统
+     */
+    public static final String WIN = "win";
+
+    /**
+     * mac 系统
+     */
+    public static final String MAC = "mac";
+
+    public enum TimeType {
+
+        /** 天 */
+        DAY("天"),
+        /** 小时 */
+        HOUR("小时"),
+        /** 分钟 */
+        MINUTE("分"),
+        /** 秒 */
+        SECOND("秒"),
+        /** 毫秒 */
+        MILLSECOND("毫秒");
+
+        /** 级别名称 */
+        private final String name;
+
+        /**
+         * 构造
+         * @param name 级别名称
+         */
+        TimeType(String name) {
+            this.name = name;
+        }
+
+        /**
+         * 获取级别名称
+         * @return 级别名称
+         */
+        public String getName() {
+            return this.name;
+        }
+    }
 }

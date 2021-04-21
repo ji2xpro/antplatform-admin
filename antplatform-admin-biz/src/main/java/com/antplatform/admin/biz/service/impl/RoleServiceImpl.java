@@ -6,6 +6,7 @@ import com.antplatform.admin.api.request.UserSpec;
 import com.antplatform.admin.biz.mapper.RoleMapper;
 import com.antplatform.admin.biz.mapper.UserRoleMapper;
 import com.antplatform.admin.biz.model.Role;
+import com.antplatform.admin.biz.model.RoleAuthority;
 import com.antplatform.admin.biz.model.RolePermission;
 import com.antplatform.admin.biz.model.UserRole;
 import com.antplatform.admin.biz.model.repository.RoleRepository;
@@ -83,37 +84,27 @@ public class RoleServiceImpl implements RoleService {
     }
 
     /**
-     * 新增或更新角色信息
+     * 保存角色信息
      *
      * @param role
      * @return
      */
     @Override
-    public Boolean saveOrUpdate(Role role) {
+    public Boolean save(Role role) {
         return roleRepository.createOrUpdate(role);
     }
 
     /**
-     * 新增角色信息
+     * 删除角色信息
      *
      * @param role
      * @return
      */
     @Override
-    public Boolean create(Role role) {
+    public Boolean delete(Role role) {
         return roleRepository.createOrUpdate(role);
     }
 
-    /**
-     * 更新角色信息
-     *
-     * @param role
-     * @return
-     */
-    @Override
-    public Boolean update(Role role) {
-        return roleRepository.createOrUpdate(role);
-    }
 
     /**
      * 角色分配权限
@@ -123,10 +114,17 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     public Boolean assignPermission(Collection<RolePermission> rolePermissions) {
-//        Role role = roleMapper.selectByPrimaryKey(rolePermission.getRoleId());
-//        if (StringUtils.isEmpty(role)) {
-//            throw new BusinessException(ErrorCode.Role_Not_Found, "role not found with id:" + rolePermission.getRoleId());
-//        }
         return roleRepository.assignPermission(rolePermissions);
+    }
+
+    /**
+     * 角色分配权限
+     *
+     * @param roleAuthorities
+     * @return
+     */
+    @Override
+    public Boolean assignAuth(Collection<RoleAuthority> roleAuthorities) {
+        return roleRepository.assignAuth(roleAuthorities);
     }
 }

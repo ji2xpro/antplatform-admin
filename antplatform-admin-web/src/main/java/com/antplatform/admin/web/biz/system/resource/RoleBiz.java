@@ -1,6 +1,7 @@
 package com.antplatform.admin.web.biz.system.resource;
 
 import com.antplatform.admin.api.dto.RoleDTO;
+import com.antplatform.admin.api.request.RoleAuthSpec;
 import com.antplatform.admin.api.request.RolePageSpec;
 import com.antplatform.admin.api.request.RolePermissionSpec;
 import com.antplatform.admin.api.request.RoleSpec;
@@ -35,23 +36,7 @@ public interface RoleBiz {
      * @param roleSpec
      * @return
      */
-    Response<Boolean> saveRole(RoleSpec roleSpec);
-
-    /**
-     * 新增角色信息
-     *
-     * @param roleSpec
-     * @return
-     */
-    Response<Boolean> createRole(RoleSpec roleSpec);
-
-    /**
-     * 更新角色信息
-     *
-     * @param roleSpec
-     * @return
-     */
-    Response<Boolean> updateRole(RoleSpec roleSpec);
+    Response<Boolean> save(RoleSpec roleSpec);
 
     /**
      * 保存角色权限
@@ -60,6 +45,15 @@ public interface RoleBiz {
      * @return
      */
     Response<Boolean> saveRolePermission(RolePermissionSpec rolePermissionSpec);
+
+
+    /**
+     * 保存角色权限
+     *
+     * @param roleAuthSpec
+     * @return
+     */
+    Response<Boolean> saveRoleAuth(RoleAuthSpec roleAuthSpec);
 
     /**
      * 删除角色信息

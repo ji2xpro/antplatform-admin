@@ -2,15 +2,18 @@ package com.antplatform.admin.service;
 
 import com.antplatform.admin.api.RoleMgtApi;
 import com.antplatform.admin.api.dto.PermissionDTO;
+import com.antplatform.admin.api.dto.RoleAuthDTO;
 import com.antplatform.admin.api.dto.RoleDTO;
 import com.antplatform.admin.api.dto.RolePermissionDTO;
 import com.antplatform.admin.api.dto.UserDTO;
 import com.antplatform.admin.api.enums.IsDeleteStatus;
+import com.antplatform.admin.api.request.RoleAuthSpec;
 import com.antplatform.admin.api.request.RolePageSpec;
 import com.antplatform.admin.api.request.RolePermissionSpec;
 import com.antplatform.admin.api.request.RoleSpec;
 import com.antplatform.admin.biz.model.Permission;
 import com.antplatform.admin.biz.model.Role;
+import com.antplatform.admin.biz.model.RoleAuthority;
 import com.antplatform.admin.biz.model.RolePermission;
 import com.antplatform.admin.biz.service.RoleService;
 import com.antplatform.admin.common.dto.PageModel;
@@ -21,6 +24,7 @@ import com.antplatform.admin.common.dto.Response;
 import com.antplatform.admin.common.dto.Responses;
 import com.antplatform.admin.common.enums.ResponseCode;
 import com.antplatform.admin.service.port.mapper.PermissionMapper;
+import com.antplatform.admin.service.port.mapper.RoleAuthMapper;
 import com.antplatform.admin.service.port.mapper.RoleMapper;
 import com.antplatform.admin.service.port.mapper.RolePermissionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +51,10 @@ public class RoleMgtPortService implements RoleMgtApi {
 
     @Autowired
     private RolePermissionMapper rolePermissionMapper;
+
+
+    @Autowired
+    private RoleAuthMapper roleAuthMapper;
 
     /**
      * 分页查询角色列表
@@ -82,52 +90,18 @@ public class RoleMgtPortService implements RoleMgtApi {
     }
 
     /**
-     * 新增或更新角色信息
+     * 保存角色信息
      *
      * @param spec
      * @return
      */
     @Override
-    public Response<Boolean> saveOrUpdate(RoleSpec spec) {
+    public Response<Boolean> save(RoleSpec spec) {
         Role role = roleMapper.commandToEntity(spec);
 
-        Boolean temp = roleService.saveOrUpdate(role);
+        Boolean temp = roleService.save(role);
         if (!temp) {
-            return Responses.fail(ResponseCode.VALIDATION_ERROR.getCode(), "新增或更新角色信息失败");
-        }
-        return Responses.of(temp);
-    }
-
-    /**
-     * 新增角色信息
-     *
-     * @param spec
-     * @return
-     */
-    @Override
-    public Response<Boolean> createRole(RoleSpec spec) {
-        Role role = roleMapper.commandToEntity(spec);
-
-        Boolean temp = roleService.create(role);
-        if (!temp) {
-            return Responses.fail(ResponseCode.VALIDATION_ERROR.getCode(), "新增角色信息失败");
-        }
-        return Responses.of(temp);
-    }
-
-    /**
-     * 更新角色信息
-     *
-     * @param spec
-     * @return
-     */
-    @Override
-    public Response<Boolean> updateRole(RoleSpec spec) {
-        Role role = roleMapper.commandToEntity(spec);
-
-        Boolean temp = roleService.update(role);
-        if (!temp) {
-            return Responses.fail(ResponseCode.VALIDATION_ERROR.getCode(), "更新角色信息失败");
+            return Responses.fail(ResponseCode.VALIDATION_ERROR.getCode(), "保存角色信息失败");
         }
         return Responses.of(temp);
     }
@@ -161,6 +135,34 @@ public class RoleMgtPortService implements RoleMgtApi {
     }
 
     /**
+     * 角色分配权限
+     *
+     * @param spec
+     * @return
+     */
+    @Override
+    public Response<Boolean> assignAuth(RoleAuthSpec spec) {
+        Collection<RoleAuthority> roleAuthorities = new ArrayList<>();
+
+        List<RoleAuthDTO> addList = spec.getAddAuths();
+        if (!CollectionUtils.isEmpty(addList)) {
+            Collection<RoleAuthority> adds = roleAuthMapper.commandToEntity(addList);
+            adds.forEach(add -> add.setIsDelete(IsDeleteStatus.EXITS.getCode()));
+
+            roleAuthorities.addAll(adds);
+        }
+
+        List<RoleAuthDTO> delList = spec.getDelAuths();
+        if (!CollectionUtils.isEmpty(delList)) {
+            Collection<RoleAuthority> deletes = roleAuthMapper.commandToEntity(delList);
+            deletes.forEach(delete -> delete.setIsDelete(IsDeleteStatus.DELETED.getCode()));
+
+            roleAuthorities.addAll(deletes);
+        }
+        return Responses.of(roleService.assignAuth(roleAuthorities));
+    }
+
+    /**
      * 删除角色信息
      *
      * @param spec
@@ -171,7 +173,7 @@ public class RoleMgtPortService implements RoleMgtApi {
         Role role = roleMapper.commandToEntity(spec);
         role.setIsDelete(IsDeleteStatus.DELETED.getCode());
 
-        Boolean temp = roleService.saveOrUpdate(role);
+        Boolean temp = roleService.delete(role);
 
         return Responses.of(temp);
     }

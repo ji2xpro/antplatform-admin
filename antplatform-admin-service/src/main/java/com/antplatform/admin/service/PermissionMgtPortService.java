@@ -52,9 +52,6 @@ public class PermissionMgtPortService implements PermissionMgtApi {
     @Autowired
     private PermissionMapper permissionMapper;
 
-    @Autowired
-    private RolePermissionMapper rolePermissionMapper;
-
     /**
      * 查询权限列表
      *
@@ -94,70 +91,6 @@ public class PermissionMgtPortService implements PermissionMgtApi {
 
         Collection<PermissionDTO> permissionDTOS = permissionMapper.toDto(permissions);
 
-//        Collection<PermissionDTO> permissionDTOS = portService.getPermissionTree(permissions,false);
-
         return Responses.of(permissionDTOS);
     }
-
-    /**
-     * 查询角色权限
-     *
-     * @param roleId
-     * @return
-     */
-    @Override
-    public Response<Collection<RolePermissionDTO>> findBySpec1(int roleId) {
-        Collection<RolePermission> rolePermissions = permissionService.findBySpec(roleId,IsDeleteStatus.EXITS.getCode());
-
-        List<RolePermissionDTO> rolePermissionDTOS = Lists.newArrayList(rolePermissionMapper.toDto(rolePermissions));
-        rolePermissionDTOS = rolePermissionDTOS.stream().sorted(Comparator.comparing(RolePermissionDTO::getPermissionId)).collect(Collectors.toList());
-
-
-        RoleSpec roleSpec = new RoleSpec();
-        roleSpec.setRoleId(roleId);
-
-        Collection<Permission> permissions = permissionService.findBySpec(roleSpec);
-
-        List<PermissionDTO> permissionDTOS = Lists.newArrayList(permissionMapper.toDto(permissions));
-
-        permissionDTOS = permissionDTOS.stream().sorted(Comparator.comparing(PermissionDTO::getId)).collect(Collectors.toList());
-
-
-        System.out.println(permissionDTOS);
-
-        for (int i = 0; i < rolePermissionDTOS.size(); i++) {
-            rolePermissionDTOS.get(i).setName(permissionDTOS.get(i).getName());
-            rolePermissionDTOS.get(i).setType(permissionDTOS.get(i).getType());
-        }
-
-        return Responses.of(rolePermissionDTOS);
-    }
-
-    /**
-     * 组装子父级目录
-     * @param resourceList
-     * @return
-     */
-//    private List<PermissionDTO> assembleResourceTree(Collection<PermissionDTO> resourceList) {
-//        Map<Integer, PermissionDTO> resourceMap = new HashMap<>();
-//        List<PermissionDTO> menus = new ArrayList<>();
-//        for (PermissionDTO resource : resourceList) {
-//            resourceMap.put(resource.getId(), resource);
-//        }
-//        for (PermissionDTO resource : resourceList) {
-//            Integer treePId = resource.getParentId();
-//            PermissionDTO resourceTree = resourceMap.get(treePId);
-//            if (null != resourceTree && !resource.equals(resourceTree)) {
-//                List<PermissionDTO> nodes = resourceTree.getChildren();
-//                if (null == nodes) {
-//                    nodes = new ArrayList<>();
-//                    resourceTree.setChildren(nodes);
-//                }
-//                nodes.add(resource);
-//            } else {
-//                menus.add(resource);
-//            }
-//        }
-//        return menus;
-//    }
 }

@@ -30,13 +30,4 @@ public interface PermissionBiz {
      * @return
      */
     Response<Collection<PermissionDTO>> queryRolePermission(int roleId);
-
-    /**
-     * 查询角色权限
-     *
-     * @param roleId
-     * @return
-     */
-    Response<Collection<RolePermissionDTO>> queryRolePermission1(int roleId);
-
 }

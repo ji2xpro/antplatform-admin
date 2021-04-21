@@ -3,6 +3,7 @@ package com.antplatform.admin.biz.service;
 import com.antplatform.admin.api.request.PermissionListSpec;
 import com.antplatform.admin.api.request.PermissionSpec;
 import com.antplatform.admin.api.request.RoleSpec;
+import com.antplatform.admin.biz.model.Authority;
 import com.antplatform.admin.biz.model.Permission;
 import com.antplatform.admin.biz.model.RolePermission;
 

@@ -1,6 +1,7 @@
 package com.antplatform.admin.web.action.system.resource;
 
 import com.antplatform.admin.api.dto.RoleDTO;
+import com.antplatform.admin.api.request.RoleAuthSpec;
 import com.antplatform.admin.api.request.RolePageSpec;
 import com.antplatform.admin.api.request.RolePermissionSpec;
 import com.antplatform.admin.api.request.RoleSpec;
@@ -10,18 +11,19 @@ import com.antplatform.admin.common.result.AjaxResult;
 import com.antplatform.admin.common.result.Paging;
 import com.antplatform.admin.common.utils.TransformUtils;
 import com.antplatform.admin.web.biz.system.resource.RoleBiz;
-import com.antplatform.admin.web.entity.system.resource.RolePermissionRequest;
-import com.antplatform.admin.web.entity.system.resource.RoleRequest;
-import com.antplatform.admin.web.entity.system.resource.RoleVO;
+import com.antplatform.admin.web.entity.system.resource.request.RoleAuthRequest;
+import com.antplatform.admin.web.entity.system.resource.request.RolePermissionRequest;
+import com.antplatform.admin.web.entity.system.resource.request.RoleRequest;
+import com.antplatform.admin.web.entity.system.resource.vo.RoleVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.Logical;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -41,6 +44,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/role")
+@Validated
 @Api(value = "RoleAction|角色相关的前端控制器")
 public class RoleAction {
 
@@ -120,7 +124,7 @@ public class RoleAction {
         roleSpec.setStatus(roleRequest.getStatus());
         roleSpec.setRemark(roleRequest.getRemark());
 
-        Response<Boolean> response = roleBiz.createRole(roleSpec);
+        Response<Boolean> response = roleBiz.save(roleSpec);
 
         if (response.isSuccess()) {
             return AjaxResult.createSuccessResult(true);
@@ -142,7 +146,7 @@ public class RoleAction {
         roleSpec.setStatus(roleRequest.getStatus());
         roleSpec.setType(roleRequest.getType());
 
-        Response<Boolean> response = roleBiz.updateRole(roleSpec);
+        Response<Boolean> response = roleBiz.save(roleSpec);
 
         if (response.isSuccess()) {
             return AjaxResult.createSuccessResult(true);
@@ -160,13 +164,36 @@ public class RoleAction {
     @RequiresRoles("admin")
     @ApiOperation(value = "修改角色的权限资源")
 //    @AroundLog(name = "修改角色的权限资源")
-    public AjaxResult<Boolean> updateRoleResource(@RequestBody RolePermissionRequest rolePermissionRequest) {
+    public AjaxResult<Boolean> updateRoleResource(@Validated @RequestBody RolePermissionRequest rolePermissionRequest) {
         RolePermissionSpec rolePermissionSpec = new RolePermissionSpec();
         rolePermissionSpec.setRoleId(rolePermissionRequest.getRoleId());
         rolePermissionSpec.setAddResources(rolePermissionRequest.getAddResources());
         rolePermissionSpec.setDelResources(rolePermissionRequest.getDelResources());
 
         Response<Boolean> response = roleBiz.saveRolePermission(rolePermissionSpec);
+        if (response.isSuccess()) {
+            return AjaxResult.createSuccessResult(true);
+        }
+        return AjaxResult.createSuccessResult(false);
+    }
+
+    /**
+     * 修改角色权限
+     *
+     * @param roleAuthRequest
+     * @return
+     */
+    @PostMapping(value = "/auth/update")
+    @RequiresRoles("admin")
+    @ApiOperation(value = "修改角色的权限资源")
+//    @AroundLog(name = "修改角色的权限资源")
+    public AjaxResult<Boolean> updateRoleAuth(@Validated @RequestBody RoleAuthRequest roleAuthRequest) {
+        RoleAuthSpec roleAuthSpec = new RoleAuthSpec();
+        roleAuthSpec.setRoleId(roleAuthRequest.getRoleId());
+        roleAuthSpec.setAddAuths(roleAuthRequest.getAddResources());
+        roleAuthSpec.setDelAuths(roleAuthRequest.getDelResources());
+
+        Response<Boolean> response = roleBiz.saveRoleAuth(roleAuthSpec);
         if (response.isSuccess()) {
             return AjaxResult.createSuccessResult(true);
         }
@@ -190,7 +217,7 @@ public class RoleAction {
         roleSpec.setRoleId(roleId);
         roleSpec.setStatus(roleStatus);
 
-        Response<Boolean> response = roleBiz.updateRole(roleSpec);
+        Response<Boolean> response = roleBiz.save(roleSpec);
 
         if (response.isSuccess()) {
             return AjaxResult.createSuccessResult(true);
@@ -206,7 +233,7 @@ public class RoleAction {
     @ApiOperation(value = "删除角色")
 //    @AroundLog(name = "删除角色")
     @ApiImplicitParam(paramType = "path", name = "roleId", value = "角色ID", required = true, dataType = "Integer")
-    public AjaxResult<Boolean> delete(@PathVariable("roleId") Integer roleId) {
+    public AjaxResult<Boolean> delete( @NotNull(message="角色id不能为空") @PathVariable("roleId") Integer roleId) {
         if (null == roleId) {
             return AjaxResult.createFailedResult(1000, "ID不能为空");
         }

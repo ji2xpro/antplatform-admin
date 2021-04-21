@@ -2,6 +2,7 @@ package com.antplatform.admin.biz.infrastructure.shiro.jwt;
 
 import com.antplatform.admin.api.request.PermissionListSpec;
 import com.antplatform.admin.biz.infrastructure.shiro.ShiroFilterProperties;
+import com.antplatform.admin.biz.infrastructure.shiro.account.UserContextFilter;
 import com.antplatform.admin.biz.infrastructure.shiro.cache.ShiroCacheManager;
 import com.antplatform.admin.biz.infrastructure.shiro.credentials.CredentialsMatcher;
 import com.antplatform.admin.biz.infrastructure.shiro.credentials.RetryLimitCredentialsMatcher;
@@ -275,6 +276,13 @@ public class ShiroConfig {
         FilterRegistrationBean<Filter> registration = new FilterRegistrationBean<>(filter);
         registration.setEnabled(false);
         return registration;
+    }
+
+    @Bean
+    public FilterRegistrationBean filterRegistrationBean(){
+        FilterRegistrationBean bean = new FilterRegistrationBean();
+        bean.setFilter(new UserContextFilter());
+        return bean;
     }
 
     @Bean

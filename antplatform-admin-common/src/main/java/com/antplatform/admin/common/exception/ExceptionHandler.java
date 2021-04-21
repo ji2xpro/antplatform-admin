@@ -18,9 +18,9 @@ public class ExceptionHandler {
     private ExceptionHandler() {
     }
 
-    public static Response processFailureException(Exception exp) {
+    public static <T> Response<T> processException(Exception exp) {
         if (exp instanceof IllegalArgumentException) {
-//            exp = new ValidationException(ResponseCode.VALIDATION_ERROR.getCode(), exp.getMessage(), exp, LionUtils.getExceptionDepth());
+//            exp = new ValidationException(ResponseCode.VALIDATION_ERROR.code(), exp.getMessage(), exp, LionUtils.getExceptionDepth());
         }
         if (exp instanceof ValidationException) {
             ValidationException e = (ValidationException) exp;
@@ -47,9 +47,38 @@ public class ExceptionHandler {
         return Responses.unknownInnerError();
     }
 
+    public static <T> PagedResponse<T> processPageException(Exception exp) {
+        if (exp instanceof IllegalArgumentException) {
+//            exp = new ValidationException(ResponseCode.VALIDATION_ERROR.code(), exp.getMessage(), exp, LionUtils.getExceptionDepth());
+        }
+        if (exp instanceof ValidationException) {
+            ValidationException e = (ValidationException) exp;
+            log.error(MSG_FMT, ExceptionHandler.currentMethod(exp), ((ValidationException) exp).getCode(), exp);
+            return PagedResponses.fail(e.getCode(), e.getMessage());
+        }
+        if (exp instanceof CommunicationException) {
+            CommunicationException e = (CommunicationException) exp;
+            log.error(MSG_FMT, ExceptionHandler.currentMethod(exp), ((CommunicationException) exp).getCode(), exp);
+            return PagedResponses.fail(e.getCode(), e.getMessage());
+        }
+        if (exp instanceof DataProcessException) {
+            DataProcessException e = (DataProcessException) exp;
+            log.error(MSG_FMT, ExceptionHandler.currentMethod(exp), ((DataProcessException) exp).getCode(), exp);
+            return PagedResponses.fail(e.getCode(), e.getMessage());
+        }
+        if (exp instanceof BusinessException) {
+            BusinessException e = (BusinessException) exp;
+            log.error(MSG_FMT, ExceptionHandler.currentMethod(exp), ((BusinessException) exp).getCode(), exp);
+            return PagedResponses.fail(e.getCode(), e.getMessage());
+        }
+        log.error("msg:{}", exp);
+//        Cat.logErrorWithCategory("UnknownError", exp);
+        return PagedResponses.unknownInnerError();
+    }
+
     public static PagedResponse resolve(Exception exp) {
         if (exp instanceof IllegalArgumentException) {
-//            exp = new ValidationException(ResponseCode.VALIDATION_ERROR.getCode(), exp.getMessage(), exp, LionUtils.getExceptionDepth());
+//            exp = new ValidationException(ResponseCode.VALIDATION_ERROR.code(), exp.getMessage(), exp, LionUtils.getExceptionDepth());
         }
         if (exp instanceof ValidationException) {
             ValidationException e = (ValidationException) exp;

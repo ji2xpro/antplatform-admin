@@ -6,6 +6,7 @@ import com.antplatform.admin.api.request.PermissionSpec;
 import com.antplatform.admin.api.request.RoleSpec;
 import com.antplatform.admin.biz.mapper.PermissionMapper;
 import com.antplatform.admin.biz.mapper.RolePermissionMapper;
+import com.antplatform.admin.biz.model.Authority;
 import com.antplatform.admin.biz.model.Permission;
 import com.antplatform.admin.biz.model.RolePermission;
 import com.antplatform.admin.biz.model.repository.PermissionRepository;

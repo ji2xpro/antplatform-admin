@@ -6,7 +6,7 @@ import com.antplatform.admin.common.dto.Response;
 import com.antplatform.admin.common.result.AjaxResult;
 import com.antplatform.admin.common.utils.TransformUtils;
 import com.antplatform.admin.web.biz.system.resource.PermissionBiz;
-import com.antplatform.admin.web.entity.system.resource.PermissionVO;
+import com.antplatform.admin.web.entity.system.resource.vo.PermissionVO;
 import com.google.common.collect.Lists;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -77,18 +77,5 @@ public class PermissionAction {
         }
         return AjaxResult.createFailedResult(response.getCode(), response.getMsg());
     }
-//    public AjaxResult<List<RolePermissionVO>> queryRoleResource(@PathVariable("roleId") Integer roleId) {
-//
-//        Response<Collection<RolePermissionDTO>> response = permissionBiz.queryRolePermission1(roleId);
-//
-//        if (response.isSuccess()){
-//            List<RolePermissionDTO> rolePermissionDTOS = Lists.newArrayList(response.getData());
-//
-//            List<RolePermissionVO> rolePermissionVOS = TransformUtils.simpleTransform(rolePermissionDTOS,RolePermissionVO.class);
-//
-//            return AjaxResult.createSuccessResult(rolePermissionVOS);
-//        }
-//        return AjaxResult.createFailedResult(response.getCode(), response.getMsg());
-//    }
 
 }

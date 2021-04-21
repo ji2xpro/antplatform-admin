@@ -2,6 +2,7 @@ package com.antplatform.admin.biz.model;
 
 
 import com.antplatform.admin.biz.model.entity.AbstractDomainObject;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.persistence.Column;
@@ -15,6 +16,17 @@ import java.util.Date;
  */
 @Data
 public class BaseModel extends AbstractDomainObject implements Serializable{
+    /**
+     * 创建人
+     */
+    @Column(name = "creator")
+    private String creator;
+
+    /**
+     * 修改人
+     */
+    @Column(name = "editor")
+    private String editor;
 
     @Column(name = "create_time",insertable = false)
     private Date createTime;

@@ -5,6 +5,7 @@ import com.antplatform.admin.api.request.RolePermissionSpec;
 import com.antplatform.admin.api.request.RoleSpec;
 import com.antplatform.admin.api.request.UserSpec;
 import com.antplatform.admin.biz.model.Role;
+import com.antplatform.admin.biz.model.RoleAuthority;
 import com.antplatform.admin.biz.model.RolePermission;
 import com.antplatform.admin.common.dto.PageModel;
 import com.antplatform.admin.common.dto.Response;
@@ -43,28 +44,20 @@ public interface RoleService {
     Role findBySpec(RoleSpec roleSpec);
 
     /**
-     * 新增或更新角色信息
+     * 保存角色信息
      *
      * @param role
      * @return
      */
-    Boolean saveOrUpdate(Role role);
+    Boolean save(Role role);
 
     /**
-     * 新增角色信息
+     * 删除角色信息
      *
      * @param role
      * @return
      */
-    Boolean create(Role role);
-
-    /**
-     * 更新角色信息
-     *
-     * @param role
-     * @return
-     */
-    Boolean update(Role role);
+    Boolean delete(Role role);
 
     /**
      * 角色分配权限
@@ -72,4 +65,11 @@ public interface RoleService {
      * @return
      */
     Boolean assignPermission(Collection<RolePermission> rolePermissions);
+
+    /**
+     * 角色分配权限
+     * @param roleAuthorities
+     * @return
+     */
+    Boolean assignAuth(Collection<RoleAuthority> roleAuthorities);
 }

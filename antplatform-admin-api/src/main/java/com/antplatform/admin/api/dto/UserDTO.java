@@ -13,8 +13,11 @@ import java.util.Date;
  */
 @Data
 public class UserDTO extends BaseDTO {
+
     private Collection<String> roles;
     private Collection<PermissionDTO> resources;
+    private Collection<String> auth;
+    private Collection<MenuDTO> menus;
     private String introduction;
     private String avatar;
     private String name;
@@ -29,6 +32,4 @@ public class UserDTO extends BaseDTO {
 
     private Integer status;
     private Date createTime;
-//    private String username;
-
 }

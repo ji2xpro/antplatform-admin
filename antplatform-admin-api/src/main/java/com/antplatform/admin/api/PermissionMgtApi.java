@@ -31,11 +31,4 @@ public interface PermissionMgtApi {
      * @return
      */
     Response<Collection<PermissionDTO>> findBySpec(int roleId);
-
-    /**
-     * 查询角色权限
-     * @param roleId
-     * @return
-     */
-    Response<Collection<RolePermissionDTO>> findBySpec1(int roleId);
 }

@@ -1,6 +1,7 @@
 package com.antplatform.admin.api;
 
 import com.antplatform.admin.api.dto.RoleDTO;
+import com.antplatform.admin.api.request.RoleAuthSpec;
 import com.antplatform.admin.api.request.RolePageSpec;
 import com.antplatform.admin.api.request.RolePermissionSpec;
 import com.antplatform.admin.api.request.RoleSpec;
@@ -30,28 +31,12 @@ public interface RoleMgtApi {
     Response<RoleDTO> findBySpec(RoleSpec spec);
 
     /**
-     * 新增或更新角色信息
+     * 保存角色信息
      *
      * @param spec
      * @return
      */
-    Response<Boolean> saveOrUpdate(RoleSpec spec);
-
-    /**
-     * 新增角色信息
-     *
-     * @param spec
-     * @return
-     */
-    Response<Boolean> createRole(RoleSpec spec);
-
-    /**
-     * 更新角色信息
-     *
-     * @param spec
-     * @return
-     */
-    Response<Boolean> updateRole(RoleSpec spec);
+    Response<Boolean> save(RoleSpec spec);
 
     /**
      * 角色分配权限
@@ -60,6 +45,14 @@ public interface RoleMgtApi {
      * @return
      */
     Response<Boolean> assignPermission(RolePermissionSpec spec);
+
+    /**
+     * 角色分配权限
+     *
+     * @param spec
+     * @return
+     */
+    Response<Boolean> assignAuth(RoleAuthSpec spec);
 
     /**
      * 删除角色信息
