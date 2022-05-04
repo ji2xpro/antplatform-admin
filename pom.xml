@@ -82,6 +82,13 @@
                 <scope>provided</scope>
             </dependency>
 
+            <!-- SpringBoot 外部tomcat支持,整合jsp必须要 -->
+            <dependency>
+                <groupId>org.apache.tomcat.embed</groupId>
+                <artifactId>tomcat-embed-jasper</artifactId>
+                <version>8.5.23</version>
+            </dependency>
+
             <dependency>
                 <groupId>log4j</groupId>
                 <artifactId>log4j</artifactId>
@@ -101,13 +108,13 @@
                 <version>2.1.1</version>
             </dependency>
             <!-- 热部署 -->
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-devtools</artifactId>
-                <version>${springboot.version}</version>
-                <!--<scope>runtime</scope>-->
-                <!--<optional>true</optional>-->
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>org.springframework.boot</groupId>-->
+<!--                <artifactId>spring-boot-devtools</artifactId>-->
+<!--                <version>${springboot.version}</version>-->
+<!--                &lt;!&ndash;<scope>runtime</scope>&ndash;&gt;-->
+<!--                &lt;!&ndash;<optional>true</optional>&ndash;&gt;-->
+<!--            </dependency>-->
             <!-- jpa -->
             <!--<dependency>-->
                 <!--<groupId>org.springframework.boot</groupId>-->
@@ -151,6 +158,7 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-thymeleaf</artifactId>
+                <version>${springboot.version}</version>
             </dependency>
             <!-- elastic search -->
             <dependency>
@@ -177,12 +185,7 @@
                 <version>4.12</version>
                 <scope>test</scope>
             </dependency>
-            <!-- tomcat的支持.-->
-            <dependency>
-                <groupId>org.apache.tomcat.embed</groupId>
-                <artifactId>tomcat-embed-jasper</artifactId>
-                <version>8.5.23</version>
-            </dependency>
+
             <!-- mysql驱动 -->
             <dependency>
                 <groupId>mysql</groupId>
@@ -355,10 +358,13 @@
 
     <build>
         <plugins>
-<!--            <plugin>-->
-<!--                <groupId>org.springframework.boot</groupId>-->
-<!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
-<!--            </plugin>-->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
 
 
             <!-- 注意: 因为我们不需要demo-parent是一个可运行的项目，所以修改原来的打包方式为maven打包方式 -->

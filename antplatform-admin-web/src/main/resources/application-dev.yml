@@ -1,7 +1,16 @@
+#配置Servlet容器
 server:
+    # 配置程序端口，默认为8080
     port: 1234
+    # 配置默认访问路径，默认为/
     servlet:
       context-path: /dev-api
+    # 配置Tomcat
+    tomcat:
+      # 配置Tomcat编码,默认为UTF-8
+      uri-encoding: utf-8
+      # 配置最大线程数
+      max-threads: 1000
 system:
   #注册用户默认密码
   defaultPwd: 123456
