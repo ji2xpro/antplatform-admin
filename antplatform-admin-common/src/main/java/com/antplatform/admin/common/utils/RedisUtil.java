@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -113,7 +114,7 @@ public class RedisUtil {
                 if (key.length == 1) {
                     redisTemplate.delete(key[0]);
                 } else {
-                    redisTemplate.delete(CollectionUtils.arrayToList(key));
+                    redisTemplate.delete((Collection<String>) CollectionUtils.arrayToList(key));
                 }
             }
             return true;

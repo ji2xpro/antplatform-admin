@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.2.3.RELEASE</version>
+        <version>2.5.12</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.antplatform</groupId>
@@ -25,11 +25,28 @@
     </modules>
 
     <properties>
-        <springboot.version>2.2.3.RELEASE</springboot.version>
+        <springboot.version>2.5.12</springboot.version>
         <java.version>1.8</java.version>
         <!-- oshi监控需要指定jna版本, 问题详见 https://github.com/oshi/oshi/issues/1040 -->
         <jna.version>5.6.0</jna.version>
     </properties>
+
+    <repositories>
+        <repository>
+            <id>central</id>
+            <name>aliyun maven</name>
+            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+            <layout>default</layout>
+            <!-- 是否开启发布版构件下载 -->
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <!-- 是否开启快照版构件下载 -->
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
     <!--统一管理依赖的版本号-->
     <dependencyManagement>
@@ -73,21 +90,21 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-            <!-- springboot tomcat 支持 -->
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-tomcat</artifactId>
-                <version>${springboot.version}</version>
-                <!--打包的时候可以不用包进去，别的设施会提供。事实上该依赖理论上可以参与编译，测试，运行等周期。相当于compile，但是打包阶段做了exclude操作-->
-                <scope>provided</scope>
-            </dependency>
+<!--            &lt;!&ndash; springboot tomcat 支持 &ndash;&gt;-->
+<!--            <dependency>-->
+<!--                <groupId>org.springframework.boot</groupId>-->
+<!--                <artifactId>spring-boot-starter-tomcat</artifactId>-->
+<!--                <version>${springboot.version}</version>-->
+<!--                &lt;!&ndash;打包的时候可以不用包进去，别的设施会提供。事实上该依赖理论上可以参与编译，测试，运行等周期。相当于compile，但是打包阶段做了exclude操作&ndash;&gt;-->
+<!--                <scope>provided</scope>-->
+<!--            </dependency>-->
 
-            <!-- SpringBoot 外部tomcat支持,整合jsp必须要 -->
-            <dependency>
-                <groupId>org.apache.tomcat.embed</groupId>
-                <artifactId>tomcat-embed-jasper</artifactId>
-                <version>8.5.23</version>
-            </dependency>
+<!--            &lt;!&ndash; SpringBoot 外部tomcat支持,整合jsp必须要 &ndash;&gt;-->
+<!--            <dependency>-->
+<!--                <groupId>org.apache.tomcat.embed</groupId>-->
+<!--                <artifactId>tomcat-embed-jasper</artifactId>-->
+<!--                <version>8.5.23</version>-->
+<!--            </dependency>-->
 
             <dependency>
                 <groupId>log4j</groupId>
