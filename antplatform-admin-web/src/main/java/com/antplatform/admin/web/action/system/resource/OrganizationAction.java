@@ -70,7 +70,7 @@ public class OrganizationAction {
     @RequiresRoles("admin")
     @ApiOperation(value = "校验组织名称是否存在", notes = "校验组织名称是否存在")
     public AjaxResult<Boolean> checkOrganizationName(@RequestParam(value = "id", required = false) Integer id,
-                                             @RequestParam(value = "organizationName") String organizationName) {
+                                                     @RequestParam(value = "organizationName") String organizationName) {
         OrganizationSpec organizationSpec = new OrganizationSpec();
         organizationSpec.setOrganizationId(id);
         organizationSpec.setName(organizationName);
@@ -87,7 +87,8 @@ public class OrganizationAction {
     @RequiresRoles("admin")
     @ApiOperation(value = "校验组织标识是否存在", notes = "校验组织标识是否存在")
     public AjaxResult<Boolean> checkOrganizationKey(@RequestParam(value = "id", required = false) Integer id,
-                                                    @NotEmpty(message="组织标识不能为空") @RequestParam(value = "organizationKey") String organizationKey) {
+                                                    @NotEmpty(message = "组织标识不能为空")
+                                                    @RequestParam(value = "organizationKey") String organizationKey) {
         OrganizationSpec organizationSpec = new OrganizationSpec();
         organizationSpec.setOrganizationId(id);
         organizationSpec.setKeypoint(organizationKey);

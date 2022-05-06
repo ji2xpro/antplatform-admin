@@ -1,6 +1,7 @@
 package com.antplatform.admin.biz.infrastructure.shiro.credentials;
 
 import com.antplatform.admin.biz.service.UserService;
+import com.antplatform.admin.common.base.Constants.GlobalData;
 import com.antplatform.admin.common.utils.RedisUtil;
 import org.apache.shiro.authc.AccountException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -39,21 +40,25 @@ public class RetryLimitCredentialsMatcher extends SimpleCredentialsMatcher {
 
     @Override
     public boolean doCredentialsMatch(AuthenticationToken token, AuthenticationInfo info) {
-        int retryCount = retryLimitCount(token, info);
-        boolean matches = super.doCredentialsMatch(token, info);
-        if (!matches) {
-            String msg = retryCount <= 0 ? "您的账号一小时内禁止登录！" : "您还剩" + retryCount + "次重试的机会";
-            throw new AccountException("帐号或密码不正确！" + msg);
-        }
+        if (GlobalData.isLogin){
+            GlobalData.isLogin = false;
+            int retryCount = retryLimitCount(token, info);
+            boolean matches = super.doCredentialsMatch(token, info);
+            if (!matches) {
+                String msg = retryCount <= 0 ? "您的账号一小时内禁止登录！" : "您还剩" + retryCount + "次重试的机会";
+                throw new AccountException("帐号或密码不正确！" + msg);
+            }
 
-        //清空登录计数
-        RedisUtil.del(loginCountKey);
-        try {
+            //清空登录计数
+            RedisUtil.del(loginCountKey);
+            try {
 //            userService.updateUserLastLoginInfo(user);
-        } catch (Exception e) {
-            e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return true;
         }
-        return true;
+       return super.doCredentialsMatch(token, info);
     }
 
     /**

@@ -512,5 +512,31 @@
 <!--                <ignoreColumn column="update_time"/>-->
 <!--            </table>-->
 
+        <table tableName="sys_organization" domainObjectName="Organization" enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false"
+               selectByExampleQueryId="false">
+
+            <columnOverride column="status" property="status" javaType="Integer"/>
+            <columnOverride column="is_delete" property="isDelete" javaType="Integer"/>
+
+            <ignoreColumn column="create_time"/>
+            <ignoreColumn column="update_time"/>
+        </table>
+
+
+        <table tableName="sys_organization_user" domainObjectName="OrganizationUser" enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false"
+               selectByExampleQueryId="false">
+
+            <columnOverride column="is_delete" property="isDelete" javaType="Integer"/>
+
+            <ignoreColumn column="create_time"/>
+            <ignoreColumn column="update_time"/>
+        </table>
+
     </context>
 </generatorConfiguration>

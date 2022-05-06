@@ -207,7 +207,7 @@ INSERT INTO `sys_menu` VALUES (13, '系统日志', 4, '0-1-4', 1, 'systemTable',
 INSERT INTO `sys_menu` VALUES (14, '系统监控', 0, '0', 1, 'monitor', 'monitor', 'Layout', '这是一个系统监控页面', 1, 0, 0, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO `sys_menu` VALUES (15, '服务监控', 14, '0-14', 30, 'server', 'server', 'monitor/server', '这是一个服务监控', 1, 0, 0, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO `sys_menu` VALUES (16, '缓存监控', 14, '0-14', 1, 'cache', 'cache', 'monitor/cache', '缓存监控', 2, 1, 0, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_menu` VALUES (17, '系统帮助', 0, '0', 1, 'help', 'help', 'Layout', '这是一个帮助页面', 1, 0, 0, 0, 'admin', , CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_menu` VALUES (17, '系统帮助', 0, '0', 1, 'help', 'help', 'Layout', '这是一个帮助页面', 1, 0, 0, 0, 'admin',NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO `sys_menu` VALUES (18, '源码更新', 17, '0-17', 1, 'code', 'https://github.com/ji2xpro/antplatform-web-v4.3.1', NULL, '这是源码', 1, 0, 0, 0, 'admin', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO `sys_menu` VALUES (19, '开发文档', 17, '0-17', 1, 'document', 'https://panjiachen.github.io/vue-element-admin-site/zh/', NULL, '开发', 1, 0, 0, 0, 'admin', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 COMMIT;

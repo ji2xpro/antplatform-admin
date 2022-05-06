@@ -6,6 +6,7 @@ import com.antplatform.admin.api.request.UserSpec;
 import com.antplatform.admin.biz.model.User;
 import com.antplatform.admin.common.annotation.auth.CurrentUser;
 import com.antplatform.admin.common.annotation.auth.NoAuthentication;
+import com.antplatform.admin.common.base.Constants.GlobalData;
 import com.antplatform.admin.common.dto.Response;
 import com.antplatform.admin.common.enums.DataType;
 import com.antplatform.admin.common.enums.ParamType;
@@ -82,6 +83,8 @@ public class LoginAction {
         String password = loginRequest.getPassword();
         String vcode = loginRequest.getVcode();
         String verKey = loginRequest.getVerkey();
+
+        GlobalData.isLogin = true;
 
         if (!CaptchaUtil.isVerified(vcode, verKey, request)) {
             return AjaxResult.createFailedResult(ResponseCode.INVALID_RE_VCODE);
