@@ -34,8 +34,9 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `sys_user`;
 CREATE TABLE `sys_user` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `username` varchar(225) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '用户名',
+  `username` varchar(225) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '账号',
   `password` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '用户密码',
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '姓名',
   `nickname` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '昵称',
   `mobile` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '手机号',
   `email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '邮箱',
@@ -55,8 +56,8 @@ CREATE TABLE `sys_user` (
 -- ----------------------------
 BEGIN;
 
-INSERT INTO `sys_user` VALUES (1, 'admin', '43286a86708820e38c333cdd4c496355', '超级管理员', NULL, NULL, 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif', NULL, 0, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `sys_user` VALUES (2, 'editor', '123456', '普通用户', NULL, NULL, 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif', NULL, 0, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_user` VALUES (1, 'admin', '43286a86708820e38c333cdd4c496355', '超级管理员', '超级管理员', '13052099111', '1@163.com', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif', NULL, 0, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `sys_user` VALUES (2, 'editor', '123456', '普通用户', '普通用户', '13052099222', '2@163.com', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif', NULL, 0, 0, 'admin', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 COMMIT;
 
 -- ----------------------------

@@ -72,10 +72,12 @@ public class JwtUtil {
         log.info(String.format("为账户%s颁发新的令牌", account));
         String currentTimeMillis = String.valueOf(millTimes);
         String token = JwtUtil.sign(account, secret, expTimeType, currentTimeMillis);
+        log.info("成功生成token："+token);
         //更新RefreshToken缓存的时间戳
         String refreshTokenKey = SecurityConstant.PREFIX_SHIRO_REFRESH_TOKEN + account;
+        log.info("成功生成refreshTokenKey："+refreshTokenKey);
         RedisUtil.set(refreshTokenKey, currentTimeMillis, jwtUtil.jwtProperties.getTokenExpireTime() * 60);
-
+        log.info("成功插入redis");
         return token;
     }
 

@@ -1,6 +1,7 @@
 package com.antplatform.admin.web.entity.system.resource.request;
 
 import com.antplatform.admin.common.enums.DataType;
+import com.antplatform.admin.common.group.PageQuery;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -36,10 +37,10 @@ public class RoleRequest {
     private Integer status;
 
     @ApiModelProperty(value = "页码", required = true, dataType = DataType.INTEGER)
-    @NotNull(message="页码数不能为空")
+    @NotNull(message="页码数不能为空",groups = PageQuery.class)
     private Integer pageNo;
 
     @ApiModelProperty(value = "每页数量", required = true, dataType = DataType.INTEGER)
-    @NotNull(message="每页数量不能为空")
+    @NotNull(message="页码数不能为空",groups = PageQuery.class)
     private Integer pageSize;
 }

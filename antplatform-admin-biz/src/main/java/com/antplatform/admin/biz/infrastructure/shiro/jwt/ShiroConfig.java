@@ -61,7 +61,7 @@ public class ShiroConfig {
     public static final String PERMISSION_STRING = "perms[\"{0}\"]";
 
     /**
-     * Shiro生命周期处理器
+     * 配置Shiro生命周期处理器
      *
      * @return
      */
@@ -89,6 +89,8 @@ public class ShiroConfig {
 
     /**
      * 开启shiro aop注解支持,使用代理方式;所以需要开启代码支持;否则@RequiresRoles等注解无法生效
+     * 可以在controller中的方法前加上注解
+     * 如 @RequiresPermissions("userInfo:add")
      *
      * @param securityManager
      * @return
@@ -102,7 +104,7 @@ public class ShiroConfig {
     }
 
     /**
-     * 注入安全管理器 securityManager
+     * 配置核心安全事务管理器 securityManager
      *
      * @return
      */
@@ -127,7 +129,11 @@ public class ShiroConfig {
         subjectDAO.setSessionStorageEvaluator(defaultSessionStorageEvaluator);
         securityManager.setSubjectDAO(subjectDAO);
 
+        // 4.配置redis缓存管理器
         securityManager.setCacheManager(shiroCacheManager);
+
+        //配置记住我
+        //securityManager.setRememberMeManager(rememberMeManager());
 
         return securityManager;
     }
@@ -135,6 +141,10 @@ public class ShiroConfig {
     /**
      * 注入安全过滤器
      * 先走 filter, 然后 filter 如果检测到请求头存在 token，则用 token 去 login，走 Realm 去验证
+     *
+     * ShiroFilterFactoryBean 处理拦截资源文件问题。
+     * 注意：初始化ShiroFilterFactoryBean的时候需要注入：SecurityManager
+     * Web应用中,Shiro可控制的Web请求必须经过Shiro主过滤器的拦截
      *
      * 如果没有此name,将会找不到shiroFilter的Bean
      * @param securityManager
@@ -144,6 +154,7 @@ public class ShiroConfig {
     @ConditionalOnMissingBean(ShiroFilter.class)
     public ShiroFilterFactoryBean shiroFilter(DefaultWebSecurityManager securityManager) {
         ShiroFilterFactoryBean shiroFilter = new ShiroFilterFactoryBean();
+
         // 添加自己的过滤器并且取名为jwt
         Map<String, Filter> filterMap = new LinkedHashMap<>(Constant.Number.ONE);
         // 设置我们自定义的JWT过滤器 **自定义过滤器不能用@bean注入，由于spring的机制，注入的话定义的anon的资源也要全部走一遍自定义过滤器，也就是说走一遍anon过滤器，还会走自定义过滤器，也就是走两遍，那我们anon就相当于失效了，所以这里用new**
@@ -151,15 +162,19 @@ public class ShiroConfig {
         filterMap.put("logout", new SystemLogoutFilter());
 //        filterMap.put("perms", new JwtFilter());
         shiroFilter.setFilters(filterMap);
-        // 注入管理器 必须设置 SecurityManager
+
+        // 注入管理器 必须设置 SecurityManager，Shiro的核心安全接口
         shiroFilter.setSecurityManager(securityManager);
-        // 设置无权限时跳转的 url;
+//        //这里的/login是后台的接口名,非页面，如果不设置默认会自动寻找Web工程根目录下的"/login.jsp"页面
+//        shiroFilter.setLoginUrl("/login");
+//        //这里的/index是后台的接口名,非页面,登录成功后要跳转的链接
+//        shiroFilter.setSuccessUrl("/index");
+        // 设置无权限时跳转的 url，该配置无效，并不会进行页面跳转
         shiroFilter.setUnauthorizedUrl("/401");
-        /*
-         * 自定义url规则 http://shiro.apache.org/web.html#urls-
-         * 设置拦截器
-         * 配置不会被拦截的链接 顺序判断
-         */
+
+        // 自定义url规则 http://shiro.apache.org/web.html#urls-
+        // 设置拦截器，配置不会被拦截的链接，顺序判断，必须是LinkedHashMap，因为它必须保证有序
+        // 过滤链定义，从上向下顺序执行，一般将 /** 放在最为下边，一定要注意顺序，否则就不好使了
         Map<String, String> filterRuleMap = new LinkedHashMap<>(Constant.Number.TWO);
         // 访问401和404页面不通过我们的Filter
 //        filterRuleMap.put("/401", "anon");
@@ -173,6 +188,7 @@ public class ShiroConfig {
 //        filterRuleMap.put("/error", "anon");
 //        filterRuleMap.put("/webjars/springfox-swagger-ui/**", "anon");
 
+        // 配置不登录可以访问的资源，anon 表示资源都可以匿名访问
         List<Map<String, String>> perms = this.getShiroFilterProperties().getPerms();
         perms.forEach(perm -> filterRuleMap.put(perm.get("key"), perm.get("value")));
         // 获取所有Permission
@@ -193,7 +209,8 @@ public class ShiroConfig {
 //        filterRuleMap.put("/**/unauthorized/**", "anon");
 //        filterRuleMap.put("/unauthorized/**", "anon");
 //        filterRuleMap.put("/**/timeout", "anon");
-        // 所有请求通过我们自己的JWT Filter，这行代码必须放在所有权限设置的最后，不然会导致所有 url 都被拦截
+
+        // 其他请求都需要认证，通过我们自定义的JWT Filter，这行代码必须放在所有权限设置的最后，不然会导致所有 url 都被拦截
         filterRuleMap.put("/**", "jwt");
         shiroFilter.setFilterChainDefinitionMap(filterRuleMap);
 

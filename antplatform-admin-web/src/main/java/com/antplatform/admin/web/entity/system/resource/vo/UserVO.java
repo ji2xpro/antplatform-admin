@@ -13,9 +13,11 @@ import java.util.Date;
 public class UserVO {
     private Integer id;
 
-    private String name;
+    private String organizationId;
 
-    private String nickname;
+    private String username;
+
+    private String name;
 
     private String mobile;
 

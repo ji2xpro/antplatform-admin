@@ -1,11 +1,15 @@
 package com.antplatform.admin.common.exception;
 
+import com.alibaba.druid.sql.visitor.functions.Bin;
 import com.antplatform.admin.common.result.AjaxCode;
 import com.antplatform.admin.common.result.AjaxResult;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.ShiroException;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -59,23 +63,29 @@ public class ExceptionController {
         return AjaxResult.createFailedResult(AjaxCode.UNLOGIN_CODE,"登录失效，请重新登录");
     }
 
-    @ExceptionHandler(ConstraintViolationException.class)
+    /**
+     * 捕捉参数校验的异常
+     *
+     * 请求参数校验（Path Variables 和 Request Parameters）参数校验失败后，会抛出 ConstraintViolationException 异常
+     * 其余参数校验失败后，会抛出 MethodArgumentNotValidException 异常或 BindException 异常
+     */
+    @ExceptionHandler({ConstraintViolationException.class, MethodArgumentNotValidException.class, BindException.class})
     @ResponseBody
-    public AjaxResult handler(ConstraintViolationException e) {
-        StringBuffer errorMsg = new StringBuffer();
-        Set<ConstraintViolation<?>> violations = e.getConstraintViolations();
-        violations.forEach(x -> errorMsg.append(x.getMessage()).append(";"));
-        return AjaxResult.createFailedResult(AjaxCode.INVALID_PARAMS,errorMsg.toString());
-    }
+    public AjaxResult handler(Exception e) {
+        StringBuffer stringBuffer = new StringBuffer();
+        if (e instanceof ConstraintViolationException) {
+            ConstraintViolationException constraintViolationException = (ConstraintViolationException) e;
+            Set<ConstraintViolation<?>> violations = constraintViolationException.getConstraintViolations();
+            violations.forEach(x -> stringBuffer.append(x.getMessage()).append(";"));
+            return AjaxResult.createFailedResult(AjaxCode.INVALID_PARAMS, stringBuffer.toString());
+        }
+        BindException bindException = (BindException) e;
+        BindingResult bindingResult = bindException.getBindingResult();
+        return AjaxResult.createFailedResult(AjaxCode.INVALID_PARAMS,buildMessages(bindingResult));
 
-    //处理校验异常，对于对象类型的数据的校验异常
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseBody
-    public AjaxResult handler(MethodArgumentNotValidException e) {
-        StringBuffer sb = new StringBuffer();
-        List<ObjectError> allErrors = e.getBindingResult().getAllErrors();
-        allErrors.forEach(msg -> sb.append(msg.getDefaultMessage()).append(";"));
-        return AjaxResult.createFailedResult(AjaxCode.INVALID_PARAMS,sb.toString());
+//        List<ObjectError> allErrors = bindException.getBindingResult().getAllErrors();
+//        allErrors.forEach(msg -> stringBuffer.append(msg.getDefaultMessage()).append(";"));
+//        return AjaxResult.createFailedResult(AjaxCode.INVALID_PARAMS,stringBuffer.toString());
     }
 
     /**
@@ -106,5 +116,22 @@ public class ExceptionController {
             return HttpStatus.INTERNAL_SERVER_ERROR;
         }
         return HttpStatus.valueOf(statusCode);
+    }
+
+    private String buildMessages(BindingResult result) {
+        StringBuilder resultBuilder = new StringBuilder();
+
+        List<ObjectError> errors = result.getAllErrors();
+        if (errors != null && errors.size() > 0) {
+            for (ObjectError error : errors) {
+                if (error instanceof FieldError) {
+                    FieldError fieldError = (FieldError) error;
+                    String fieldName = fieldError.getField();
+                    String fieldErrMsg = fieldError.getDefaultMessage();
+                    resultBuilder.append(fieldName).append(" ").append(fieldErrMsg).append(";");
+                }
+            }
+        }
+        return resultBuilder.toString();
     }
 }

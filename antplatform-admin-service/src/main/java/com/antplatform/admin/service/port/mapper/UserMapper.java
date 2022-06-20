@@ -18,9 +18,6 @@ import java.util.Collection;
 public interface UserMapper extends EntityMapper<UserDTO, User> {
 
     @Override
-    @Mappings({
-            @Mapping(source = "user.username", target = "name")
-    })
     UserDTO toDto(User user);
 
     @Override

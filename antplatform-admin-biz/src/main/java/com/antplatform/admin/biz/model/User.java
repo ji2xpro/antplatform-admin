@@ -19,10 +19,10 @@ public class User extends BaseModel implements Serializable {
     private Integer id;
 
     /**
-     * 用户名
+     * 账号
      */
     @Column(name = "username")
-    @ApiModelProperty(value="username用户名")
+    @ApiModelProperty(value="username账号")
     private String username;
 
     /**
@@ -31,6 +31,13 @@ public class User extends BaseModel implements Serializable {
     @Column(name = "password")
     @ApiModelProperty(value="password用户密码")
     private String password;
+
+    /**
+     * 姓名
+     */
+    @Column(name = "name")
+    @ApiModelProperty(value="name姓名")
+    private String name;
 
     /**
      * 昵称
@@ -81,6 +88,20 @@ public class User extends BaseModel implements Serializable {
     @ApiModelProperty(value="isDelete是否删除,0-未删除,1-删除")
     private Integer isDelete;
 
+    /**
+     * 创建人
+     */
+    @Column(name = "creator")
+    @ApiModelProperty(value="creator创建人")
+    private String creator;
+
+    /**
+     * 修改人
+     */
+    @Column(name = "editor")
+    @ApiModelProperty(value="editor修改人")
+    private String editor;
+
     private static final long serialVersionUID = 1L;
 
     @Override
@@ -92,6 +113,7 @@ public class User extends BaseModel implements Serializable {
         sb.append(", id=").append(id);
         sb.append(", username=").append(username);
         sb.append(", password=").append(password);
+        sb.append(", name=").append(name);
         sb.append(", nickname=").append(nickname);
         sb.append(", mobile=").append(mobile);
         sb.append(", email=").append(email);
@@ -99,6 +121,8 @@ public class User extends BaseModel implements Serializable {
         sb.append(", remark=").append(remark);
         sb.append(", status=").append(status);
         sb.append(", isDelete=").append(isDelete);
+        sb.append(", creator=").append(creator);
+        sb.append(", editor=").append(editor);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

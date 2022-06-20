@@ -115,7 +115,6 @@ public class UserMgtPortService implements UserMgtApi {
         // 根据角色查询权限
         Collection<Authority> authorities = authorityService.findBySpec(roleSpec);
         Set<String> authCode = authorities.stream().map(Authority::getCode).collect(Collectors.toSet());
-//        Collection<String> authCode = authorities.stream().map(Authority::getCode).collect(Collectors.toList());
 
         // 根据角色查询菜单
         Set<Integer> authSet = authorities.stream().map(e -> e.getId()).collect(Collectors.toSet());

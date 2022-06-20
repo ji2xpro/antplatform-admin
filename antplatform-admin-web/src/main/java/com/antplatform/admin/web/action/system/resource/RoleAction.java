@@ -7,6 +7,7 @@ import com.antplatform.admin.api.request.RolePermissionSpec;
 import com.antplatform.admin.api.request.RoleSpec;
 import com.antplatform.admin.common.dto.PagedResponse;
 import com.antplatform.admin.common.dto.Response;
+import com.antplatform.admin.common.group.PageQuery;
 import com.antplatform.admin.common.result.AjaxResult;
 import com.antplatform.admin.common.result.Paging;
 import com.antplatform.admin.common.utils.TransformUtils;
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -54,7 +56,7 @@ public class RoleAction {
     @GetMapping("/list")
     @RequiresRoles(value = {"admin","editor"},logical=Logical.OR)
     @ApiOperation(value = "查询角色列表")
-    public AjaxResult<List<RoleVO>> list(RoleRequest roleRequest) {
+    public AjaxResult<List<RoleVO>> list(@Validated(PageQuery.class) RoleRequest roleRequest) {
         RolePageSpec rolePageSpec = new RolePageSpec();
         rolePageSpec.setId(roleRequest.getId());
         rolePageSpec.setName(roleRequest.getName());
@@ -79,7 +81,7 @@ public class RoleAction {
     @RequiresRoles("admin")
     @ApiOperation(value = "校验角色名称是否存在", notes = "校验角色名称是否存在")
     public AjaxResult<Boolean> checkRoleName(@RequestParam(value = "id", required = false) Integer id,
-                                             @RequestParam(value = "roleName") String roleName) {
+                                             @NotEmpty(message="角色名称不能为空") @RequestParam(value = "roleName") String roleName) {
         RoleSpec roleSpec = new RoleSpec();
         roleSpec.setRoleId(id);
         roleSpec.setName(roleName);
@@ -96,7 +98,7 @@ public class RoleAction {
     @RequiresRoles("admin")
     @ApiOperation(value = "校验角色标识是否存在", notes = "校验角色标识是否存在")
     public AjaxResult<Boolean> checkRoleKey(@RequestParam(value = "id", required = false) Integer id,
-                                            @RequestParam(value = "roleKey") String roleKey) {
+                                            @NotEmpty(message="角色标识不能为空") @RequestParam(value = "roleKey") String roleKey) {
         RoleSpec roleSpec = new RoleSpec();
         roleSpec.setRoleId(id);
         roleSpec.setKeypoint(roleKey);
@@ -137,7 +139,7 @@ public class RoleAction {
     @RequiresRoles("admin")
     @ApiOperation(value = "更新角色")
 //    @AroundLog(name = "更新角色")
-    public AjaxResult<Boolean> update(@RequestBody RoleRequest roleRequest) {
+    public AjaxResult<Boolean> update(@Validated @RequestBody RoleRequest roleRequest) {
         RoleSpec roleSpec = new RoleSpec();
         roleSpec.setRoleId(roleRequest.getId());
         roleSpec.setName(roleRequest.getName());

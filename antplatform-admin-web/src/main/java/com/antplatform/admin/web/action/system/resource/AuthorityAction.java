@@ -1,24 +1,20 @@
 package com.antplatform.admin.web.action.system.resource;
 
 import com.antplatform.admin.api.dto.AuthorityDTO;
-import com.antplatform.admin.api.dto.PermissionDTO;
 import com.antplatform.admin.api.request.AuthoritySpec;
-import com.antplatform.admin.api.request.MenuSpec;
-import com.antplatform.admin.biz.model.Authority;
 import com.antplatform.admin.common.dto.Response;
 import com.antplatform.admin.common.result.AjaxResult;
 import com.antplatform.admin.common.utils.TransformUtils;
 import com.antplatform.admin.web.biz.system.resource.AuthorityBiz;
 import com.antplatform.admin.web.entity.system.resource.request.AuthorityRequest;
-import com.antplatform.admin.web.entity.system.resource.request.MenuRequest;
 import com.antplatform.admin.web.entity.system.resource.vo.AuthorityVO;
-import com.antplatform.admin.web.entity.system.resource.vo.PermissionVO;
 import com.google.common.collect.Lists;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.List;
 
@@ -36,6 +33,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/authority")
+@Validated
 @Api(value = "AuthorityAction|权限相关的前端控制器")
 public class AuthorityAction {
 
@@ -113,7 +111,7 @@ public class AuthorityAction {
     @RequiresRoles("admin")
     @ApiOperation(value = "获取角色的权限资源")
     @ApiImplicitParam(paramType = "path", name = "roleId", value = "角色ID", required = true, dataType = "Integer")
-    public AjaxResult<List<AuthorityVO>> queryRoleResource(@PathVariable("roleId") Integer roleId) {
+    public AjaxResult<List<AuthorityVO>> queryRoleResource(@NotNull(message="角色id不能为空") @PathVariable("roleId") Integer roleId) {
 
         Response<Collection<AuthorityDTO>> response = authorityBiz.queryRoleAuth(roleId);
 

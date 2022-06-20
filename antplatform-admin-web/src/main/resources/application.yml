@@ -18,6 +18,8 @@ token:
 #动态设置拦截器
 permission-config:
   perms:
+    - key: /user/login
+      value: anon
     - key: /user/logout
       value: logout
     - key: /401

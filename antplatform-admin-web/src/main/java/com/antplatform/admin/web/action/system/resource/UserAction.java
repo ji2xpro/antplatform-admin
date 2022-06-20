@@ -5,6 +5,7 @@ import com.antplatform.admin.api.request.UserPageSpec;
 import com.antplatform.admin.common.dto.PagedResponse;
 import com.antplatform.admin.common.enums.DataType;
 import com.antplatform.admin.common.enums.ParamType;
+import com.antplatform.admin.common.group.PageQuery;
 import com.antplatform.admin.common.result.AjaxResult;
 import com.antplatform.admin.common.result.Paging;
 import com.antplatform.admin.common.utils.TransformUtils;
@@ -17,6 +18,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,16 +46,16 @@ public class UserAction {
     @RequiresRoles("admin")
     @ApiOperation(value = "查询用户列表")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "username", value = "账号", dataType = DataType.STRING, paramType = ParamType.QUERY),
+            @ApiImplicitParam(name = "account", value = "账号", dataType = DataType.STRING, paramType = ParamType.QUERY),
             @ApiImplicitParam(name = "mobile", value = "手机号",dataType = DataType.STRING, paramType = ParamType.QUERY),
             @ApiImplicitParam(name = "email", value = "邮箱", dataType = DataType.STRING, paramType = ParamType.QUERY),
             @ApiImplicitParam(name = "roleId", value = "角色", dataType = DataType.INTEGER, paramType = ParamType.QUERY),
             @ApiImplicitParam(name = "status", value = "状态", dataType = DataType.STRING, paramType = ParamType.QUERY),
             @ApiImplicitParam(name = "pageNo", value = "当前页", dataType = DataType.INTEGER, paramType = ParamType.QUERY),
             @ApiImplicitParam(name = "pageSize", value = "每页条数", dataType = DataType.INTEGER, paramType = ParamType.QUERY) })
-    public AjaxResult<List<UserVO>> list(@ApiIgnore UserRequest userRequest) {
+    public AjaxResult<List<UserVO>> list(@Validated(PageQuery.class) @ApiIgnore UserRequest userRequest) {
         UserPageSpec userPageSpec = new UserPageSpec();
-        userPageSpec.setId(userRequest.getId());
+        userPageSpec.setOrganizationId(userRequest.getOrganizationId());
         userPageSpec.setUsername(userRequest.getUsername());
         userPageSpec.setMobile(userRequest.getMobile());
         userPageSpec.setEmail(userRequest.getEmail());

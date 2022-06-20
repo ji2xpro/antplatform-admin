@@ -17,8 +17,8 @@ import javax.validation.constraints.NotNull;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @ApiModel(value = "UserRequest对象", description = "角色查询信息")
 public class UserRequest {
-    @ApiModelProperty(value = "序号", dataType = DataType.INTEGER)
-    private Integer id;
+    @ApiModelProperty(value = "组织Id", dataType = DataType.INTEGER)
+    private Integer organizationId;
 
     @ApiModelProperty(value = "账号", dataType = DataType.STRING)
     private String username;

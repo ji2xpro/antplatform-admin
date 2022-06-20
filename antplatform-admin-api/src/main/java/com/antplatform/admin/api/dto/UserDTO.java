@@ -20,9 +20,16 @@ public class UserDTO extends BaseDTO {
     private Collection<MenuDTO> menus;
     private String introduction;
     private String avatar;
-    private String name;
 
     private Integer id;
+
+    private Integer organizationId;
+
+    private Integer organizationName;
+
+    private String username;
+
+    private String name;
 
     private String nickname;
     private String mobile;
